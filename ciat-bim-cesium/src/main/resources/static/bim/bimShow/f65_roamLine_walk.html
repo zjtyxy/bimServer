@@ -1,0 +1,128 @@
+<!-- 2017-12-7 14:56:03 | 修改 木遥（微信:  http://marsgis.cn/weixin.html ） -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <!-- 标题及搜索关键字 -->
+    <meta name="keywords" content="中国科学院空天创新研究院" />
+    <meta
+      name="description"
+      content="中国科学院空天创新研究院 三维 地球 模型  gis marsgis 地图离线 地图开发 地图框架 地图外包 框架 开发 外包  地图离线 二维地图 三维地图 全景漫游 地理信息系统 云GIS 三维GIS GIS平台 WebGIS"
+    />
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://mars3d.cn/favicon.ico" />
+    <title>地面漫游 | 中国科学院空天创新研究院</title>
+
+    <script
+      type="text/javascript"
+      src="../lib/include-lib.js"
+      libpath="../lib/"
+      include="jquery,font-awesome,bootstrap,bootstrap-checkbox,jquery.range,layer,haoutil,turf,mars3d"
+    ></script>
+
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+      .mp_table {
+        width: 100%;
+        border: #cde1de 1px solid;
+        font-size: 12px;
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      .mp_table tr td {
+        padding: 5px 5px;
+        text-align: left;
+        border: #cde1de 1px solid;
+      }
+
+      .mp_table tr td:first-child {
+        border-left: none;
+      }
+
+      .nametd {
+        width: 40%;
+      }
+
+      .mp_head2 {
+        width: 100%;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+      }
+
+      .dark .progress {
+        margin: 0;
+        background-color: #0b2931;
+      }
+    </style>
+  </head>
+
+  <body class="dark">
+    <!--加载前进行操作提示，优化用户体验-->
+    <div id="mask" class="signmask" onclick="removeMask()"></div>
+
+    <div id="mars3dContainer" class="mars3d-container"></div>
+
+    <!-- 信息 面板 -->
+    <div class="infoview rightbottom" style="min-width: 200px; right: 100px">
+      <table class="mp_table">
+        <tr>
+          <td class="nametd">总长度</td>
+          <td id="td_alllength"></td>
+        </tr>
+        <tr>
+          <td class="nametd">已漫游长度</td>
+          <td id="td_length"></td>
+        </tr>
+        <tr>
+          <td class="nametd">总时长</td>
+          <td id="td_alltimes"></td>
+        </tr>
+        <tr>
+          <td class="nametd">已漫游时间</td>
+          <td id="td_times"></td>
+        </tr>
+
+        <tr>
+          <td class="nametd">经度</td>
+          <td id="td_jd"></td>
+        </tr>
+        <tr>
+          <td class="nametd">经度</td>
+          <td id="td_wd"></td>
+        </tr>
+        <tr>
+          <td class="nametd">漫游高程</td>
+          <td id="td_gd"></td>
+        </tr>
+        <tr>
+          <td class="nametd">地面高程</td>
+          <td id="td_dmhb"></td>
+        </tr>
+        <tr id="tr_ldgd">
+          <td class="nametd">离地距离</td>
+          <td id="td_ldgd"></td>
+        </tr>
+
+        <tr>
+          <td colspan="2" style="width: 100%; text-align: center">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script src="./js/common.js"></script>
+    <script src="js/walk.js"></script>
+  </body>
+</html>

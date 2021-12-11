@@ -1,0 +1,7 @@
+server:
+  port: 7002
+spring:
+  application:
+    name: ciat-bim
+  resource:
+    static-locations: classpath:/static/,classpath:/public/

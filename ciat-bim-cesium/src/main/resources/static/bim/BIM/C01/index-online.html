@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" />
+    <title>BimAngle.com - Trial version</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.80/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.80/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="./bimangle-latest.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    <script>
+        //Setting
+		
+        const ALLOW_3D_TILES_INSPECTOR = false;
+        const ALLOW_NODE_PROPS = true;
+
+        // Cesium.Ion.defaultAccessToken = 'your_access_token';
+    </script>
+	<script>
+        //Init
+	
+        //set home view
+        Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(90, -20, 110, 90);
+
+        //Please replace it with your own token
+        const TIANDITU_TOKEN = '01e768fa9e1bcf33ae174c9231479793';
+
+        var options = {
+            // Google Maps (Has been blocked)
+            // imageryProvider: new Cesium.UrlTemplateImageryProvider({ url: "http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali" }),
+
+            // TianDiTu(https://www.tianditu.gov.cn/) - China Only
+            imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
+                url: 'http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=' + TIANDITU_TOKEN,
+                layer: 'tdtBasicLayer',
+                style: 'default',
+                format: 'tiles',
+                tileMatrixSetID: 'GoogleMapsCompatible',
+                show: true,
+                maximumLevel: 18
+            }),
+        };
+        var viewer = new Cesium.Viewer('cesiumContainer', options);
+        viewer.scene.globe.depthTestAgainstTerrain = true;
+
+        //hide copyright info
+        viewer._cesiumWidget._creditContainer.style.display = "none";
+
+        //3D Tiles Inspector
+        if (ALLOW_3D_TILES_INSPECTOR) {
+            viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
+            var inspectorViewModel = viewer.cesium3DTilesInspector.viewModel;
+        }
+    </script>
+    <script>
+        //Note:
+        //  Mouse move:        highlight feature
+        //  Mouse left click:  selected and show feature's info
+        //  Mouse right click: zoom to feature
+
+        //操作说明:
+        //  鼠标移动:     高亮显示构件
+        //  鼠标左键单击: 选中构件并弹出属性栏
+        //  鼠标右键单击: 缩放到构件
+
+        //Load Model:
+        var tileset = (function(viewer, zoomTo){
+            "use strict";
+
+            var url = "./tileset.json";
+            var tileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+                url: url,
+                luminanceAtZenith: 0.2,
+                lightColor: new Cesium.Cartesian3(0.3, 0.3, 0.3)
+            }));
+
+            if (ALLOW_NODE_PROPS) {
+                //允许可选中构件
+                attachTileset(viewer, tileset);
+            } else {
+                //模型融合为一体
+                attachTilesetX(viewer, tileset, "Model", "Model description.");
+            }
+		
+            if(zoomTo){
+                viewer.zoomTo(tileset, new Cesium.HeadingPitchRange(0, -0.5, 0));
+            }
+
+            return tileset;
+        })(viewer, true);
+    </script>
+    <script>
+        //get geographic coordinate from mouse click
+        (function (viewer) {
+            viewer.scene.canvas.addEventListener('click', function (e) {
+                var ellipsoid = viewer.scene.globe.ellipsoid;
+                var cartesian = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(e.clientX, e.clientY), ellipsoid);
+                if (cartesian) {
+                    var cartographic = ellipsoid.cartesianToCartographic(cartesian);
+                    var plon = Cesium.Math.toDegrees(cartographic.longitude);
+                    var plat = Cesium.Math.toDegrees(cartographic.latitude);
+                    console.log(`Click point coordinate: (${plon.toFixed(10)}, ${plat.toFixed(10)})`);
+                }
+            });
+        })(viewer);
+    </script>
+</body>
+</html>

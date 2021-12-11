@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html class="no-js css-menubar" lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- 移动设备 viewport -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" />
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit" />
+    <!-- Chrome浏览器添加桌面快捷方式（安卓） -->
+    <link rel="shortcut icon" type="image/x-icon" href="//mars3d.cn/favicon.ico" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- Safari浏览器添加到主屏幕（IOS） -->
+    <link rel="icon" sizes="192x192" href="//mars3d.cn/img/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="MarsGIS" />
+    <!-- Win8标题栏及ICON图标 -->
+    <link rel="apple-touch-icon-precomposed" href="//mars3d.cn/img/favicon/apple-touch-icon.png" />
+    <meta name="msapplication-TileImage" content="//mars3d.cn/img/favicon/app-icon72x72@2x.png" />
+    <meta name="msapplication-TileColor" content="#62a8ea" />
+
+
+
+    <title>中科院空天创新研究院</title>
+
+    <script
+      type="text/javascript"
+      src="./lib/include-lib.js?time=20210329"
+      include="jquery,bootstrap,admin-lte,haoutil,jquery.scrollTo,lazyload,mars3d"
+      libpath="./lib/"
+    ></script>
+
+    <link rel="stylesheet" href="bimShow/css/common.css?time=20210329" />
+    <link rel="stylesheet" href="bimShow/css/sideBar.css?time=20210329" />
+    <link rel="stylesheet" href="bimShow/css/examples.css?time=20210329" />
+    <style>
+      /*无头部菜单时*/
+      .noHeader .main-sidebar, .left-side {
+        padding-top: 0px;
+      }
+
+      .noHeader .category {
+        padding-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body class="hold-transition skin-blue sidebar-mini noHeader" data-spy="scroll" data-target="#scrollSpy">
+    <div class="wrapper">
+      <!-- 侧边栏 -->
+      <aside class="sidebar-wrapper main-sidebar" id="scrollSpy">
+        <section class="sidebar" id="sidebar">
+          <ul class="sidebar-menu nav nav-stacked" id="sidebar-menu"></ul>
+        </section>
+      </aside>
+      <!-- 内容区 -->
+      <div class="content-wrapper examples-container" id="main">
+        <ul id="charts-list">
+
+        </ul>
+      </div>
+
+
+
+      <!-- footer -->
+      <footer class="main-footer">
+        <div class="iclient-copyright" id="iclient-footer">
+          版权所有 © 2017-2021
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      window.exampleConfig = 'data/example.json' //配置文件目录
+      window.exampleIconPath = '//mars3d.cn/data/exampleIcon/' //ICON目录
+      window.examplePath = 'example_new/' //示例功能所在目录
+      window.autoShowCode = false
+    </script>
+    <script src="bimShow/js/sidebar.js?time=20210329"></script>
+    <script src="bimShow/js/example.js?time=20210329"></script>
+  </body>
+</html>

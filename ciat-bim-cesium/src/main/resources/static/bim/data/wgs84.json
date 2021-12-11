@@ -1,0 +1,124 @@
+{
+    "map": {
+        "zoom": 13,
+        "center": { "x": 117.240601, "y": 31.827107 },
+        "minZoom": 3,
+        "maxZoom": 18,
+        "centerAutoLevel": 15,
+        "controls": [
+            { "type": "scale" },
+            { "type": "location", "format": "<div>经度:{x}</div><div>纬度:{y}</div>" },
+            { "type": "tool", "item": [ "home", "location", "fullscreen" ], "position": "bottomright" },
+            { "type": "zoom", "position": "bottomright" },
+            { "type": "layers", "position": "topleft", "visible": true }
+        ],
+        "basemaps": [
+            {
+                "id": 10,
+                "name": "地图底图",
+                "type": "group"
+            },
+            {
+                "pid": 10,
+                "name": "天地图电子",
+                "icon": "tianditumap.png",
+                "type": "www_tdt",
+                "layer": "vec", 
+                "key": ["ad5bee3fe473a639887fa9d57a670c6e"],
+                "visible": true
+            },
+            {
+                "pid": 10,
+                "name": "天地图卫星",
+                "icon": "tiandituimage.png" ,
+                "type": "www_tdt",
+                "layer": "img",
+                "key": ["ad5bee3fe473a639887fa9d57a670c6e"]
+            },
+            {
+                "pid": 10,
+                "name": "天地图地形",
+                "icon": "tianditudem.png",
+                "type": "www_tdt",
+                "layer": "ter",
+                "key": ["ad5bee3fe473a639887fa9d57a670c6e"],
+                "maxNativeZoom":  14
+            },
+            {
+                "pid": 10,
+                "name": "OSM地图",
+                "type": "www_osm",
+                "icon": "bingmap.png"
+            },
+            {
+                "pid": 10,
+                "name": "海图",
+                "icon": "advsea.png",
+                "type": "wmts",
+                "url": "http://www.ais.msa.gov.cn/MapService",
+                "layer": "default",
+                "style": "default",
+                "format": "image/png",
+                "tilematrixSet": "advsea"
+            },
+
+            {
+                "pid": 10,
+                "name": "高德地图",
+                "type": "www_gaode",
+                "layer": "vec",
+                "coordType": "gcj",
+                "icon": "bingmap.png"
+            },
+            {
+                "pid": 10,
+                "name": "高德卫星",
+                "type": "www_gaode",
+                "layer": "img",
+                "coordType": "gcj",
+                "icon": "bingimage.png"
+            },
+            {
+                "pid": 10,
+                "name": "谷歌地图",
+                "type": "www_google",
+                "layer": "vec",
+                "coordType": "gcj",
+                "icon": "googlemap.png"
+            },
+            {
+                "pid": 10,
+                "name": "谷歌卫星",
+                "type": "www_google",
+                "layer": "img",
+                "coordType": "gcj",
+                "icon": "googleimage.png"
+            },
+            {
+                "pid": 10,
+                "name": "灰色地图",
+                "type": "arcgis_tile",
+                "url": "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer",
+                "coordType": "gcj",
+                "icon": "bd-c-grayscale.png"
+            },
+            {
+                "pid": 10,
+                "name": "深色地图",
+                "type": "arcgis_tile",
+                "url": "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer",
+                "coordType": "gcj",
+                "icon": "bd-c-midnight.png"
+            }
+        ],
+        "operationallayers": [
+ 
+            { "name": "实时路况", "type": "www_gaode", "layer": "time" , "coordType": "gcj" },
+            { "name": "经纬网", "type": "custom_jww" }
+        ]
+
+    }
+
+
+
+}

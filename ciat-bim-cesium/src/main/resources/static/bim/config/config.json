@@ -1,0 +1,118 @@
+{
+ 
+    "map3d": {
+        "homeButton": true,
+        "sceneModePicker": true,
+        "navigationHelpButton": true,
+        "infoBox": true,
+        "vrButton": false,
+        "fullscreenButton": true,
+        "geocoder": true,
+        "baseLayerPicker": true,
+        "center": { "y": 34.717482, "x":97.764094, "z": 371372, "heading": 357.7, "pitch": -87.6, "roll": 359.9 },
+        "minzoom": 1,
+        "maxzoom": 20000000,
+        "style": { "atmosphere": true, "lighting": false, "fog": false, "testTerrain": false },
+        "mouseZoom": true,
+        "location": {
+            "crs":"",
+            "format":"<div>视高：{height}米</div><div>方向：{heading}度</div><div>海拔：{z}米</div><div>纬度:{y}</div><div>经度:{x}</div>"
+        },
+        "navigation": {
+          "legend": { "left": "100px", "bottom": "-1px" },
+          "compass": { "top": "50px", "right": "5px" }
+        },
+        "terrain": {
+            "url": "http://data.marsgis.cn/terrain/",
+            "visible": true
+        },
+        "crs": "",
+        "basemaps": [
+            {
+                "id": 10,
+                "name": "地图底图",
+                "type": "group"
+            },
+            {
+                "pid": 10,
+                "name": "谷歌卫星",
+                "icon": "img/basemaps/google_img.png",
+                "type": "www_google",
+                "crs": "wgs84",
+                "layer": "img_d",
+                "visible": true
+            },
+            {
+                "pid": 10,
+                "name": "ArcGIS卫星",
+                "icon": "img/basemaps/esriWorldImagery.png",
+                "type": "arcgis",
+                "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+            },
+            {
+                "pid": 10,
+                "name": "微软卫星",
+                "icon": "img/basemaps/bingAerial.png",
+                "type": "www_bing",
+                "layer": "Aerial"
+            },
+            {
+                "pid": 10,
+                "name": "天地图卫星",
+                "icon": "img/basemaps/tdt_img.png",
+                "type": "www_tdt",
+                "layer": "img_d" ,
+                "key": [
+                  "313cd4b28ed520472e8b43de00b2de56",
+                  "83b36ded6b43b9bc81fbf617c40b83b5",
+                  "0ebd57f93a114d146a954da4ecae1e67",
+                  "6c99c7793f41fccc4bd595b03711913e",
+                  "56b81006f361f6406d0e940d2f89a39c"
+                ]
+            }, 
+            {
+                "pid": 10,
+                "name": "黑色底图",
+                "icon": "img/basemaps/blackMarble.png",
+                "type": "mapbox",
+                "mapId": "mapbox.dark"
+            },
+            {
+                "pid": 10,
+                "name": "谷歌卫星(有偏移)",
+                "type": "group",
+                "crs": "gcj",
+                "icon": "img/basemaps/google_img.png",
+                "layers": [
+                    { "name": "底图", "type": "www_google", "layer": "img_d" },
+                    { "name": "注记", "type": "www_google", "layer": "img_z" }
+                ]
+            },
+            {
+                "pid": 10,
+                "name": "谷歌卫星(有偏移)",
+                "type": "group",
+                "icon": "img/basemaps/gaode_img.png",
+                "crs": "gcj",
+                "layers": [
+                    { "name": "底图", "type": "www_gaode", "layer": "img_d" },
+                    { "name": "注记", "type": "www_gaode", "layer": "img_z" }
+                ]
+            },
+            {
+                "pid": 10,
+                "name": "默认图片底图",
+                "type": "tms",
+                "icon": "img/basemaps/stamenWatercolor.png"
+            }
+        ],
+        "operationallayers": [
+
+            { "type": "custom_graticule", "name": "经纬网" }
+        ]
+    }
+
+
+
+
+}

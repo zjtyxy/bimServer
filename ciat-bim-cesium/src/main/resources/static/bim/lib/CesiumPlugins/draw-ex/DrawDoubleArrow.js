@@ -1,0 +1,2 @@
+/* 2019-9-2 09:29:12 | 版权所有 国信科技 http://marsgis.cn */
+!function(){var o="doubleArrow",t=mars3d.DrawEdit.PolygonEx.extend({getShowPositions:function(o){var t=mars3d.draw.util.cartesians2lonlats(o);return plotUtil.doubleArrow(t).polygonalPoint}}),r=mars3d.Draw.PolygonEx.extend({type:o,_minPointNum:3,_maxPointNum:5,editClass:t,getShowPositions:function(o){var t=mars3d.draw.util.cartesians2lonlats(o);return plotUtil.doubleArrow(t).polygonalPoint}});mars3d.draw.register(o,r)}(window);

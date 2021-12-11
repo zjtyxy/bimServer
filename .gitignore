@@ -1,0 +1,11 @@
+/target/
+/.idea/
+*.iml
+rebel.xml
+# Project exclude paths
+/ciat-bim-cesium/target/
+/jeecg-boot-base/jeecg-boot-base-api/jeecg-system-cloud-api/target/
+/jeecg-boot-base/jeecg-boot-base-api/jeecg-system-local-api/target/
+/jeecg-boot-base/jeecg-boot-base-core/target/
+/jeecg-boot-base/jeecg-boot-base-tools/target/
+/jeecg-boot-module-system/target/

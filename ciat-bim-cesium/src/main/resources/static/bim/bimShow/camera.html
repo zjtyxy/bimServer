@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>前端播放m3u8格式视频</title>
+    <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
+    <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js"
+        type="text/javascript"></script>
+    <!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 -->
+</head>
+
+<body>
+    <style>
+        .video-js .vjs-tech {
+            position: relative !important;
+        }
+    </style>
+    <div>
+        <video  autoplay="autoplay" loop="loop" muted="muted"  id="myVideo" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"
+            data-setup='{}' style='width: 100%;height: auto'>
+            <source id="source" src="http://cctvalih5ca.v.myalicdn.com/live/cctv1_2/index.m3u8"
+                type="application/x-mpegURL">
+            </source>
+        </video>
+    </div>
+
+</body>
+
+<script>
+    // videojs 简单使用
+    var myVideo = videojs('myVideo', {
+        bigPlayButton: true,
+        textTrackDisplay: false,
+        posterImage: false,
+        errorDisplay: false,
+    })
+    myVideo.play()
+    var changeVideo = function (vdoSrc) {
+        if (/\.m3u8$/.test(vdoSrc)) { //判断视频源是否是m3u8的格式
+            myVideo.src({
+                src: vdoSrc,
+                type: 'application/x-mpegURL' //在重新添加视频源的时候需要给新的type的值
+            })
+        } else {
+            myVideo.src(vdoSrc)
+        }
+        myVideo.load();
+        myVideo.play();
+    }
+   
+</script>
