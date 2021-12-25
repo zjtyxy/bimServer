@@ -1,0 +1,58 @@
+﻿<!-- 2018-12-23 18:09:09 | 版权所有 国信同科 http://ciat.com.cn  【联系我们QQ：516584683，微信：ciatgis】 --><!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1,maximum-scale=1" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <title>图上选点 三维地图| 国信同科|北京国信同科|北京国信同科有限公司</title>
+    <script src="../lib/include-lib.js" libpath="../lib/" include="jquery,font-awesome,web-icons,bootstrap,formvalidation,layer,haoutil,admui,turf,cesium-mars"></script>
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+        .title {
+            text-align: center;
+        }
+
+        .form-horizontal {
+            width: 200px;
+        }
+    </style>
+</head>
+<body class="dark">
+    <div id="mask" class="signmask" onclick="removeMask()"></div>
+    <div id="cesiumContainer" class="cesium-container"></div>
+    <div class="infoview">
+        <h4 class="title">坐标拾取</h4>
+        <form id="jwdForm" class="form-horizontal" autocomplete="off">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">经度</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control input-width" name="point_jd" id="point_jd" data-fv-between="true" data-fv-between-min="-180" data-fv-between-max="180" data-fv-between-message="请输入-180至180之间的数字" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">纬度</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control input-width" name="point_wd" id="point_wd" data-fv-between="true" data-fv-between-min="-90" data-fv-between-max="90" data-fv-between-message="请输入-90至90之间的数字" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">高程</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control input-width" name="point_height" id="point_height" />
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-primary" id="btnSelectOK">提交</button>
+            </div>
+        </form>
+    </div>
+    <script src="js/selectPoint.js" />
+
+
+</body>
+</html>

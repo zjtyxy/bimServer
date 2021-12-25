@@ -1,0 +1,63 @@
+<!-- 2020-1-13 19:36:55 | 版权所有 国信同科 http://ciatgis.cn -->
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="zh-cn">
+<head><title>&#x5F39;&#x7A97;&#x5B50;&#x9875;&#x9762;</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+    <meta name="author" content="&#x706B;&#x661F;&#x79D1;&#x6280; http://cesium.ciatgis.cn ">
+    <meta name="renderer" content="webkit">
+    <link rel="icon" type="image/png" href="../../img/favicon/favicon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="img/favicon/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="&#x706B;&#x661F;&#x79D1;&#x6280;MarsGIS">
+    <link rel="apple-touch-icon-precomposed" href="../../img/favicon/apple-touch-icon.png">
+    <meta name="msapplication-TileImage" content="../../img/favicon/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#62a8ea">
+    <script src="../../../lib/include-lib.js?time=20200102" libpath="../../../lib/"
+            include="jquery,jquery.minicolors,font-awesome,bootstrap,bootstrap-checkbox,bootstrap-table,haoutil,admui-frame"></script>
+    <link href="../../css/widget-win.css" rel="stylesheet">
+    <link href="css/plot.css?time=20200102" rel="stylesheet">
+</head>
+<body>
+<div class="mp_box">
+    <div class="mp_head">
+        <ul>
+            <li id="btn_plot_openfile"><i class="fa fa-folder-open-o" title="&#x6253;&#x5F00;&#x6587;&#x4EF6;"></i></li>
+            <li id="btn_plot_openfile2"><i class="fa fa-folder-open" title="&#x53E0;&#x52A0;&#x6587;&#x4EF6;"></i></li>
+            <li id="btn_plot_savefile"><i class="fa fa-save" title="&#x4FDD;&#x5B58;&#x6587;&#x4EF6;"></i></li>
+            <li class="ml10">|</li>
+            <li id="btn_plot_delall"><i class="fa fa-trash" title="&#x6E05;&#x7A7A;&#x6807;&#x7ED8;"></i></li>
+            <li id="btn_plot_isedit"><i class="fa fa-unlock" title="&#x662F;&#x5426;&#x53EF;&#x7F16;&#x8F91;"></i></li>
+            <li id="btn_plot_end"><i class="fa fa-share-alt"
+                                     title="&#x7ED3;&#x675F;&#x7ED8;&#x5236;&#xFF0C;&#x7B49;&#x540C;&#x53CC;&#x51FB;&#x7ED3;&#x675F;"></i>
+            </li>
+        </ul>
+        <input id="input_plot_file" type="file" accept=".json" style="display:none"></div>
+    <div class="clear"></div>
+    <div class="mp_tab_card">
+        <ul class="mp_tab_con">
+            <li class="cur"><select id="sel_plot_list" class="mp_select m10" data-value="1"></select>
+                <div class="mp_mark">
+                    <ul id="plotlist"></ul>
+                </div>
+            </li>
+            <li>
+                <div class="mp_tree" style="overflow:hidden">
+                    <table id="table"></table>
+                </div>
+            </li>
+        </ul>
+        <ul class="mp_tab_tit">
+            <li id="tab_plot" class="cur">&#x6807;&#x53F7;</li>
+            <li id="tab_attr">&#x5217;&#x8868;</li>
+        </ul>
+    </div>
+</div>
+<script src="js/vew.common.js?time=20200102"></script>
+<script src="js/vew.work.js?time=20200102"></script>
+</body>
+</html>

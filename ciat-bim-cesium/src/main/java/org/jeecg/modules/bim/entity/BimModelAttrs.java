@@ -66,4 +66,9 @@ public class BimModelAttrs implements Serializable {
 	@Excel(name = "外部ID", width = 15)
     @ApiModelProperty(value = "外部ID")
     private java.lang.String externalId;
+
+    /**外部ID*/
+    @Excel(name = "所属模型", width = 15)
+    @ApiModelProperty(value = "所属模型")
+    private java.lang.String modelId;
 }

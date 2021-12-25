@@ -16,23 +16,24 @@ public interface IBimModelAttrsService extends IService<BimModelAttrs> {
 
 	/**根节点父ID的值*/
 	public static final String ROOT_PID_VALUE = "0";
-	
+
 	/**树节点有子节点状态值*/
 	public static final String HASCHILD = "1";
-	
+
 	/**树节点无子节点状态值*/
 	public static final String NOCHILD = "0";
 
 	/**新增节点*/
 	void addBimModelAttrs(BimModelAttrs bimModelAttrs);
-	
+
 	/**修改节点*/
 	void updateBimModelAttrs(BimModelAttrs bimModelAttrs) throws JeecgBootException;
-	
+
 	/**删除节点*/
 	void deleteBimModelAttrs(String id) throws JeecgBootException;
 
 	/**查询所有数据，无分页*/
     List<BimModelAttrs> queryTreeListNoPage(QueryWrapper<BimModelAttrs> queryWrapper);
-
+	/**更新树形关系*/
+    void updateTree();
 }

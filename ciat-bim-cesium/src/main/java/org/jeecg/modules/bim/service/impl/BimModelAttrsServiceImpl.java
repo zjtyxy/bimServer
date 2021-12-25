@@ -39,7 +39,7 @@ public class BimModelAttrsServiceImpl extends ServiceImpl<BimModelAttrsMapper, B
 		}
 		baseMapper.insert(bimModelAttrs);
 	}
-	
+
 	@Override
 	public void updateBimModelAttrs(BimModelAttrs bimModelAttrs) {
 		BimModelAttrs entity = this.getById(bimModelAttrs.getId());
@@ -59,7 +59,7 @@ public class BimModelAttrsServiceImpl extends ServiceImpl<BimModelAttrsMapper, B
 		}
 		baseMapper.updateById(bimModelAttrs);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteBimModelAttrs(String id) throws JeecgBootException {
@@ -97,7 +97,7 @@ public class BimModelAttrsServiceImpl extends ServiceImpl<BimModelAttrsMapper, B
             baseMapper.deleteById(id);
         }
 	}
-	
+
 	@Override
     public List<BimModelAttrs> queryTreeListNoPage(QueryWrapper<BimModelAttrs> queryWrapper) {
         List<BimModelAttrs> dataList = baseMapper.selectList(queryWrapper);
@@ -118,8 +118,13 @@ public class BimModelAttrsServiceImpl extends ServiceImpl<BimModelAttrsMapper, B
         }
         return mapList;
     }
-	
-	/**
+
+    @Override
+    public void updateTree() {
+        baseMapper.updateTree();
+    }
+
+    /**
 	 * 根据所传pid查询旧的父级节点的子节点并修改相应状态值
 	 * @param pid
 	 */

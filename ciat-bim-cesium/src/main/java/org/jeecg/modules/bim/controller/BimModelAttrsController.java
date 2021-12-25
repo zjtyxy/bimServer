@@ -89,7 +89,7 @@ public class BimModelAttrsController extends JeecgController<BimModelAttrs, IBim
             }
             bimModelAttrs.setParentId(null);
             QueryWrapper<BimModelAttrs> queryWrapper = QueryGenerator.initQueryWrapper(bimModelAttrs, req.getParameterMap());
-            // 使用 eq 防止模糊查询
+            // 使用 eq 防止模糊查询0
             queryWrapper.eq("parent_id", parentId);
             Page<BimModelAttrs> page = new Page<BimModelAttrs>(pageNo, pageSize);
             IPage<BimModelAttrs> pageList = bimModelAttrsService.page(page, queryWrapper);
@@ -249,7 +249,10 @@ public class BimModelAttrsController extends JeecgController<BimModelAttrs, IBim
                     JSONArray categories = jd.getJSONObject(key).getJSONArray("categories");
                     for (int i = 0; i < categories.size(); i++) {
                         BimModelAttrsCategories categorty = categories.getObject(i, BimModelAttrsCategories.class);
+                        if(categorty.getName().equals("__internalref__"))//排除没必要的属性
+                            continue;
                         categorty.setMainId(bma.getExternalId());
+
                         bimModelAttrsCategoriesService.save(categorty);
                         categorty.getProps().setMainId(categorty.getId());
                         bimModelAttrsCategoriesPropsService.save(categorty.getProps());
@@ -257,6 +260,7 @@ public class BimModelAttrsController extends JeecgController<BimModelAttrs, IBim
                     bmal.add(bma);
                 }
                 bimModelAttrsService.saveBatch(bmal);
+                bimModelAttrsService.updateTree();
 
                // UPDATE bim_model_attrs set has_child ='1' where db_id IN (select a.pid from (select distinct parent_id pid from bim_model_attrs) a)
             } catch (Exception e) {
