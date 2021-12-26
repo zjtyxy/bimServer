@@ -1,6 +1,8 @@
 package org.jeecg.modules.bim.entity;
 
 import java.io.Serializable;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -17,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * @Description: 模型属性类别属性
  * @Author: jeecg-boot
- * @Date:   2021-12-20
+ * @Date:   2021-12-25
  * @Version: V1.0
  */
 @ApiModel(value="bim_model_attrs_categories_props对象", description="模型属性类别属性")
@@ -49,16 +51,17 @@ public class BimModelAttrsCategoriesProps implements Serializable {
 	/**类型值*/
 	@Excel(name = "类型值", width = 15)
     @ApiModelProperty(value = "类型值")
-    @TableField("values_t")
-    private java.lang.String values;
+    @JSONField(name="values")
+    private java.lang.String valuesT;
 	/**标志*/
 	@Excel(name = "标志", width = 15)
     @ApiModelProperty(value = "标志")
     private java.lang.String flags;
-    @ApiModelProperty(value = "单位")
-    private java.lang.String units;
-
 	/**附表id*/
     @ApiModelProperty(value = "附表id")
     private java.lang.String mainId;
+	/**单位*/
+	@Excel(name = "单位", width = 15)
+    @ApiModelProperty(value = "单位")
+    private java.lang.String units;
 }

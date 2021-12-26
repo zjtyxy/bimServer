@@ -226,14 +226,14 @@ public class BimModelAttrsController extends JeecgController<BimModelAttrs, IBim
     }
 
     /**
-     * 通过excel导入数据
+     * 通过json数据
      *
      * @param request
      * @param response
      * @return
      */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+    public Result<?> importExcel(@RequestParam String modelId, HttpServletRequest request, HttpServletResponse response) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
         for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
@@ -251,12 +251,13 @@ public class BimModelAttrsController extends JeecgController<BimModelAttrs, IBim
                         BimModelAttrsCategories categorty = categories.getObject(i, BimModelAttrsCategories.class);
                         if(categorty.getName().equals("__internalref__"))//排除没必要的属性
                             continue;
-                        categorty.setMainId(bma.getExternalId());
+                        categorty.setMainId(bma.getDbId());
 
                         bimModelAttrsCategoriesService.save(categorty);
                         categorty.getProps().setMainId(categorty.getId());
                         bimModelAttrsCategoriesPropsService.save(categorty.getProps());
                     }
+                    bma.setModelId(modelId);
                     bmal.add(bma);
                 }
                 bimModelAttrsService.saveBatch(bmal);

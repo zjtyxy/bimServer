@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
  * @Description: 模型参数属性类别
  * @Author: jeecg-boot
- * @Date:   2021-12-20
+ * @Date:   2021-12-25
  * @Version: V1.0
  */
 public interface BimModelAttrsCategoriesMapper extends BaseMapper<BimModelAttrsCategories> {

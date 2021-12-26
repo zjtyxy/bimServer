@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * @Description: 模型参数属性类别
  * @Author: jeecg-boot
- * @Date:   2021-12-20
+ * @Date:   2021-12-25
  * @Version: V1.0
  */
 @Data
@@ -42,7 +42,7 @@ public class BimModelAttrsCategoriesPage {
 	/**数量*/
 	@Excel(name = "数量", width = 15)
 	@ApiModelProperty(value = "数量")
-    private java.lang.String count;
+    private java.lang.Integer count;
 	/**主表ID*/
 	@Excel(name = "主表ID", width = 15)
 	@ApiModelProperty(value = "主表ID")

@@ -3,8 +3,6 @@ package org.jeecg.modules.bim.entity;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.List;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -20,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * @Description: 模型参数属性类别
  * @Author: jeecg-boot
- * @Date:   2021-12-20
+ * @Date:   2021-12-25
  * @Version: V1.0
  */
 @ApiModel(value="bim_model_attrs_categories对象", description="模型参数属性类别")
@@ -48,12 +46,13 @@ public class BimModelAttrsCategories implements Serializable {
 	/**数量*/
 	@Excel(name = "数量", width = 15)
     @ApiModelProperty(value = "数量")
-    private java.lang.String count;
+    private java.lang.Integer count;
 	/**主表ID*/
 	@Excel(name = "主表ID", width = 15)
     @ApiModelProperty(value = "主表ID")
     private java.lang.String mainId;
 
+
     @TableField(exist=false)
-	private BimModelAttrsCategoriesProps props;
+    private BimModelAttrsCategoriesProps props;
 }

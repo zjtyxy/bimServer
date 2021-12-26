@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * @Description: 模型属性类别属性
  * @Author: jeecg-boot
- * @Date:   2021-12-20
+ * @Date:   2021-12-25
  * @Version: V1.0
  */
 public interface BimModelAttrsCategoriesPropsMapper extends BaseMapper<BimModelAttrsCategoriesProps> {
