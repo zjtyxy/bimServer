@@ -1,16 +1,17 @@
 package org.jeecg.modules.base.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections4.MapUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.vo.DictModel;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.base.entity.BimGtlfModel;
 import org.jeecg.modules.base.service.IBimGtlfModelService;
@@ -20,6 +21,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
+import org.jeecg.modules.bim.entity.BimModel;
+import org.jeecg.modules.system.service.ISysDictService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -49,7 +52,12 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGtlfModelService> {
 	@Autowired
 	private IBimGtlfModelService bimGtlfModelService;
-	
+
+
+	 @Autowired
+	 private ISysDictService sysDictService;
+
+
 	/**
 	 * 分页列表查询
 	 *
@@ -71,7 +79,27 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
 		IPage<BimGtlfModel> pageList = bimGtlfModelService.page(page, queryWrapper);
 		return Result.OK(pageList);
 	}
-	
+	 @AutoLog(value = "BIM模型-分页列表查询")
+	 @ApiOperation(value="BIM模型-分页列表查询", notes="BIM模型-分页列表查询")
+	 @GetMapping(value = "/listMap")
+	 public Result<?> queryListMap(BimGtlfModel bimModel, HttpServletRequest req) {
+		 QueryWrapper<BimGtlfModel> queryWrapper = QueryGenerator.initQueryWrapper(bimModel, req.getParameterMap());
+		 List<BimGtlfModel> pageList = bimGtlfModelService.list(queryWrapper);
+		 Map<String,List<BimGtlfModel>> rst = new HashMap<>();
+		 List<DictModel> dicts = sysDictService.getDictItems("gltf_type");
+		 for(BimGtlfModel bm : pageList)
+		 {
+		 	bm.setClassType(this.translDictText(dicts,bm.getClassType()));
+			List<BimGtlfModel>  bgl=  MapUtils.getObject(rst,bm.getClassType(),new ArrayList<BimGtlfModel>());
+			if(bgl.isEmpty())
+			{
+				rst.put(bm.getClassType(),bgl);
+			}
+			 bgl.add(bm);
+		 }
+
+		 return Result.OK(rst);
+	 }
 	/**
 	 *   添加
 	 *
@@ -85,7 +113,7 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
 		bimGtlfModelService.save(bimGtlfModel);
 		return Result.OK("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -99,7 +127,7 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
 		bimGtlfModelService.updateById(bimGtlfModel);
 		return Result.OK("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -113,7 +141,7 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
 		bimGtlfModelService.removeById(id);
 		return Result.OK("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -127,7 +155,7 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
 		this.bimGtlfModelService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.OK("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *
@@ -167,5 +195,21 @@ public class BimGtlfModelController extends JeecgController<BimGtlfModel, IBimGt
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, BimGtlfModel.class);
     }
+	 private String translDictText(List<DictModel> dictModels, String values) {
+		 List<String> result = new ArrayList<>();
 
+		 // 允许多个逗号分隔，允许传数组对象
+		 String[] splitVal = values.split(",");
+		 for (String val : splitVal) {
+			 String dictText = val;
+			 for (DictModel dict : dictModels) {
+				 if (val.equals(dict.getValue())) {
+					 dictText = dict.getText();
+					 break;
+				 }
+			 }
+			 result.add(dictText);
+		 }
+		 return String.join(",", result);
+	 }
 }

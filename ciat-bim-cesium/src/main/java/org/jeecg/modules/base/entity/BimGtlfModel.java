@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -40,10 +41,9 @@ public class BimGtlfModel implements Serializable {
     @ApiModelProperty(value = "图片")
     private java.lang.String image;
 	/**类型*/
-	@Excel(name = "类型", width = 15, dicCode = "gltf_type")
-	@Dict(dicCode = "gltf_type")
-    @ApiModelProperty(value = "类型")
-    private java.lang.String type;
+
+    @TableField(exist = false)
+    private java.lang.String type = "model";
 	/**模型地址*/
 	@Excel(name = "模型地址", width = 15)
     @ApiModelProperty(value = "模型地址")
@@ -68,4 +68,12 @@ public class BimGtlfModel implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "更新时间")
     private java.util.Date updateTime;
+
+    @TableField(exist = false)
+	private String edittype;//前台展示用
+    @Excel(name = "类型", width = 15, dicCode = "gltf_type")
+    @Dict(dicCode = "gltf_type")
+    @ApiModelProperty(value = "类型")
+    @TableField(value = "type")
+    private String classType;
 }

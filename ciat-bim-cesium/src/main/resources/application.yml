@@ -1,7 +1,5 @@
-server:
-  port: 7002
 spring:
   application:
-    name: ciat-bim
-  resource:
-    static-locations: classpath:/static/,classpath:/public/
+    name: jeecg-system
+  profiles:
+    active: @profile.name@
