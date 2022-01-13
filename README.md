@@ -1,4 +1,4 @@
-Jeecg-Boot 低代码开发平台
+数字孪生 低代码开发平台 基于Jeecg-boot
 ===============
 
 当前最新版本： 3.0（发布日期：2021-11-01）
@@ -37,13 +37,7 @@ Jeecg-Boot 低代码开发平台
 ## 技术文档
 
 
-- 在线演示 ：  [http://boot.jeecg.com](http://boot.jeecg.com)
-
-- 在线文档：  [http://doc.jeecg.com](http://doc.jeecg.com)
-
-- 常见问题：  [http://jeecg.com/doc/qa](http://jeecg.com/doc/qa)
-
-- QQ交流群 ： ⑤860162132、④774126647(满)、③816531124(满)、②769925425(满)、①284271917(满)
+- QQ交流群 ： 7897648
 
 
 ## 专项文档
