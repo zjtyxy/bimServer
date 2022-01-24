@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.common.msg;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+import com.ciat.bim.msg.TbActorMsg;
+import com.ciat.bim.server.common.msg.aware.DeviceAwareMsg;
+import com.ciat.bim.server.common.msg.aware.TenantAwareMsg;
 
 
-import java.util.List;
+import java.io.Serializable;
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+/**
+ * @author Andrew Shvayka
+ */
+public interface ToDeviceActorNotificationMsg extends TbActorMsg, TenantAwareMsg, DeviceAwareMsg, Serializable {
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
 }

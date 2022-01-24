@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.queue.queue;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 
-import java.util.List;
+/**
+ * Created by igor on 11/24/16.
+ */
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+@Service("environmentLogService")
+@ConditionalOnProperty(prefix = "zk", value = "enabled", havingValue = "false", matchIfMissing = true)
+@Slf4j
+public class EnvironmentLogService {
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    @PostConstruct
+    public void init() {
+        //Environment.logEnv("ThingsBoard server environment: ", log);
     }
+
 }

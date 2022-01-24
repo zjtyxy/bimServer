@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
-
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+package com.ciat.bim.server.profile;
 
 
-import java.util.List;
+import com.ciat.bim.data.device.profile.DeviceProfile;
+import com.ciat.bim.data.id.DeviceId;
+import com.ciat.bim.data.id.DeviceProfileId;
+import com.ciat.bim.data.id.TenantId;
+import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+public interface TbDeviceProfileCache extends RuleEngineDeviceProfileCache {
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
+//    void evict(TenantId tenantId, DeviceProfileId id);
+//
+//    void evict(TenantId tenantId, DeviceId id);
+//
+//    DeviceProfile find(DeviceProfileId deviceProfileId);
+//
+//    DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String deviceType);
 }

@@ -15,22 +15,25 @@
  */
 package com.ciat.bim.server.queue.discovery.event;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.context.ApplicationEvent;
 
+import java.util.concurrent.atomic.AtomicInteger;
 
-import java.util.List;
-
-@Getter
 @ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+public class TbApplicationEvent extends ApplicationEvent {
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    private static final long serialVersionUID = 3884264064887765146L;
+
+    private static final AtomicInteger sequence = new AtomicInteger();
+
+    @Getter
+    private final int sequenceNumber;
+
+    public TbApplicationEvent(Object source) {
+        super(source);
+        sequenceNumber = sequence.incrementAndGet();
     }
+
 }

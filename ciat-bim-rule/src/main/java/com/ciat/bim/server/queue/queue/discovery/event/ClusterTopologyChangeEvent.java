@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.queue.queue.discovery.event;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
+import com.ciat.bim.msg.ServiceQueueKey;
 import lombok.Getter;
-import lombok.ToString;
+
+import java.util.Set;
 
 
-import java.util.List;
+public class ClusterTopologyChangeEvent extends TbApplicationEvent {
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+    private static final long serialVersionUID = -2441739930040282254L;
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    @Getter
+    private final Set<ServiceQueueKey> serviceQueueKeys;
+
+    public ClusterTopologyChangeEvent(Object source, Set<ServiceQueueKey> serviceQueueKeys) {
+        super(source);
+        this.serviceQueueKeys = serviceQueueKeys;
     }
 }

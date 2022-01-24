@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.queue.setting;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
+@Data
+public class TbRuleEngineQueueSubmitStrategyConfiguration {
 
-import java.util.List;
+    private String type;
+    private int batchSize;
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
-
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
 }

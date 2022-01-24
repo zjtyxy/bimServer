@@ -13,24 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.common.msg.rpc;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Optional;
+import java.util.UUID;
 
-@Getter
+/**
+ * @author Andrew Shvayka
+ */
+@RequiredArgsConstructor
 @ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+public class FromDeviceRpcResponse implements Serializable {
+    @Getter
+    private final UUID id;
+    private final String response;
+    private final RpcError error;
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    public Optional<String> getResponse() {
+        return Optional.ofNullable(response);
     }
+
+    public Optional<RpcError> getError() {
+        return Optional.ofNullable(error);
+    }
+
 }

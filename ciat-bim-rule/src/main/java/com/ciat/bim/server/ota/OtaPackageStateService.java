@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.ota;
+import com.ciat.bim.data.device.profile.DeviceProfile;
+import com.ciat.bim.server.transport.TransportProtos.ToOtaPackageStateServiceMsg;
+import org.jeecg.modules.device.entity.Device;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+public interface OtaPackageStateService {
 
+    void update(Device device, Device oldDevice);
 
-import java.util.List;
+    void update(DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged);
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+    boolean process(ToOtaPackageStateServiceMsg msg);
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
 }

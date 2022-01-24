@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.state;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
 
+/**
+ * Created by ashvayka on 01.05.18.
+ */
+@Data
+@Builder
+public class DeviceState {
 
-import java.util.List;
+    private boolean active;
+    private long lastConnectTime;
+    private long lastActivityTime;
+    private long lastDisconnectTime;
+    private long lastInactivityAlarmTime;
+    private long inactivityTimeout;
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
-
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
 }

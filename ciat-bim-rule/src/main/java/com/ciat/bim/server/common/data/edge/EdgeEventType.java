@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.common.data.edge;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
-
-
-import java.util.List;
-
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
-
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
+public enum EdgeEventType {
+    DASHBOARD,
+    ASSET,
+    DEVICE,
+    DEVICE_PROFILE,
+    ENTITY_VIEW,
+    ALARM,
+    RULE_CHAIN,
+    RULE_CHAIN_METADATA,
+    EDGE,
+    USER,
+    CUSTOMER,
+    RELATION,
+    TENANT,
+    WIDGETS_BUNDLE,
+    WIDGET_TYPE,
+    ADMIN_SETTINGS
 }

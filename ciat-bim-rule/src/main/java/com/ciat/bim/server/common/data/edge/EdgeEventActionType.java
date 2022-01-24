@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.common.data.edge;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
-
-
-import java.util.List;
-
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
-
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
-    }
+public enum EdgeEventActionType {
+    ADDED,
+    DELETED,
+    UPDATED,
+    POST_ATTRIBUTES,
+    ATTRIBUTES_UPDATED,
+    ATTRIBUTES_DELETED,
+    TIMESERIES_UPDATED,
+    CREDENTIALS_UPDATED,
+    ASSIGNED_TO_CUSTOMER,
+    UNASSIGNED_FROM_CUSTOMER,
+    RELATION_ADD_OR_UPDATE,
+    RELATION_DELETED,
+    RPC_CALL,
+    ALARM_ACK,
+    ALARM_CLEAR,
+    ASSIGNED_TO_EDGE,
+    UNASSIGNED_FROM_EDGE,
+    CREDENTIALS_REQUEST,
+    ENTITY_MERGE_REQUEST
 }

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.queue.queue.discovery.event;
 
 import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
 import lombok.Getter;
 import lombok.ToString;
-
 
 import java.util.List;
 

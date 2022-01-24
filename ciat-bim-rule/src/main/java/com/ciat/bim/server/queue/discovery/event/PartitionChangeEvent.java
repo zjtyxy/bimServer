@@ -16,21 +16,31 @@
 package com.ciat.bim.server.queue.discovery.event;
 
 import com.ciat.bim.msg.ServiceQueueKey;
+import com.ciat.bim.msg.ServiceType;
+import com.ciat.bim.msg.TopicPartitionInfo;
 import lombok.Getter;
+import lombok.ToString;
 
 
 import java.util.Set;
 
+@ToString(callSuper = true)
+public class PartitionChangeEvent extends TbApplicationEvent {
 
-public class ClusterTopologyChangeEvent extends TbApplicationEvent {
-
-    private static final long serialVersionUID = -2441739930040282254L;
+    private static final long serialVersionUID = -8731788167026510559L;
 
     @Getter
-    private final Set<ServiceQueueKey> serviceQueueKeys;
+    private final ServiceQueueKey serviceQueueKey;
+    @Getter
+    private final Set<TopicPartitionInfo> partitions;
 
-    public ClusterTopologyChangeEvent(Object source, Set<ServiceQueueKey> serviceQueueKeys) {
+    public PartitionChangeEvent(Object source, ServiceQueueKey serviceQueueKey, Set<TopicPartitionInfo> partitions) {
         super(source);
-        this.serviceQueueKeys = serviceQueueKeys;
+        this.serviceQueueKey = serviceQueueKey;
+        this.partitions = partitions;
+    }
+
+    public ServiceType getServiceType() {
+        return serviceQueueKey.getServiceQueue().getType();
     }
 }

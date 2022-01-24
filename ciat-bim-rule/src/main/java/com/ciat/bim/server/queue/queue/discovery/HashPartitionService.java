@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery;
+package com.ciat.bim.server.queue.queue.discovery;
 
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
@@ -21,21 +21,19 @@ import com.ciat.bim.msg.ServiceQueue;
 import com.ciat.bim.msg.ServiceQueueKey;
 import com.ciat.bim.msg.ServiceType;
 import com.ciat.bim.msg.TopicPartitionInfo;
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import com.ciat.bim.server.queue.QueueService;
-import com.ciat.bim.server.queue.discovery.event.ClusterTopologyChangeEvent;
-import com.ciat.bim.server.queue.discovery.event.ServiceListChangedEvent;
-import com.ciat.bim.server.queue.setting.TbQueueRuleEngineSettings;
-
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
+import com.ciat.bim.server.queue.queue.QueueService;
+import com.ciat.bim.server.queue.queue.discovery.event.ClusterTopologyChangeEvent;
+import com.ciat.bim.server.queue.queue.discovery.event.PartitionChangeEvent;
+import com.ciat.bim.server.queue.queue.discovery.event.ServiceListChangedEvent;
+import com.ciat.bim.server.queue.queue.setting.TbQueueRuleEngineSettings;
 import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -68,8 +66,8 @@ public class HashPartitionService implements PartitionService {
 
     private Map<String, TopicPartitionInfo> tbCoreNotificationTopics = new HashMap<>();
     private Map<String, TopicPartitionInfo> tbRuleEngineNotificationTopics = new HashMap<>();
-    private Map<String, List<TransportProtos.ServiceInfo>> tbTransportServicesByType = new HashMap<>();
-    private List<TransportProtos.ServiceInfo> currentOtherServices;
+    private Map<String, List<ServiceInfo>> tbTransportServicesByType = new HashMap<>();
+    private List<ServiceInfo> currentOtherServices;
 
     private HashFunction hashFunction;
 
@@ -125,13 +123,13 @@ public class HashPartitionService implements PartitionService {
     }
 
     @Override
-    public synchronized void recalculatePartitions(TransportProtos.ServiceInfo currentService, List<TransportProtos.ServiceInfo> otherServices) {
+    public synchronized void recalculatePartitions(ServiceInfo currentService, List<ServiceInfo> otherServices) {
         tbTransportServicesByType.clear();
         logServiceInfo(currentService);
         otherServices.forEach(this::logServiceInfo);
-        Map<ServiceQueueKey, List<TransportProtos.ServiceInfo>> queueServicesMap = new HashMap<>();
+        Map<ServiceQueueKey, List<ServiceInfo>> queueServicesMap = new HashMap<>();
         addNode(queueServicesMap, currentService);
-        for (TransportProtos.ServiceInfo other : otherServices) {
+        for (ServiceInfo other : otherServices) {
             addNode(queueServicesMap, other);
         }
         queueServicesMap.values().forEach(list -> list.sort(Comparator.comparing(ServiceInfo::getServiceId)));
@@ -309,7 +307,7 @@ public class HashPartitionService implements PartitionService {
         }
     }
 
-    private void logServiceInfo(TransportProtos.ServiceInfo server) {
+    private void logServiceInfo(ServiceInfo server) {
         TenantId tenantId = getSystemOrIsolatedTenantId(server);
         if (tenantId.isNullUid()) {
             log.info("[{}] Found common server: [{}]", server.getServiceId(), server.getServiceTypesList());
@@ -318,11 +316,11 @@ public class HashPartitionService implements PartitionService {
         }
     }
 
-    private TenantId getSystemOrIsolatedTenantId(TransportProtos.ServiceInfo serviceInfo) {
+    private TenantId getSystemOrIsolatedTenantId(ServiceInfo serviceInfo) {
         return new TenantId(new UUID(serviceInfo.getTenantIdMSB(), serviceInfo.getTenantIdLSB()));
     }
 
-    private void addNode(Map<ServiceQueueKey, List<TransportProtos.ServiceInfo>> queueServiceList, TransportProtos.ServiceInfo instance) {
+    private void addNode(Map<ServiceQueueKey, List<ServiceInfo>> queueServiceList, ServiceInfo instance) {
         TenantId tenantId = getSystemOrIsolatedTenantId(instance);
         for (String serviceTypeStr : instance.getServiceTypesList()) {
             ServiceType serviceType = ServiceType.valueOf(serviceTypeStr.toUpperCase());
@@ -343,7 +341,7 @@ public class HashPartitionService implements PartitionService {
         }
     }
 
-    private TransportProtos.ServiceInfo resolveByPartitionIdx(List<TransportProtos.ServiceInfo> servers, Integer partitionIdx) {
+    private ServiceInfo resolveByPartitionIdx(List<ServiceInfo> servers, Integer partitionIdx) {
         if (servers == null || servers.isEmpty()) {
             return null;
         }

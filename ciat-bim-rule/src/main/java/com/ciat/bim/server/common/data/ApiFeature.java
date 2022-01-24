@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.common.data;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
 import lombok.Getter;
-import lombok.ToString;
 
+public enum ApiFeature {
+    TRANSPORT("transportApiState", "Device API"),
+    DB("dbApiState", "Telemetry persistence"),
+    RE("ruleEngineApiState", "Rule Engine execution"),
+    JS("jsExecutionApiState", "JavaScript functions execution"),
+    EMAIL("emailApiState", "Email messages"),
+    SMS("smsApiState", "SMS messages"),
+    ALARM("alarmApiState", "Created alarms");
 
-import java.util.List;
+    @Getter
+    private final String apiStateKey;
+    @Getter
+    private final String label;
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
-
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    ApiFeature(String apiStateKey, String label) {
+        this.apiStateKey = apiStateKey;
+        this.label = label;
     }
+
 }

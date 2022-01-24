@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.discovery.event;
+package com.ciat.bim.server.queue.common;
+import com.ciat.bim.server.queue.queue.TbQueueMsgHeaders;
 
-import com.ciat.bim.server.transport.TransportProtos.ServiceInfo;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.HashMap;
+import java.util.Map;
 
+public class DefaultTbQueueMsgHeaders implements TbQueueMsgHeaders {
 
-import java.util.List;
+    protected final Map<String, byte[]> data = new HashMap<>();
 
-@Getter
-@ToString
-public class ServiceListChangedEvent extends TbApplicationEvent {
-    private final List<ServiceInfo> otherServices;
-    private final ServiceInfo currentService;
+    @Override
+    public byte[] put(String key, byte[] value) {
+        return data.put(key, value);
+    }
 
-    public ServiceListChangedEvent(List<ServiceInfo> otherServices, ServiceInfo currentService) {
-        super(otherServices);
-        this.otherServices = otherServices;
-        this.currentService = currentService;
+    @Override
+    public byte[] get(String key) {
+        return data.get(key);
+    }
+
+    @Override
+    public Map<String, byte[]> getData() {
+        return data;
     }
 }
