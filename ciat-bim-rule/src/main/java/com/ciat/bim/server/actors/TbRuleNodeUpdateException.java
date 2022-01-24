@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+public class TbRuleNodeUpdateException extends RuntimeException {
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+    private static final long serialVersionUID = 8209771144711980882L;
 
-
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
-
+    public TbRuleNodeUpdateException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+

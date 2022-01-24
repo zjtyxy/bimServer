@@ -55,7 +55,9 @@ import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.resource.entity.TbResource;
 import org.jeecg.modules.tenant.entity.Tenant;
 import org.jeecg.modules.tenant.entity.TenantProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -79,12 +81,19 @@ public class DefaultTbClusterService implements TbClusterService {
     private final AtomicInteger toRuleEngineMsgs = new AtomicInteger(0);
     private final AtomicInteger toRuleEngineNfs = new AtomicInteger(0);
     private final AtomicInteger toTransportNfs = new AtomicInteger(0);
-
+    @Autowired
     private final TbQueueProducerProvider producerProvider;
+    @Autowired
     private final PartitionService partitionService;
-    private final DataDecodingEncodingService encodingService;
-    private final TbDeviceProfileCache deviceProfileCache;
-    private final OtaPackageStateService otaPackageStateService;
+    @Autowired
+    @Lazy
+    private  DataDecodingEncodingService encodingService;
+    @Autowired
+    @Lazy
+    private  TbDeviceProfileCache deviceProfileCache;
+    @Autowired
+    @Lazy
+    private  OtaPackageStateService otaPackageStateService;
 
     @Override
     public void pushMsgToCore(TenantId tenantId, EntityId entityId, ToCoreMsg msg, TbQueueCallback callback) {

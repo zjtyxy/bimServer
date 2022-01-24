@@ -15,43 +15,30 @@
  */
 package com.ciat.bim.server.queue.common;
 
-import com.ciat.bim.server.queue.TbQueueMsg;
-
 import com.ciat.bim.server.queue.queue.TbQueueMsgHeaders;
-import lombok.Data;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-@Data
-public class TbProtoQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> implements TbQueueMsg {
+public class TbProtoJsQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> extends TbProtoQueueMsg<T> {
 
-    private final UUID key;
-    protected final T value;
-    private final TbQueueMsgHeaders headers;
-
-    public TbProtoQueueMsg(UUID key, T value) {
-        this(key, value, new DefaultTbQueueMsgHeaders());
+    public TbProtoJsQueueMsg(UUID key, T value) {
+        super(key, value);
     }
 
-    public TbProtoQueueMsg(UUID key, T value, TbQueueMsgHeaders headers) {
-        this.key = key;
-        this.value = value;
-        this.headers = headers;
-    }
-
-    @Override
-    public UUID getKey() {
-        return key;
-    }
-
-    @Override
-    public TbQueueMsgHeaders getHeaders() {
-        return headers;
+    public TbProtoJsQueueMsg(UUID key, T value, TbQueueMsgHeaders headers) {
+        super(key, value, headers);
     }
 
     @Override
     public byte[] getData() {
-        return value.toByteArray();
+        try {
+            return JsonFormat.printer().print(value).getBytes(StandardCharsets.UTF_8);
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

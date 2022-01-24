@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+import com.ciat.bim.server.actors.ActorSystemContext;
+import com.ciat.bim.server.actors.TbActorCreator;
 
+public abstract class ContextBasedCreator implements TbActorCreator {
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    protected final transient ActorSystemContext context;
 
+    public ContextBasedCreator(ActorSystemContext context) {
+        super();
+        this.context = context;
+    }
 }

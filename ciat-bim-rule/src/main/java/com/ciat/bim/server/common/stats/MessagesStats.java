@@ -13,13 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.common.stats;
 
+public interface MessagesStats {
+    default void incrementTotal() {
+        incrementTotal(1);
+    }
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+    void incrementTotal(int amount);
 
+    default void incrementSuccessful() {
+        incrementSuccessful(1);
+    }
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    void incrementSuccessful(int amount);
 
+    default void incrementFailed() {
+        incrementFailed(1);
+    }
+
+    void incrementFailed(int amount);
+
+    int getTotal();
+
+    int getSuccessful();
+
+    int getFailed();
+
+    void reset();
 }

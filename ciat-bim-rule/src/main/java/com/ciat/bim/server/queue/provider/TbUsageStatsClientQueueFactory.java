@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.queue.provider;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
+import com.ciat.bim.server.queue.queue.TbQueueProducer;
+import com.ciat.bim.server.transport.TransportProtos;
 
+public interface TbUsageStatsClientQueueFactory {
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer();
 
 }

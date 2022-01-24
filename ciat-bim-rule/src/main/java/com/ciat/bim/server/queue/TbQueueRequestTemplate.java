@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.queue;
+
+import com.ciat.bim.server.common.stats.MessagesStats;
+import com.google.common.util.concurrent.ListenableFuture;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+public interface TbQueueRequestTemplate<Request extends TbQueueMsg, Response extends TbQueueMsg> {
 
+    void init();
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    ListenableFuture<Response> send(Request request);
 
+    ListenableFuture<Response> send(Request request, long timeoutNs);
+
+    void stop();
+
+    void setMessagesStats(MessagesStats messagesStats);
 }

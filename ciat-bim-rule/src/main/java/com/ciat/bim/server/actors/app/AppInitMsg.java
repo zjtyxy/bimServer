@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors.app;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+import com.ciat.bim.msg.MsgType;
+import com.ciat.bim.msg.TbActorMsg;
 
+public class AppInitMsg implements TbActorMsg {
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
-
+    @Override
+    public MsgType getMsgType() {
+        return MsgType.APP_INIT_MSG;
+    }
 }

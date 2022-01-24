@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+import com.ciat.bim.msg.TbActorMsg;
 
+public interface TbActorRef {
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    TbActorId getActorId();
+
+    void tell(TbActorMsg actorMsg);
+
+    void tellWithHighPriority(TbActorMsg actorMsg);
 
 }

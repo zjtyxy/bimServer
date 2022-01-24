@@ -23,11 +23,14 @@ import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.apiusage.TbApiUsageStateService;
 import com.ciat.bim.server.common.msg.queue.TbCallback;
 import com.ciat.bim.server.common.transport.util.DataDecodingEncodingService;
+import com.ciat.bim.server.ota.OtaPackageStateService;
 import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
 import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
+import com.ciat.bim.server.queue.provider.TbCoreQueueFactory;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
 import com.ciat.bim.server.state.DeviceStateService;
+import com.ciat.bim.server.subscription.TbLocalSubscriptionService;
 import com.ciat.bim.server.transport.TransportProtos;
 import com.ciat.bim.server.transport.TransportProtos.ToCoreMsg;
 import com.ciat.bim.server.transport.TransportProtos.ToCoreNotificationMsg;
@@ -70,66 +73,66 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     @Value("${queue.core.ota.pack-size:100}")
     private int firmwarePackSize;
 
-//    private final TbQueueConsumer<TbProtoQueueMsg<ToCoreMsg>> mainConsumer;
-//    private final DeviceStateService stateService;
-//    private final TbApiUsageStateService statsService;
-//    private final TbLocalSubscriptionService localSubscriptionService;
-//    private final SubscriptionManagerService subscriptionManagerService;
-//    private final TbCoreDeviceRpcService tbCoreDeviceRpcService;
-//    private final EdgeNotificationService edgeNotificationService;
-//    private final OtaPackageStateService firmwareStateService;
-//    private final TbCoreConsumerStats stats;
-//    protected final TbQueueConsumer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> usageStatsConsumer;
-//    private final TbQueueConsumer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
+    private final TbQueueConsumer<TbProtoQueueMsg<ToCoreMsg>> mainConsumer;
+    private final DeviceStateService stateService;
+    private final TbApiUsageStateService statsService;
+    private final TbLocalSubscriptionService localSubscriptionService;
+    private final SubscriptionManagerService subscriptionManagerService;
+    private final TbCoreDeviceRpcService tbCoreDeviceRpcService;
+    private final EdgeNotificationService edgeNotificationService;
+    private final OtaPackageStateService firmwareStateService;
+    private final TbCoreConsumerStats stats;
+    protected final TbQueueConsumer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> usageStatsConsumer;
+    private final TbQueueConsumer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
 
     protected volatile ExecutorService usageStatsExecutor;
 
     private volatile ExecutorService firmwareStatesExecutor;
 
-//    public DefaultTbCoreConsumerService(TbCoreQueueFactory tbCoreQueueFactory,
-//                                        ActorSystemContext actorContext,
-//                                        DeviceStateService stateService,
-//                                        TbLocalSubscriptionService localSubscriptionService,
-//                                        SubscriptionManagerService subscriptionManagerService,
-//                                        DataDecodingEncodingService encodingService,
-//                                        TbCoreDeviceRpcService tbCoreDeviceRpcService,
-//                                        StatsFactory statsFactory,
-//                                        TbDeviceProfileCache deviceProfileCache,
-//                                        TbApiUsageStateService statsService,
-//                                        TbTenantProfileCache tenantProfileCache,
-//                                        TbApiUsageStateService apiUsageStateService,
-//                                        EdgeNotificationService edgeNotificationService,
-//                                        OtaPackageStateService firmwareStateService) {
-//        super(actorContext, encodingService, tenantProfileCache, deviceProfileCache, apiUsageStateService, tbCoreQueueFactory.createToCoreNotificationsMsgConsumer());
-//        this.mainConsumer = tbCoreQueueFactory.createToCoreMsgConsumer();
-//        this.usageStatsConsumer = tbCoreQueueFactory.createToUsageStatsServiceMsgConsumer();
-//        this.firmwareStatesConsumer = tbCoreQueueFactory.createToOtaPackageStateServiceMsgConsumer();
-//        this.stateService = stateService;
-//        this.localSubscriptionService = localSubscriptionService;
-//        this.subscriptionManagerService = subscriptionManagerService;
-//        this.tbCoreDeviceRpcService = tbCoreDeviceRpcService;
-//        this.edgeNotificationService = edgeNotificationService;
-//        this.stats = new TbCoreConsumerStats(statsFactory);
-//        this.statsService = statsService;
-//        this.firmwareStateService = firmwareStateService;
-//    }
+    public DefaultTbCoreConsumerService(TbCoreQueueFactory tbCoreQueueFactory,
+                                        ActorSystemContext actorContext,
+                                        DeviceStateService stateService,
+                                        TbLocalSubscriptionService localSubscriptionService,
+                                        SubscriptionManagerService subscriptionManagerService,
+                                        DataDecodingEncodingService encodingService,
+                                        TbCoreDeviceRpcService tbCoreDeviceRpcService,
+                                        StatsFactory statsFactory,
+                                        TbDeviceProfileCache deviceProfileCache,
+                                        TbApiUsageStateService statsService,
+                                        TbTenantProfileCache tenantProfileCache,
+                                        TbApiUsageStateService apiUsageStateService,
+                                        EdgeNotificationService edgeNotificationService,
+                                        OtaPackageStateService firmwareStateService) {
+        super(actorContext, encodingService, tenantProfileCache, deviceProfileCache, apiUsageStateService, tbCoreQueueFactory.createToCoreNotificationsMsgConsumer());
+        this.mainConsumer = tbCoreQueueFactory.createToCoreMsgConsumer();
+        this.usageStatsConsumer = tbCoreQueueFactory.createToUsageStatsServiceMsgConsumer();
+        this.firmwareStatesConsumer = tbCoreQueueFactory.createToOtaPackageStateServiceMsgConsumer();
+        this.stateService = stateService;
+        this.localSubscriptionService = localSubscriptionService;
+        this.subscriptionManagerService = subscriptionManagerService;
+        this.tbCoreDeviceRpcService = tbCoreDeviceRpcService;
+        this.edgeNotificationService = edgeNotificationService;
+        this.stats = new TbCoreConsumerStats(statsFactory);
+        this.statsService = statsService;
+        this.firmwareStateService = firmwareStateService;
+    }
 
     @PostConstruct
     public void init() {
         super.init("tb-core-consumer", "tb-core-notifications-consumer");
-        this.usageStatsExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-usage-stats-consumer"));
-        this.firmwareStatesExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-firmware-notifications-consumer"));
+      //  this.usageStatsExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-usage-stats-consumer"));
+       // this.firmwareStatesExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-firmware-notifications-consumer"));
     }
 
     @PreDestroy
     public void destroy() {
         super.destroy();
-        if (usageStatsExecutor != null) {
-            usageStatsExecutor.shutdownNow();
-        }
-        if (firmwareStatesExecutor != null) {
-            firmwareStatesExecutor.shutdownNow();
-        }
+//        if (usageStatsExecutor != null) {
+//            usageStatsExecutor.shutdownNow();
+//        }
+//        if (firmwareStatesExecutor != null) {
+//            firmwareStatesExecutor.shutdownNow();
+//        }
     }
 
     @EventListener(ApplicationReadyEvent.class)

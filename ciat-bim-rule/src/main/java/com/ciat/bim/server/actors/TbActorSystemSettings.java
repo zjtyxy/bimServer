@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+import lombok.Data;
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+@Data
+public class TbActorSystemSettings {
 
-
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    private final int actorThroughput;
+    private final int schedulerPoolSize;
+    private final int maxActorInitAttempts;
 
 }

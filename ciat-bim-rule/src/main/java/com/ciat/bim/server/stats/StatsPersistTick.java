@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.stats;
 
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+import com.ciat.bim.msg.MsgType;
+import com.ciat.bim.msg.TbActorMsg;
 
-
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
-
+public final class StatsPersistTick implements TbActorMsg {
+    @Override
+    public MsgType getMsgType() {
+        return MsgType.STATS_PERSIST_TICK_MSG;
+    }
 }

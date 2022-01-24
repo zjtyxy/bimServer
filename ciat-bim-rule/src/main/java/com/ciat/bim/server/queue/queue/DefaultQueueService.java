@@ -17,8 +17,9 @@ package com.ciat.bim.server.queue.queue;
 
 import com.ciat.bim.msg.ServiceQueue;
 import com.ciat.bim.msg.ServiceType;
-import com.ciat.bim.server.queue.queue.setting.TbQueueRuleEngineSettings;
-import com.ciat.bim.server.queue.queue.setting.TbRuleEngineQueueConfiguration;
+import com.ciat.bim.server.queue.QueueService;
+import com.ciat.bim.server.queue.setting.TbQueueRuleEngineSettings;
+import com.ciat.bim.server.queue.setting.TbRuleEngineQueueConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

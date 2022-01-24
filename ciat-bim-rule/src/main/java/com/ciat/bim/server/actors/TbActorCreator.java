@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+public interface TbActorCreator {
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+    TbActorId createActorId();
 
-
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    TbActor createActor();
 
 }

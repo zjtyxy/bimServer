@@ -16,8 +16,8 @@
 package com.ciat.bim.server.queue.queue;
 
 import com.ciat.bim.data.id.TenantId;
-import com.ciat.bim.server.queue.queue.discovery.TenantRoutingInfo;
-import com.ciat.bim.server.queue.queue.discovery.TenantRoutingInfoService;
+import com.ciat.bim.server.queue.discovery.TenantRoutingInfo;
+import com.ciat.bim.server.queue.discovery.TenantRoutingInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;

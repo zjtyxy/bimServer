@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+import lombok.Getter;
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+public abstract class AbstractTbActor implements TbActor {
 
+    @Getter
+    protected TbActorCtx ctx;
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    @Override
+    public void init(TbActorCtx ctx) throws TbActorException {
+        this.ctx = ctx;
+    }
 
+    @Override
+    public TbActorRef getActorRef() {
+        return ctx;
+    }
 }

@@ -59,7 +59,7 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
     protected  TbApiUsageStateService apiUsageStateService;
 
     protected  TbQueueConsumer<TbProtoQueueMsg<N>> nfConsumer;
-//
+////
 //    public AbstractConsumerService(ActorSystemContext actorContext, DataDecodingEncodingService encodingService,
 //                                   TbTenantProfileCache tenantProfileCache, TbDeviceProfileCache deviceProfileCache,
 //                                   TbApiUsageStateService apiUsageStateService, TbQueueConsumer<TbProtoQueueMsg<N>> nfConsumer) {
@@ -79,10 +79,10 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
     @EventListener(ApplicationReadyEvent.class)
     @Order(value = 2)
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        log.info("Subscribing to notifications: {}", nfConsumer.getTopic());
-        this.nfConsumer.subscribe();
-        launchNotificationsConsumer();
-        launchMainConsumers();
+//        log.info("Subscribing to notifications: {}", nfConsumer.getTopic());
+//        this.nfConsumer.subscribe();
+//        launchNotificationsConsumer()4772333333333333333333333333333333333333333331;
+//        launchMainConsumers();
     }
 
     protected abstract ServiceType getServiceType();

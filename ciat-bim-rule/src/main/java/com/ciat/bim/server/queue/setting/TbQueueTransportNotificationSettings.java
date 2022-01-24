@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.queue.setting;
 
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+@Data
+@Component
+public class TbQueueTransportNotificationSettings {
 
+    @Value("${queue.transport.notifications_topic}")
+    private String notificationsTopic;
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    @Value("${queue.transport.poll_interval}")
+    private long transportPollInterval;
 
 }

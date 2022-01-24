@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+import lombok.Getter;
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+public class TbActorNotRegisteredException extends RuntimeException {
 
+    @Getter
+    private TbActorId target;
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
-
+    public TbActorNotRegisteredException(TbActorId target, String message) {
+        super(message);
+        this.target = target;
+    }
 }

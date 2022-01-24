@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors;
 
+import lombok.Getter;
+import lombok.ToString;
 
-import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
-import org.springframework.context.ApplicationListener;
+@ToString
+public class ProcessFailureStrategy {
 
+    @Getter
+    private boolean stop;
 
-public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
+    private ProcessFailureStrategy(boolean stop) {
+        this.stop = stop;
+    }
 
+    public static ProcessFailureStrategy stop() {
+        return new ProcessFailureStrategy(true);
+    }
+
+    public static ProcessFailureStrategy resume() {
+        return new ProcessFailureStrategy(false);
+    }
 }

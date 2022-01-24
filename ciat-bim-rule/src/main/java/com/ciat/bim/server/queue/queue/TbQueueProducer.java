@@ -17,6 +17,7 @@ package com.ciat.bim.server.queue.queue;
 
 
 import com.ciat.bim.msg.TopicPartitionInfo;
+import com.ciat.bim.server.queue.TbQueueMsg;
 
 public interface TbQueueProducer<T extends TbQueueMsg> {
 
