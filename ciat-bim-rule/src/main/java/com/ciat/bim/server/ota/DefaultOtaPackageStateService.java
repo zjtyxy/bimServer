@@ -15,27 +15,12 @@
  */
 package com.ciat.bim.server.ota;
 
-import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.device.profile.DeviceProfile;
-import com.ciat.bim.data.id.DeviceId;
-import com.ciat.bim.data.id.OtaPackageId;
 import com.ciat.bim.data.id.TenantId;
-import com.ciat.bim.msg.TopicPartitionInfo;
-import com.ciat.bim.page.PageLink;
-import com.ciat.bim.server.cluster.TbClusterService;
-import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
 import com.ciat.bim.server.transport.TransportProtos.ToOtaPackageStateServiceMsg;
-import com.google.common.util.concurrent.FutureCallback;
-import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.device.entity.Device;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Consumer;
 
 
 @Slf4j

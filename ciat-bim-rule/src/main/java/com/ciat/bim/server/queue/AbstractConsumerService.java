@@ -60,16 +60,18 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
 
     protected  TbQueueConsumer<TbProtoQueueMsg<N>> nfConsumer;
 ////
-//    public AbstractConsumerService(ActorSystemContext actorContext, DataDecodingEncodingService encodingService,
-//                                   TbTenantProfileCache tenantProfileCache, TbDeviceProfileCache deviceProfileCache,
-//                                   TbApiUsageStateService apiUsageStateService, TbQueueConsumer<TbProtoQueueMsg<N>> nfConsumer) {
-//        this.actorContext = actorContext;
-//        this.encodingService = encodingService;
-//        this.tenantProfileCache = tenantProfileCache;
-//        this.deviceProfileCache = deviceProfileCache;
-//        this.apiUsageStateService = apiUsageStateService;
-//        this.nfConsumer = nfConsumer;
-//    }
+    public AbstractConsumerService(
+           ActorSystemContext actorContext,
+                                   DataDecodingEncodingService encodingService,
+                                   TbTenantProfileCache tenantProfileCache, TbDeviceProfileCache deviceProfileCache,
+                                   TbApiUsageStateService apiUsageStateService, TbQueueConsumer<TbProtoQueueMsg<N>> nfConsumer) {
+        this.actorContext = actorContext;
+        this.encodingService = encodingService;
+        this.tenantProfileCache = tenantProfileCache;
+        this.deviceProfileCache = deviceProfileCache;
+        this.apiUsageStateService = apiUsageStateService;
+        this.nfConsumer = nfConsumer;
+    }
 
     public void init(String mainConsumerThreadName, String nfConsumerThreadName) {
         this.consumersExecutor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName(mainConsumerThreadName));

@@ -17,33 +17,19 @@ package com.ciat.bim.server.actors;
 
 import com.ciat.bim.msg.*;
 import com.ciat.bim.server.ActorService;
-import com.ciat.bim.server.EventService;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.ciat.bim.server.event.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
-import javax.annotation.Nullable;
-import javax.management.relation.RelationService;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 

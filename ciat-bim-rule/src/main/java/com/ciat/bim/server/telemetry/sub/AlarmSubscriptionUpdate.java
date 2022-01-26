@@ -16,6 +16,7 @@
 package com.ciat.bim.server.telemetry.sub;
 
 import lombok.Getter;
+import org.jeecg.modules.alarm.entity.Alarm;
 
 
 public class AlarmSubscriptionUpdate {
@@ -26,21 +27,21 @@ public class AlarmSubscriptionUpdate {
     private int errorCode;
     @Getter
     private String errorMsg;
-//    @Getter
-//    private Alarm alarm;
+    @Getter
+    private Alarm alarm;
     @Getter
     private boolean alarmDeleted;
 
-//    public AlarmSubscriptionUpdate(int subscriptionId, Alarm alarm) {
-//        this(subscriptionId, alarm, false);
-//    }
-//
-//    public AlarmSubscriptionUpdate(int subscriptionId, Alarm alarm, boolean alarmDeleted) {
-//        super();
-//        this.subscriptionId = subscriptionId;
-//        this.alarm = alarm;
-//        this.alarmDeleted = alarmDeleted;
-//    }
+    public AlarmSubscriptionUpdate(int subscriptionId, Alarm alarm) {
+        this(subscriptionId, alarm, false);
+    }
+
+    public AlarmSubscriptionUpdate(int subscriptionId, Alarm alarm, boolean alarmDeleted) {
+        super();
+        this.subscriptionId = subscriptionId;
+        this.alarm = alarm;
+        this.alarmDeleted = alarmDeleted;
+    }
 
     public AlarmSubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode) {
         this(subscriptionId, errorCode, null);

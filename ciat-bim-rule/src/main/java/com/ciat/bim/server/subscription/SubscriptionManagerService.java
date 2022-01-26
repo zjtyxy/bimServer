@@ -30,18 +30,18 @@ public interface SubscriptionManagerService extends ApplicationListener<Partitio
     void addSubscription(TbSubscription subscription, TbCallback callback);
 
     void cancelSubscription(String sessionId, int subscriptionId, TbCallback callback);
-
-    void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, TbCallback callback);
-
-    void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, TbCallback callback);
-
-    void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, boolean notifyDevice, TbCallback callback);
-
-    void onAttributesDelete(TenantId tenantId, EntityId entityId, String scope, List<String> keys, TbCallback empty);
-
-    void onAlarmUpdate(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback);
-
-    void onAlarmDeleted(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback);
+//
+//    void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, TbCallback callback);
+//
+//    void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, TbCallback callback);
+//
+//    void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, boolean notifyDevice, TbCallback callback);
+//
+//    void onAttributesDelete(TenantId tenantId, EntityId entityId, String scope, List<String> keys, TbCallback empty);
+//
+//    void onAlarmUpdate(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback);
+//
+//    void onAlarmDeleted(TenantId tenantId, EntityId entityId, Alarm alarm, TbCallback callback);
 
 
 }

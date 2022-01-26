@@ -22,23 +22,27 @@ import com.ciat.bim.msg.TbActorMsg;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.apiusage.TbApiUsageStateService;
 import com.ciat.bim.server.common.msg.queue.TbCallback;
+import com.ciat.bim.server.common.stats.StatsFactory;
 import com.ciat.bim.server.common.transport.util.DataDecodingEncodingService;
+import com.ciat.bim.server.edge.EdgeNotificationService;
 import com.ciat.bim.server.ota.OtaPackageStateService;
 import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
 import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
 import com.ciat.bim.server.queue.provider.TbCoreQueueFactory;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
+import com.ciat.bim.server.rpc.TbCoreDeviceRpcService;
 import com.ciat.bim.server.state.DeviceStateService;
+import com.ciat.bim.server.subscription.SubscriptionManagerService;
 import com.ciat.bim.server.subscription.TbLocalSubscriptionService;
 import com.ciat.bim.server.transport.TransportProtos;
-import com.ciat.bim.server.transport.TransportProtos.ToCoreMsg;
-import com.ciat.bim.server.transport.TransportProtos.ToCoreNotificationMsg;
+import com.ciat.bim.server.transport.TransportProtos.*;
 import com.ciat.bim.server.utils.ThingsBoardThreadFactory;
 import com.ciat.bim.tenant.TbTenantProfileCache;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -73,17 +77,18 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     @Value("${queue.core.ota.pack-size:100}")
     private int firmwarePackSize;
 
-    private final TbQueueConsumer<TbProtoQueueMsg<ToCoreMsg>> mainConsumer;
-    private final DeviceStateService stateService;
-    private final TbApiUsageStateService statsService;
-    private final TbLocalSubscriptionService localSubscriptionService;
-    private final SubscriptionManagerService subscriptionManagerService;
-    private final TbCoreDeviceRpcService tbCoreDeviceRpcService;
-    private final EdgeNotificationService edgeNotificationService;
-    private final OtaPackageStateService firmwareStateService;
-    private final TbCoreConsumerStats stats;
-    protected final TbQueueConsumer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> usageStatsConsumer;
-    private final TbQueueConsumer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
+    private  TbQueueConsumer<TbProtoQueueMsg<ToCoreMsg>> mainConsumer;
+    private  DeviceStateService stateService;
+    //@Autowired
+    private  TbApiUsageStateService statsService;
+    private  TbLocalSubscriptionService localSubscriptionService;
+    private  SubscriptionManagerService subscriptionManagerService;
+    private  TbCoreDeviceRpcService tbCoreDeviceRpcService;
+    private  EdgeNotificationService edgeNotificationService;
+    private  OtaPackageStateService firmwareStateService;
+    private  TbCoreConsumerStats stats;
+    protected  TbQueueConsumer<TbProtoQueueMsg<ToUsageStatsServiceMsg>> usageStatsConsumer;
+    private  TbQueueConsumer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
 
     protected volatile ExecutorService usageStatsExecutor;
 
@@ -103,9 +108,10 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                                         TbApiUsageStateService apiUsageStateService,
                                         EdgeNotificationService edgeNotificationService,
                                         OtaPackageStateService firmwareStateService) {
-        super(actorContext, encodingService, tenantProfileCache, deviceProfileCache, apiUsageStateService, tbCoreQueueFactory.createToCoreNotificationsMsgConsumer());
+        super(actorContext,
+                encodingService, tenantProfileCache, deviceProfileCache, apiUsageStateService, tbCoreQueueFactory.createToCoreNotificationsMsgConsumer());
         this.mainConsumer = tbCoreQueueFactory.createToCoreMsgConsumer();
-        this.usageStatsConsumer = tbCoreQueueFactory.createToUsageStatsServiceMsgConsumer();
+          this.usageStatsConsumer = tbCoreQueueFactory.createToUsageStatsServiceMsgConsumer();
         this.firmwareStatesConsumer = tbCoreQueueFactory.createToOtaPackageStateServiceMsgConsumer();
         this.stateService = stateService;
         this.localSubscriptionService = localSubscriptionService;
@@ -120,42 +126,42 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     @PostConstruct
     public void init() {
         super.init("tb-core-consumer", "tb-core-notifications-consumer");
-      //  this.usageStatsExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-usage-stats-consumer"));
-       // this.firmwareStatesExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-firmware-notifications-consumer"));
+        this.usageStatsExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-usage-stats-consumer"));
+        this.firmwareStatesExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("tb-core-firmware-notifications-consumer"));
     }
 
     @PreDestroy
     public void destroy() {
         super.destroy();
-//        if (usageStatsExecutor != null) {
-//            usageStatsExecutor.shutdownNow();
-//        }
-//        if (firmwareStatesExecutor != null) {
-//            firmwareStatesExecutor.shutdownNow();
-//        }
+        if (usageStatsExecutor != null) {
+            usageStatsExecutor.shutdownNow();
+        }
+        if (firmwareStatesExecutor != null) {
+            firmwareStatesExecutor.shutdownNow();
+        }
     }
 
     @EventListener(ApplicationReadyEvent.class)
     @Order(value = 2)
     public void onApplicationEvent(ApplicationReadyEvent event) {
         super.onApplicationEvent(event);
-//        launchUsageStatsConsumer();
-//        launchOtaPackageUpdateNotificationConsumer();
+        launchUsageStatsConsumer();
+        //launchOtaPackageUpdateNotificationConsumer();
     }
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent event) {
-//        if (event.getServiceType().equals(getServiceType())) {
-//            log.info("Subscribing to partitions: {}", event.getPartitions());
-//            this.mainConsumer.subscribe(event.getPartitions());
-//            this.usageStatsConsumer.subscribe(
-//                    event
-//                            .getPartitions()
-//                            .stream()
-//                            .map(tpi -> tpi.newByTopic(usageStatsConsumer.getTopic()))
-//                            .collect(Collectors.toSet()));
-//        }
-//        this.firmwareStatesConsumer.subscribe();
+        if (event.getServiceType().equals(getServiceType())) {
+            log.info("Subscribing to partitions: {}", event.getPartitions());
+            this.mainConsumer.subscribe(event.getPartitions());
+            this.usageStatsConsumer.subscribe(
+                    event
+                            .getPartitions()
+                            .stream()
+                            .map(tpi -> tpi.newByTopic(usageStatsConsumer.getTopic()))
+                            .collect(Collectors.toSet()));
+        }
+        this.firmwareStatesConsumer.subscribe();
     }
 
     @Override
@@ -285,48 +291,48 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 //        }
     }
 
-//    private void launchUsageStatsConsumer() {
-//        usageStatsExecutor.submit(() -> {
-//            while (!stopped) {
-//                try {
-//                    List<TbProtoQueueMsg<ToUsageStatsServiceMsg>> msgs = usageStatsConsumer.poll(getNotificationPollDuration());
-//                    if (msgs.isEmpty()) {
-//                        continue;
-//                    }
-//                    ConcurrentMap<UUID, TbProtoQueueMsg<ToUsageStatsServiceMsg>> pendingMap = msgs.stream().collect(
-//                            Collectors.toConcurrentMap(s -> UUID.randomUUID(), Function.identity()));
-//                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
-//                    TbPackProcessingContext<TbProtoQueueMsg<ToUsageStatsServiceMsg>> ctx = new TbPackProcessingContext<>(
-//                            processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
-//                    pendingMap.forEach((id, msg) -> {
-//                        log.trace("[{}] Creating usage stats callback for message: {}", id, msg.getValue());
-//                        TbCallback callback = new TbPackCallback<>(id, ctx);
-//                        try {
-//                            handleUsageStats(msg, callback);
-//                        } catch (Throwable e) {
-//                            log.warn("[{}] Failed to process usage stats: {}", id, msg, e);
-//                            callback.onFailure(e);
-//                        }
-//                    });
-//                    if (!processingTimeoutLatch.await(getNotificationPackProcessingTimeout(), TimeUnit.MILLISECONDS)) {
-//                        ctx.getAckMap().forEach((id, msg) -> log.warn("[{}] Timeout to process usage stats: {}", id, msg.getValue()));
-//                        ctx.getFailedMap().forEach((id, msg) -> log.warn("[{}] Failed to process usage stats: {}", id, msg.getValue()));
-//                    }
-//                    usageStatsConsumer.commit();
-//                } catch (Exception e) {
-//                    if (!stopped) {
-//                        log.warn("Failed to obtain usage stats from queue.", e);
-//                        try {
-//                            Thread.sleep(getNotificationPollDuration());
-//                        } catch (InterruptedException e2) {
-//                            log.trace("Failed to wait until the server has capacity to handle new usage stats", e2);
-//                        }
-//                    }
-//                }
-//            }
-//            log.info("TB Usage Stats Consumer stopped.");
-//        });
-//    }
+    private void launchUsageStatsConsumer() {
+        usageStatsExecutor.submit(() -> {
+            while (!stopped) {
+                try {
+                    List<TbProtoQueueMsg<ToUsageStatsServiceMsg>> msgs = usageStatsConsumer.poll(getNotificationPollDuration());
+                    if (msgs.isEmpty()) {
+                        continue;
+                    }
+                    ConcurrentMap<UUID, TbProtoQueueMsg<ToUsageStatsServiceMsg>> pendingMap = msgs.stream().collect(
+                            Collectors.toConcurrentMap(s -> UUID.randomUUID(), Function.identity()));
+                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
+                    TbPackProcessingContext<TbProtoQueueMsg<ToUsageStatsServiceMsg>> ctx = new TbPackProcessingContext<>(
+                            processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
+                    pendingMap.forEach((id, msg) -> {
+                        log.trace("[{}] Creating usage stats callback for message: {}", id, msg.getValue());
+                        TbCallback callback = new TbPackCallback<>(id, ctx);
+                        try {
+                            handleUsageStats(msg, callback);
+                        } catch (Throwable e) {
+                            log.warn("[{}] Failed to process usage stats: {}", id, msg, e);
+                            callback.onFailure(e);
+                        }
+                    });
+                    if (!processingTimeoutLatch.await(getNotificationPackProcessingTimeout(), TimeUnit.MILLISECONDS)) {
+                        ctx.getAckMap().forEach((id, msg) -> log.warn("[{}] Timeout to process usage stats: {}", id, msg.getValue()));
+                        ctx.getFailedMap().forEach((id, msg) -> log.warn("[{}] Failed to process usage stats: {}", id, msg.getValue()));
+                    }
+                    usageStatsConsumer.commit();
+                } catch (Exception e) {
+                    if (!stopped) {
+                        log.warn("Failed to obtain usage stats from queue.", e);
+                        try {
+                            Thread.sleep(getNotificationPollDuration());
+                        } catch (InterruptedException e2) {
+                            log.trace("Failed to wait until the server has capacity to handle new usage stats", e2);
+                        }
+                    }
+                }
+            }
+            log.info("TB Usage Stats Consumer stopped.");
+        });
+    }
 
 //    private void launchOtaPackageUpdateNotificationConsumer() {
 //        long maxProcessingTimeoutPerRecord = firmwarePackInterval / firmwarePackSize;
@@ -373,9 +379,9 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 //        });
 //    }
 //
-//    private void handleUsageStats(TbProtoQueueMsg<ToUsageStatsServiceMsg> msg, TbCallback callback) {
-//        statsService.process(msg, callback);
-//    }
+    private void handleUsageStats(TbProtoQueueMsg<ToUsageStatsServiceMsg> msg, TbCallback callback) {
+        statsService.process(msg, callback);
+    }
 //
 //    private boolean handleOtaPackageUpdates(TbProtoQueueMsg<ToOtaPackageStateServiceMsg> msg) {
 //        return firmwareStateService.process(msg.getValue());

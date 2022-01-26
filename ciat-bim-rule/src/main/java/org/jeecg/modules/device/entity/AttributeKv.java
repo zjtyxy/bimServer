@@ -86,4 +86,17 @@ public class AttributeKv implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "最后更新")
     private java.util.Date lastupdatets;
+
+    public String getKey() {
+        return attributeKey;
+    }
+
+    public String getValueAsString() {
+        return "";
+    }
+
+    public DataType getDataType() {
+
+        return null;
+    }
 }
