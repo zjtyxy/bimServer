@@ -19,7 +19,6 @@ import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
 import com.ciat.bim.server.queue.scheduler.SchedulerComponent;
 import com.ciat.bim.server.utils.ThingsBoardExecutors;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jdi.connect.spi.TransportService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

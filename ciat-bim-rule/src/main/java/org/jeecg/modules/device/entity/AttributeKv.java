@@ -63,23 +63,23 @@ public class AttributeKv implements Serializable {
 	/**布尔值*/
 	@Excel(name = "布尔值", width = 15)
     @ApiModelProperty(value = "布尔值")
-    private java.lang.Integer booleanvalue;
+    private java.lang.Integer booleanValue;
 	/**字符串值*/
 	@Excel(name = "字符串值", width = 15)
     @ApiModelProperty(value = "字符串值")
-    private java.lang.String strvalue;
+    private java.lang.String strValue;
 	/**整数值*/
 	@Excel(name = "整数值", width = 15)
     @ApiModelProperty(value = "整数值")
-    private java.lang.Integer longvalue;
+    private java.lang.Integer longValue;
 	/**双精度值*/
 	@Excel(name = "双精度值", width = 15)
     @ApiModelProperty(value = "双精度值")
-    private java.lang.String doublevalue;
+    private java.lang.String doubleValue;
 	/**Json值*/
 	@Excel(name = "Json值", width = 15)
     @ApiModelProperty(value = "Json值")
-    private java.lang.String jsonvalue;
+    private java.lang.String jsonValue;
 	/**最后更新*/
 	@Excel(name = "最后更新", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -98,5 +98,13 @@ public class AttributeKv implements Serializable {
     public DataType getDataType() {
 
         return null;
+    }
+    public AttributeKv()
+    {
+
+    }
+    public AttributeKv(AttributeKv key,Long value)
+    {
+
     }
 }

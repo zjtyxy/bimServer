@@ -16,6 +16,7 @@
 package com.ciat.bim.transport.auth;
 
 
+import com.ciat.bim.server.common.data.security.DeviceCredentialsFilter;
 
 public interface DeviceAuthService {
 

@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ciat.bim.data.device.DeviceTransportType;
+import com.ciat.bim.data.device.profile.DeviceProfileData;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -122,4 +124,9 @@ public class DeviceProfile implements Serializable {
 	@Excel(name = "配置数据", width = 15)
     @ApiModelProperty(value = "配置数据")
     private java.lang.String profileData;
+
+    public DeviceProfileData fetchProfileData() {
+        return null;
+        // return getJson(() -> additionalInfo, () -> additionalInfoBytes);
+    }
 }

@@ -15,8 +15,14 @@
  */
 package com.ciat.bim.transport.mqtt.session;
 
+import com.ciat.bim.server.rpc.RpcStatus;
 import com.ciat.bim.server.transport.TransportProtos;
-import com.sun.jdi.connect.spi.TransportService;
+import com.ciat.bim.server.transport.TransportProtos.*;
+import com.ciat.bim.transport.TransportService;
+import com.ciat.bim.transport.TransportServiceCallback;
+import com.ciat.bim.transport.auth.TransportDeviceInfo;
+import com.ciat.bim.transport.session.SessionMsgListener;
+
 import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -39,22 +45,22 @@ public class GatewayDeviceSessionCtx extends MqttDeviceAwareSessionContext imple
                                    TransportService transportService) {
         super(UUID.randomUUID(), mqttQoSMap);
         this.parent = parent;
-        setSessionInfo(SessionInfoProto.newBuilder()
+        setSessionInfo(TransportProtos.SessionInfoProto.newBuilder()
                 .setNodeId(parent.getNodeId())
                 .setSessionIdMSB(sessionId.getMostSignificantBits())
                 .setSessionIdLSB(sessionId.getLeastSignificantBits())
-                .setDeviceIdMSB(deviceInfo.getDeviceId().getId().getMostSignificantBits())
-                .setDeviceIdLSB(deviceInfo.getDeviceId().getId().getLeastSignificantBits())
-                .setTenantIdMSB(deviceInfo.getTenantId().getId().getMostSignificantBits())
-                .setTenantIdLSB(deviceInfo.getTenantId().getId().getLeastSignificantBits())
-                .setCustomerIdMSB(deviceInfo.getCustomerId().getId().getMostSignificantBits())
-                .setCustomerIdLSB(deviceInfo.getCustomerId().getId().getLeastSignificantBits())
+                .setDeviceIdMSB(Long.parseLong(deviceInfo.getDeviceId().getId()))
+                .setDeviceIdLSB(Long.parseLong(deviceInfo.getDeviceId().getId()))
+                .setTenantIdMSB(Long.parseLong(deviceInfo.getTenantId().getId()))
+                .setTenantIdLSB(Long.parseLong(deviceInfo.getTenantId().getId()))
+                .setCustomerIdMSB(Long.parseLong(deviceInfo.getCustomerId().getId()))
+                .setCustomerIdLSB(Long.parseLong(deviceInfo.getCustomerId().getId()))
                 .setDeviceName(deviceInfo.getDeviceName())
                 .setDeviceType(deviceInfo.getDeviceType())
                 .setGwSessionIdMSB(parent.getSessionId().getMostSignificantBits())
                 .setGwSessionIdLSB(parent.getSessionId().getLeastSignificantBits())
-                .setDeviceProfileIdMSB(deviceInfo.getDeviceProfileId().getId().getMostSignificantBits())
-                .setDeviceProfileIdLSB(deviceInfo.getDeviceProfileId().getId().getLeastSignificantBits())
+                .setDeviceProfileIdMSB(Long.parseLong(deviceInfo.getDeviceProfileId().getId()))
+                .setDeviceProfileIdLSB(Long.parseLong(deviceInfo.getDeviceProfileId().getId()))
                 .build());
         setDeviceInfo(deviceInfo);
         setConnected(true);

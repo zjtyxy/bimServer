@@ -15,6 +15,10 @@
  */
 package com.ciat.bim.transport.mqtt.adaptors;
 
+import com.ciat.bim.server.common.data.OtaPackageType;
+import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.server.transport.TransportProtos.*;
+import com.ciat.bim.transport.AdaptorException;
 import com.ciat.bim.transport.mqtt.session.MqttDeviceAwareSessionContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -30,7 +34,7 @@ public interface MqttTransportAdaptor {
 
     ByteBufAllocator ALLOCATOR = new UnpooledByteBufAllocator(false);
 
-    PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException;
+    TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException;
 
     PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException;
 

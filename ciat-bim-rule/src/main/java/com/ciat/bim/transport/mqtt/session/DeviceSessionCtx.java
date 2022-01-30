@@ -17,6 +17,10 @@ package com.ciat.bim.transport.mqtt.session;
 
 import com.ciat.bim.data.device.DeviceTransportType;
 import com.ciat.bim.data.device.profile.DeviceProfileTransportConfiguration;
+import com.ciat.bim.server.common.data.TransportPayloadType;
+import com.ciat.bim.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
+import com.ciat.bim.server.common.data.device.profile.ProtoTransportPayloadConfiguration;
+import com.ciat.bim.server.common.data.device.profile.TransportPayloadTypeConfiguration;
 import com.ciat.bim.transport.mqtt.MqttTransportContext;
 import com.ciat.bim.transport.mqtt.TopicType;
 import com.ciat.bim.transport.mqtt.adaptors.BackwardCompatibilityAdaptor;
@@ -140,7 +144,7 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
     }
 
     private void updateDeviceSessionConfiguration(DeviceProfile deviceProfile) {
-        DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
+        DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.fetchProfileData().getTransportConfiguration();
         if (transportConfiguration.getType().equals(DeviceTransportType.MQTT) &&
                 transportConfiguration instanceof MqttDeviceProfileTransportConfiguration) {
             MqttDeviceProfileTransportConfiguration mqttConfig = (MqttDeviceProfileTransportConfiguration) transportConfiguration;

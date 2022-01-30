@@ -15,10 +15,11 @@
  */
 package com.ciat.bim.transport.ssl;
 
+import com.ciat.bim.server.utils.ResourceUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.thingsboard.server.common.data.ResourceUtils;
-import org.thingsboard.server.common.data.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 
 import java.io.IOException;
 import java.io.InputStream;

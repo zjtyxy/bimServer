@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.transport;
+package com.ciat.bim.transport.session;
 
 import com.ciat.bim.server.transport.TransportProtos;
 import lombok.Data;

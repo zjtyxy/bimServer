@@ -15,8 +15,9 @@
  */
 package com.ciat.bim.transport.mqtt.util;
 
+import com.ciat.bim.server.common.data.MqttTopics;
 import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.data.device.profile.MqttTopics;
+
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

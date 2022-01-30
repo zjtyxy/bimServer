@@ -19,15 +19,30 @@ import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.device.DeviceTransportType;
 import com.ciat.bim.data.id.OtaPackageId;
 import com.ciat.bim.server.common.data.MqttTopics;
+import com.ciat.bim.server.common.data.OtaPackageType;
+import com.ciat.bim.server.common.data.TransportPayloadType;
+import com.ciat.bim.server.common.msg.TbRateLimitsException;
+import com.ciat.bim.server.rpc.RpcStatus;
+import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.transport.AdaptorException;
+import com.ciat.bim.transport.TransportService;
+import com.ciat.bim.transport.TransportServiceCallback;
+import com.ciat.bim.transport.auth.SessionInfoCreator;
+import com.ciat.bim.transport.auth.TransportDeviceInfo;
+import com.ciat.bim.transport.auth.ValidateDeviceCredentialsResponse;
 import com.ciat.bim.transport.mqtt.adaptors.MqttTransportAdaptor;
 import com.ciat.bim.transport.mqtt.session.DeviceSessionCtx;
 import com.ciat.bim.transport.mqtt.session.GatewaySessionHandler;
 import com.ciat.bim.transport.mqtt.session.MqttTopicMatcher;
 import com.ciat.bim.server.queue.scheduler.SchedulerComponent;
-import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.server.transport.TransportProtos.*;
+import com.ciat.bim.transport.service.DefaultTransportService;
+import com.ciat.bim.transport.session.SessionMetaData;
+import com.ciat.bim.transport.session.SessionMsgListener;
+import com.ciat.bim.transport.ssl.EncryptionUtil;
+import com.ciat.bim.transport.ssl.SslUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.JsonParseException;
-import com.sun.jdi.connect.spi.TransportService;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -58,11 +73,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.amazonaws.util.StringUtils.UTF8;
+
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_ACCEPTED;
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_NOT_AUTHORIZED;
 import static io.netty.handler.codec.mqtt.MqttMessageType.*;
 import static io.netty.handler.codec.mqtt.MqttQoS.*;
+import static org.apache.poi.util.StringUtil.UTF8;
 
 /**
  * @author Andrew Shvayka
@@ -510,7 +526,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         @Override
         public void onSuccess(TransportProtos.GetOtaPackageResponseMsg response) {
             if (TransportProtos.ResponseStatus.SUCCESS.equals(response.getResponseStatus())) {
-                OtaPackageId firmwareId = new OtaPackageId(new UUID(response.getOtaPackageIdMSB(), response.getOtaPackageIdLSB()));
+                OtaPackageId firmwareId = new OtaPackageId(response.getOtaPackageIdMSB()+"");
                 otaPackSessions.put(requestId, firmwareId.toString());
                 sendOtaPackage(ctx, msgId, firmwareId.toString(), requestId, chunkSize, chunk, OtaPackageType.valueOf(response.getType()));
             } else {
@@ -526,16 +542,16 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     }
 
     private void sendOtaPackage(ChannelHandlerContext ctx, int msgId, String firmwareId, String requestId, int chunkSize, int chunk, OtaPackageType type) {
-        log.trace("[{}] Send firmware [{}] to device!", sessionId, firmwareId);
-        ack(ctx, msgId);
-        try {
-            byte[] firmwareChunk = context.getOtaPackageDataCache().get(firmwareId, chunkSize, chunk);
-            deviceSessionCtx.getPayloadAdaptor()
-                    .convertToPublish(deviceSessionCtx, firmwareChunk, requestId, chunk, type)
-                    .ifPresent(deviceSessionCtx.getChannel()::writeAndFlush);
-        } catch (Exception e) {
-            log.trace("[{}] Failed to send firmware response!", sessionId, e);
-        }
+//        log.trace("[{}] Send firmware [{}] to device!", sessionId, firmwareId);
+//        ack(ctx, msgId);
+//        try {
+//            byte[] firmwareChunk = context.getOtaPackageDataCache().get(firmwareId, chunkSize, chunk);
+//            deviceSessionCtx.getPayloadAdaptor()
+//                    .convertToPublish(deviceSessionCtx, firmwareChunk, requestId, chunk, type)
+//                    .ifPresent(deviceSessionCtx.getChannel()::writeAndFlush);
+//        } catch (Exception e) {
+//            log.trace("[{}] Failed to send firmware response!", sessionId, e);
+//        }
     }
 
     private void sendOtaPackageError(ChannelHandlerContext ctx, String error) {
@@ -767,7 +783,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             }
             String strCert = SslUtil.getCertificateString(cert);
             String sha3Hash = EncryptionUtil.getSha3Hash(strCert);
-            transportService.process(DeviceTransportType.MQTT, ValidateDeviceX509CertRequestMsg.newBuilder().setHash(sha3Hash).build(),
+            transportService.process(DeviceTransportType.MQTT, TransportProtos.ValidateDeviceX509CertRequestMsg.newBuilder().setHash(sha3Hash).build(),
                     new TransportServiceCallback<>() {
                         @Override
                         public void onSuccess(ValidateDeviceCredentialsResponse msg) {
@@ -899,7 +915,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             deviceSessionCtx.setDeviceInfo(msg.getDeviceInfo());
             deviceSessionCtx.setDeviceProfile(msg.getDeviceProfile());
             deviceSessionCtx.setSessionInfo(SessionInfoCreator.create(msg, context, sessionId));
-            transportService.process(deviceSessionCtx.getSessionInfo(), DefaultTransportService.getSessionEventMsg(SessionEvent.OPEN), new TransportServiceCallback<Void>() {
+            transportService.process(deviceSessionCtx.getSessionInfo(), DefaultTransportService.getSessionEventMsg(TransportProtos.SessionEvent.OPEN), new TransportServiceCallback<Void>() {
                 @Override
                 public void onSuccess(Void msg) {
                     SessionMetaData sessionMetaData = transportService.registerAsyncSession(deviceSessionCtx.getSessionInfo(), MqttTransportHandler.this);
@@ -971,7 +987,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                         }
                     }, Math.max(0, Math.min(deviceSessionCtx.getContext().getTimeout(), rpcRequest.getExpirationTime() - System.currentTimeMillis())), TimeUnit.MILLISECONDS);
                 }
-                var cf = publish(payload, deviceSessionCtx);
+                ChannelFuture cf = publish(payload, deviceSessionCtx);
                 cf.addListener(result -> {
                     if (result.cause() == null) {
                         if (!isAckExpected(payload)) {

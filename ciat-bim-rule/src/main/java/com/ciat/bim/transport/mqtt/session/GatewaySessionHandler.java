@@ -17,12 +17,22 @@ package com.ciat.bim.transport.mqtt.session;
 
 
 import com.ciat.bim.data.id.DeviceId;
+import com.ciat.bim.server.common.transport.util.JsonConverter;
+import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.transport.AdaptorException;
+import com.ciat.bim.transport.ProtoConverter;
+import com.ciat.bim.transport.TransportService;
+import com.ciat.bim.transport.TransportServiceCallback;
+import com.ciat.bim.transport.auth.GetOrCreateDeviceFromGatewayResponse;
+import com.ciat.bim.transport.auth.TransportDeviceInfo;
+import com.ciat.bim.transport.gen.TransportApiProtos;
 import com.ciat.bim.transport.mqtt.MqttTransportContext;
 import com.ciat.bim.transport.mqtt.MqttTransportHandler;
 import com.ciat.bim.transport.mqtt.adaptors.JsonMqttAdaptor;
 import com.ciat.bim.transport.mqtt.adaptors.MqttTransportAdaptor;
 import com.ciat.bim.transport.mqtt.adaptors.ProtoMqttAdaptor;
-import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.server.transport.TransportProtos.*;
+import com.ciat.bim.transport.service.DefaultTransportService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -30,7 +40,7 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.*;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ProtocolStringList;
-import com.sun.jdi.connect.spi.TransportService;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -236,15 +246,15 @@ public class GatewaySessionHandler {
                 transportService.process(GetOrCreateDeviceFromGatewayRequestMsg.newBuilder()
                                 .setDeviceName(deviceName)
                                 .setDeviceType(deviceType)
-                                .setGatewayIdMSB(gateway.getDeviceId().getId().getMostSignificantBits())
-                                .setGatewayIdLSB(gateway.getDeviceId().getId().getLeastSignificantBits()).build(),
+                                .setGatewayIdMSB(Long.parseLong(gateway.getDeviceId().getId()))
+                                .setGatewayIdLSB(Long.parseLong(gateway.getDeviceId().getId())).build(),
                         new TransportServiceCallback<GetOrCreateDeviceFromGatewayResponse>() {
                             @Override
                             public void onSuccess(GetOrCreateDeviceFromGatewayResponse msg) {
                                 GatewayDeviceSessionCtx deviceSessionCtx = new GatewayDeviceSessionCtx(GatewaySessionHandler.this, msg.getDeviceInfo(), msg.getDeviceProfile(), mqttQoSMap, transportService);
                                 if (devices.putIfAbsent(deviceName, deviceSessionCtx) == null) {
                                     log.trace("[{}] First got or created device [{}], type [{}] for the gateway session", sessionId, deviceName, deviceType);
-                                    SessionInfoProto deviceSessionInfo = deviceSessionCtx.getSessionInfo();
+                                    TransportProtos.SessionInfoProto deviceSessionInfo = deviceSessionCtx.getSessionInfo();
                                     transportService.registerAsyncSession(deviceSessionInfo, deviceSessionCtx);
                                     transportService.process(TransportProtos.TransportToDeviceActorMsg.newBuilder()
                                             .setSessionInfo(deviceSessionInfo)

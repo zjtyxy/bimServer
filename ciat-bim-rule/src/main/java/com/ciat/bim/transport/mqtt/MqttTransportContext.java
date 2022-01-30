@@ -15,6 +15,7 @@
  */
 package com.ciat.bim.transport.mqtt;
 
+import com.ciat.bim.transport.TransportContext;
 import com.ciat.bim.transport.mqtt.adaptors.JsonMqttAdaptor;
 import com.ciat.bim.transport.mqtt.adaptors.ProtoMqttAdaptor;
 import io.netty.handler.ssl.SslHandler;

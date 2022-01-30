@@ -15,6 +15,12 @@
  */
 package com.ciat.bim.transport.mqtt.adaptors;
 
+import com.ciat.bim.server.common.data.MqttTopics;
+import com.ciat.bim.server.common.data.OtaPackageType;
+import com.ciat.bim.server.common.transport.util.JsonConverter;
+import com.ciat.bim.transport.AdaptorException;
+import com.ciat.bim.transport.ProtoConverter;
+import com.ciat.bim.transport.gen.TransportApiProtos;
 import com.ciat.bim.transport.mqtt.session.DeviceSessionCtx;
 import com.ciat.bim.transport.mqtt.session.MqttDeviceAwareSessionContext;
 import com.ciat.bim.server.transport.TransportProtos;
@@ -31,7 +37,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
-
+import static com.ciat.bim.server.common.data.MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT;
 
 @Component
 @Slf4j

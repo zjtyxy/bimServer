@@ -23,6 +23,8 @@ import com.ciat.bim.server.transport.TransportProtos;
 import com.ciat.bim.server.transport.TransportProtos.*;
 import com.ciat.bim.transport.auth.GetOrCreateDeviceFromGatewayResponse;
 import com.ciat.bim.transport.auth.ValidateDeviceCredentialsResponse;
+import com.ciat.bim.transport.session.SessionMetaData;
+import com.ciat.bim.transport.session.SessionMsgListener;
 import org.jeecg.modules.device.entity.DeviceProfile;
 
 import java.util.concurrent.ExecutorService;

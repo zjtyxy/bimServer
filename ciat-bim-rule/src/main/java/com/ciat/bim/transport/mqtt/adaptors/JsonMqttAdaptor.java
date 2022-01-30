@@ -15,6 +15,12 @@
  */
 package com.ciat.bim.transport.mqtt.adaptors;
 
+
+
+import com.ciat.bim.server.common.data.MqttTopics;
+import com.ciat.bim.server.common.data.OtaPackageType;
+import com.ciat.bim.server.common.transport.util.JsonConverter;
+import com.ciat.bim.transport.AdaptorException;
 import com.ciat.bim.transport.mqtt.session.MqttDeviceAwareSessionContext;
 import com.ciat.bim.server.transport.TransportProtos;
 import com.google.gson.*;
@@ -27,8 +33,7 @@ import org.springframework.util.StringUtils;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static org.thingsboard.server.common.data.device.profile.MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT;
+import static com.ciat.bim.server.common.data.MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT;
 
 
 /**

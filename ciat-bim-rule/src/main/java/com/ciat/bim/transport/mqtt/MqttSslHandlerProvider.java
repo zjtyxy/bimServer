@@ -17,11 +17,14 @@ package com.ciat.bim.transport.mqtt;
 
 import com.ciat.bim.data.device.DeviceTransportType;
 import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.transport.TransportService;
+import com.ciat.bim.transport.TransportServiceCallback;
+import com.ciat.bim.transport.auth.ValidateDeviceCredentialsResponse;
 import com.ciat.bim.transport.ssl.EncryptionUtil;
 import com.ciat.bim.transport.ssl.SslCredentials;
 import com.ciat.bim.transport.ssl.SslCredentialsConfig;
 import com.ciat.bim.transport.ssl.SslUtil;
-import com.sun.jdi.connect.spi.TransportService;
+
 import io.netty.handler.ssl.SslHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

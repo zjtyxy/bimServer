@@ -15,6 +15,8 @@
  */
 package com.ciat.bim.transport.mqtt.adaptors;
 
+import com.ciat.bim.server.common.data.OtaPackageType;
+import com.ciat.bim.transport.AdaptorException;
 import com.ciat.bim.transport.mqtt.session.MqttDeviceAwareSessionContext;
 import com.ciat.bim.server.transport.TransportProtos;
 import io.netty.handler.codec.mqtt.MqttMessage;

@@ -15,6 +15,7 @@
  */
 package com.ciat.bim.transport.mqtt.session;
 
+import com.ciat.bim.transport.session.DeviceAwareSessionContext;
 import io.netty.handler.codec.mqtt.MqttQoS;
 
 import java.util.List;
