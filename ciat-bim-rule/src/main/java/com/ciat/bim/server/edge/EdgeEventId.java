@@ -26,11 +26,11 @@ public class EdgeEventId extends UUIDBased {
     private static final long serialVersionUID = 1L;
 
     @JsonCreator
-    public EdgeEventId(@JsonProperty("id") UUID id) {
+    public EdgeEventId(@JsonProperty("id") String id) {
         super(id);
     }
 
     public static EdgeEventId fromString(String edgeEventId) {
-        return new EdgeEventId(UUID.fromString(edgeEventId));
+        return new EdgeEventId(edgeEventId);
     }
 }

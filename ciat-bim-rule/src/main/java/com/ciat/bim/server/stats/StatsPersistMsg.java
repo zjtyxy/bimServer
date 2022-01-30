@@ -31,8 +31,8 @@ public final class StatsPersistMsg implements TbActorMsg {
 
     private final long messagesProcessed;
     private final long errorsOccurred;
-    private final TenantId tenantId;
-    private final EntityId entityId;
+    private final String tenantId;
+    private final String entityId;
 
     @Override
     public MsgType getMsgType() {

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 package com.ciat.bim.server.ota;
-import com.ciat.bim.data.device.profile.DeviceProfile;
+
 import com.ciat.bim.server.transport.TransportProtos.ToOtaPackageStateServiceMsg;
 import org.jeecg.modules.device.entity.Device;
+import org.jeecg.modules.device.entity.DeviceProfile;
 
 public interface OtaPackageStateService {
 

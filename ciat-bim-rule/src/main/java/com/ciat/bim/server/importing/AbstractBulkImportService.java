@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractBulkImportService<E extends HasId<? extends EntityId> & HasTenantId> {
+public abstract class AbstractBulkImportService<E> {
 //    @Autowired
 //    private TelemetrySubscriptionService tsSubscriptionService;
 //    @Autowired

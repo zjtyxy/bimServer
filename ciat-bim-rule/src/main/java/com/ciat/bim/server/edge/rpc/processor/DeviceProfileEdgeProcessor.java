@@ -15,7 +15,7 @@
  */
 package com.ciat.bim.server.edge.rpc.processor;
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
+
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.server.common.data.edge.EdgeEventActionType;
 import com.ciat.bim.server.edge.EdgeEvent;

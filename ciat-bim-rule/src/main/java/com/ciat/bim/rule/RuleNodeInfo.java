@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue;
+package com.ciat.bim.rule;
 
-import java.io.Serializable;
+import lombok.Getter;
 
-/**
- * @author Andrew Shvayka
- */
-public enum ComponentLifecycleEvent implements Serializable {
-    CREATED, STARTED, ACTIVATED, SUSPENDED, UPDATED, STOPPED, DELETED
+public class RuleNodeInfo {
+    private final String label;
+    @Getter
+    private final String ruleNodeId;
+
+    public RuleNodeInfo(String id, String ruleChainName, String ruleNodeName) {
+        this.ruleNodeId = id;
+        this.label = "[RuleChain: " + ruleChainName + "|RuleNode: " + ruleNodeName + "(" + id + ")]";
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }

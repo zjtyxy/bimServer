@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.data.id.EntityId;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -115,4 +116,8 @@ public class Alarm implements Serializable {
 	@Excel(name = "传播关系类型", width = 15)
     @ApiModelProperty(value = "传播关系类型")
     private java.lang.String propagateRelationTypes;
+
+    public EntityId getOriginator() {
+        return null;
+    }
 }

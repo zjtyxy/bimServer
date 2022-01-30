@@ -29,7 +29,7 @@ public abstract class TbSubscription<T> {
     private final String serviceId;
     private final String sessionId;
     private final int subscriptionId;
-    private final TenantId tenantId;
+    private final String tenantId;
     private final EntityId entityId;
     private final TbSubscriptionType type;
     private final BiConsumer<String, T> updateConsumer;

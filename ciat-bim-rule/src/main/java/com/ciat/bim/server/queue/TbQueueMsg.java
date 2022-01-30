@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public interface TbQueueMsg {
 
-    UUID getKey();
+    String getKey();
 
     TbQueueMsgHeaders getHeaders();
 

@@ -28,7 +28,7 @@ public class DeviceNameOrTypeUpdateMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = -5738949227650536685L;
 
-    private final TenantId tenantId;
+    private final String tenantId;
     private final DeviceId deviceId;
     private final String deviceName;
     private final String deviceType;

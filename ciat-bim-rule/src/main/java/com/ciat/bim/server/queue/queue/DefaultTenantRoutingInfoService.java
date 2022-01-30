@@ -36,7 +36,7 @@ public class DefaultTenantRoutingInfoService implements TenantRoutingInfoService
     private  TbTenantProfileCache tenantProfileCache;
 
     @Override
-    public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
+    public TenantRoutingInfo getRoutingInfo(String tenantId) {
         Tenant tenant = tenantService.getById(tenantId);
         if (tenant != null) {
             TenantProfile tenantProfile = tenantProfileCache.get(tenant.getTenantProfileId());

@@ -18,7 +18,6 @@ package com.ciat.bim.server.edge.rpc;
 
 
 import com.ciat.bim.data.id.EntityId;
-import com.ciat.bim.server.edge.Edge;
 import com.ciat.bim.server.edge.EdgeContextComponent;
 import com.ciat.bim.server.edge.rpc.fetch.*;
 

@@ -39,7 +39,7 @@ public class TbTimeseriesSubscription extends TbSubscription<TelemetrySubscripti
     private final boolean latestValues;
 
     @Builder
-    public TbTimeseriesSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
+    public TbTimeseriesSubscription(String serviceId, String sessionId, int subscriptionId, String tenantId, EntityId entityId,
                                     BiConsumer<String, TelemetrySubscriptionUpdate> updateConsumer,
                                     boolean allKeys, Map<String, Long> keyStates, long startTime, long endTime, boolean latestValues) {
         super(serviceId, sessionId, subscriptionId, tenantId, entityId, TbSubscriptionType.TIMESERIES, updateConsumer);

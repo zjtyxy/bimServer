@@ -35,7 +35,7 @@ public class TransportTenantRoutingInfoService implements TenantRoutingInfoServi
 //    }
 
     @Override
-    public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
+    public TenantRoutingInfo getRoutingInfo(String tenantId) {
         return  null;
 //        TenantProfile profile = tenantProfileCache.get(tenantId);
 //        return new TenantRoutingInfo(tenantId, profile.isIsolatedTbCore(), profile.isIsolatedTbRuleEngine());

@@ -15,7 +15,6 @@
  */
 package com.ciat.bim.server.edge.rpc.constructor;
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.server.common.transport.util.DataDecodingEncodingService;
 import com.ciat.bim.server.edge.gen.DeviceProfileUpdateMsg;

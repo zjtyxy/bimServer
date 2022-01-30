@@ -16,7 +16,7 @@
 package com.ciat.bim.server.edge.rpc;
 
 import com.ciat.bim.data.id.EdgeId;
-import com.ciat.bim.server.edge.Edge;
+
 import com.ciat.bim.server.edge.EdgeContextComponent;
 import com.ciat.bim.server.edge.gen.*;
 
@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.stub.StreamObserver;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.edge.entity.Edge;
 
 
 import java.io.Closeable;

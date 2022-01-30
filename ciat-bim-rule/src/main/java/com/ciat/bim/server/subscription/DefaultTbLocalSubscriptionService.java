@@ -124,7 +124,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
     }
 
     private void pushSubscriptionToManagerService(TbSubscription subscription, boolean pushToLocalService) {
-        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId());
+        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId().getId());
         if (currentPartitions.contains(tpi)) {
             // Subscription is managed on the same server;
             if (pushToLocalService) {
@@ -179,7 +179,7 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
                 if (sessionSubscriptions.isEmpty()) {
                     subscriptionsBySessionId.remove(sessionId);
                 }
-                TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId());
+                TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId().getId());
                 if (currentPartitions.contains(tpi)) {
                     // Subscription is managed on the same server;
                     subscriptionManagerService.cancelSubscription(sessionId, subscriptionId, TbCallback.EMPTY);

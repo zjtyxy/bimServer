@@ -127,7 +127,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
     }
 
     @Override
-    public void onDeviceConnect(TenantId tenantId, DeviceId deviceId) {
+    public void onDeviceConnect(String tenantId, DeviceId deviceId) {
         log.trace("on Device Connect [{}]", deviceId.getId());
         DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
@@ -139,7 +139,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
     }
 
     @Override
-    public void onDeviceActivity(TenantId tenantId, DeviceId deviceId, long lastReportedActivity) {
+    public void onDeviceActivity(String tenantId, DeviceId deviceId, long lastReportedActivity) {
         log.trace("on Device Activity [{}], lastReportedActivity [{}]", deviceId.getId(), lastReportedActivity);
         final DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         if (lastReportedActivity > 0 && lastReportedActivity > stateData.getState().getLastActivityTime()) {
@@ -166,7 +166,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
     }
 
     @Override
-    public void onDeviceDisconnect(TenantId tenantId, DeviceId deviceId) {
+    public void onDeviceDisconnect(String tenantId, DeviceId deviceId) {
         DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
         stateData.getState().setLastDisconnectTime(ts);
@@ -176,7 +176,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
     }
 
     @Override
-    public void onDeviceInactivityTimeoutUpdate(TenantId tenantId, DeviceId deviceId, long inactivityTimeout) {
+    public void onDeviceInactivityTimeoutUpdate(String tenantId, DeviceId deviceId, long inactivityTimeout) {
         if (inactivityTimeout <= 0L) {
             return;
         }
@@ -460,8 +460,8 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
         return  null;
     }
 
-    private void cleanDeviceStateIfBelongsExternalPartition(TenantId tenantId, final DeviceId deviceId) {
-        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, deviceId);
+    private void cleanDeviceStateIfBelongsExternalPartition(String tenantId, final DeviceId deviceId) {
+        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, deviceId.getId());
         if (!partitionedDevices.containsKey(tpi)) {
             cleanUpDeviceStateMap(deviceId);
             log.debug("[{}][{}] device belongs to external partition. Probably rebalancing is in progress. Topic: {}"
@@ -469,9 +469,9 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
         }
     }
 
-    private void onDeviceDeleted(TenantId tenantId, DeviceId deviceId) {
+    private void onDeviceDeleted(String tenantId, DeviceId deviceId) {
         cleanUpDeviceStateMap(deviceId);
-        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, deviceId);
+        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, deviceId.getId());
         Set<DeviceId> deviceIdSet = partitionedDevices.get(tpi);
         deviceIdSet.remove(deviceId);
     }

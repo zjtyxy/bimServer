@@ -21,7 +21,7 @@ import lombok.Data;
 
 @Data
 public class TenantRoutingInfo {
-    private final TenantId tenantId;
+    private final String tenantId;
     private final String isolatedTbCore;
     private final String isolatedTbRuleEngine;
 }

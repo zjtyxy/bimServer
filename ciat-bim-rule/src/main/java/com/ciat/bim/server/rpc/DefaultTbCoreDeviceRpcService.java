@@ -103,7 +103,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     @Override
     public void processRpcResponseFromRuleEngine(FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from rule engine: [{}]", response.getId(), response);
-        UUID requestId = response.getId();
+        String requestId = response.getId();
         Consumer<FromDeviceRpcResponse> consumer = localToRuleEngineRpcRequests.remove(requestId);
         if (consumer != null) {
             consumer.accept(response);
@@ -125,7 +125,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
     @Override
     public void processRpcResponseFromDeviceActor(FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from device actor.", response.getId());
-        UUID requestId = response.getId();
+        String requestId = response.getId();
         ToDeviceRpcRequestActorMsg request = localToDeviceRpcRequests.remove(requestId);
         if (request != null) {
             sendRpcResponseToTbRuleEngine(request.getServiceId(), response);
@@ -179,7 +179,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
 
         try {
             TbMsg tbMsg = TbMsg.newMsg(DataConstants.RPC_CALL_FROM_SERVER_TO_DEVICE, msg.getDeviceId(), currentUser.getCustomerId(), metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
-            clusterService.pushMsgToRuleEngine(msg.getTenantId(), msg.getDeviceId(), tbMsg, null);
+            clusterService.pushMsgToRuleEngine(msg.getTenantId().getId(), msg.getDeviceId(), tbMsg, null);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -192,7 +192,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             log.trace("[{}] timeout for processing to rule engine request.", requestId);
             Consumer<FromDeviceRpcResponse> consumer = localToRuleEngineRpcRequests.remove(requestId);
             if (consumer != null) {
-                consumer.accept(new FromDeviceRpcResponse(requestId, null, RpcError.TIMEOUT));
+                consumer.accept(new FromDeviceRpcResponse(requestId.toString(), null, RpcError.TIMEOUT));
             }
         }, timeout, TimeUnit.MILLISECONDS);
     }

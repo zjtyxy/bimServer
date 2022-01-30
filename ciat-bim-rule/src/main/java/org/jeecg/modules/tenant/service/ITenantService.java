@@ -1,5 +1,7 @@
 package org.jeecg.modules.tenant.service;
 
+import com.ciat.bim.server.common.data.page.PageData;
+import com.ciat.bim.server.common.data.page.PageLink;
 import org.jeecg.modules.tenant.entity.Tenant;
 import com.baomidou.mybatisplus.extension.service.IService;
 

@@ -20,5 +20,5 @@ import com.ciat.bim.data.id.TenantId;
 
 public interface TenantRoutingInfoService {
 
-    TenantRoutingInfo getRoutingInfo(TenantId tenantId);
+    TenantRoutingInfo getRoutingInfo(String tenantId);
 }

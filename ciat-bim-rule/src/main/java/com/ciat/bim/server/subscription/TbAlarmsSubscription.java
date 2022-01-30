@@ -30,7 +30,7 @@ public class TbAlarmsSubscription extends TbSubscription<AlarmSubscriptionUpdate
     private final long ts;
 
     @Builder
-    public TbAlarmsSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
+    public TbAlarmsSubscription(String serviceId, String sessionId, int subscriptionId, String tenantId, EntityId entityId,
                                 BiConsumer<String, AlarmSubscriptionUpdate> updateConsumer, long ts) {
         super(serviceId, sessionId, subscriptionId, tenantId, entityId, TbSubscriptionType.ALARMS, updateConsumer);
         this.ts = ts;

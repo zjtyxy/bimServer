@@ -15,9 +15,9 @@
  */
 package com.ciat.bim.server.edge.rpc.fetch;
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.device.entity.DeviceProfile;
 
 
 @AllArgsConstructor

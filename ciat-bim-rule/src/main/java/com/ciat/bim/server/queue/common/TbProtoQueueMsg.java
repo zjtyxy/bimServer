@@ -26,22 +26,22 @@ import java.util.UUID;
 @Data
 public class TbProtoQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> implements TbQueueMsg {
 
-    private final UUID key;
+    private final String key;
     protected final T value;
     private final TbQueueMsgHeaders headers;
 
-    public TbProtoQueueMsg(UUID key, T value) {
+    public TbProtoQueueMsg(String key, T value) {
         this(key, value, new DefaultTbQueueMsgHeaders());
     }
 
-    public TbProtoQueueMsg(UUID key, T value, TbQueueMsgHeaders headers) {
+    public TbProtoQueueMsg(String key, T value, TbQueueMsgHeaders headers) {
         this.key = key;
         this.value = value;
         this.headers = headers;
     }
 
     @Override
-    public UUID getKey() {
+    public String getKey() {
         return key;
     }
 

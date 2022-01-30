@@ -31,7 +31,7 @@ import java.util.UUID;
 public class RemoveRpcActorMsg implements ToDeviceActorNotificationMsg {
 
     @Getter
-    private final TenantId tenantId;
+    private final String tenantId;
     @Getter
     private final DeviceId deviceId;
 

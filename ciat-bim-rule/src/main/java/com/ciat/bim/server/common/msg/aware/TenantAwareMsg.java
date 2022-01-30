@@ -21,6 +21,6 @@ import com.ciat.bim.msg.TbActorMsg;
 
 public interface TenantAwareMsg extends TbActorMsg {
 
-	TenantId getTenantId();
+	String getTenantId();
 
 }

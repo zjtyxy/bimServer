@@ -40,11 +40,11 @@ public class TbSubscriptionUtils {
                 .setServiceId(subscription.getServiceId())
                 .setSessionId(subscription.getSessionId())
                 .setSubscriptionId(subscription.getSubscriptionId())
-                .setTenantIdMSB(subscription.getTenantId().getId().getMostSignificantBits())
-                .setTenantIdLSB(subscription.getTenantId().getId().getLeastSignificantBits())
+                .setTenantIdMSB(Long.parseLong(subscription.getTenantId()))
+                .setTenantIdLSB(Long.parseLong(subscription.getTenantId()))
                 .setEntityType(subscription.getEntityId().getEntityType().name())
-                .setEntityIdMSB(subscription.getEntityId().getId().getMostSignificantBits())
-                .setEntityIdLSB(subscription.getEntityId().getId().getLeastSignificantBits()).build();
+                .setEntityIdMSB(Long.parseLong(subscription.getEntityId().getId()))
+                .setEntityIdLSB(Long.parseLong(subscription.getEntityId().getId())).build();
 
         switch (subscription.getType()) {
             case TIMESERIES:
@@ -95,8 +95,8 @@ public class TbSubscriptionUtils {
                 .serviceId(subProto.getServiceId())
                 .sessionId(subProto.getSessionId())
                 .subscriptionId(subProto.getSubscriptionId())
-                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), new UUID(subProto.getEntityIdMSB(), subProto.getEntityIdLSB())))
-                .tenantId(new TenantId(new UUID(subProto.getTenantIdMSB(), subProto.getTenantIdLSB())));
+                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), subProto.getEntityIdMSB()+""))
+                .tenantId(subProto.getTenantIdMSB()+"");
 
         builder.scope(TbAttributeSubscriptionScope.valueOf(attributeSub.getScope()));
         builder.allKeys(attributeSub.getAllKeys());
@@ -112,8 +112,8 @@ public class TbSubscriptionUtils {
                 .serviceId(subProto.getServiceId())
                 .sessionId(subProto.getSessionId())
                 .subscriptionId(subProto.getSubscriptionId())
-                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), new UUID(subProto.getEntityIdMSB(), subProto.getEntityIdLSB())))
-                .tenantId(new TenantId(new UUID(subProto.getTenantIdMSB(), subProto.getTenantIdLSB())));
+                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), subProto.getEntityIdMSB()+""))
+                .tenantId(subProto.getTenantIdMSB()+"");
 
         builder.allKeys(telemetrySub.getAllKeys());
         Map<String, Long> keyStates = new HashMap<>();
@@ -131,8 +131,8 @@ public class TbSubscriptionUtils {
                 .serviceId(subProto.getServiceId())
                 .sessionId(subProto.getSessionId())
                 .subscriptionId(subProto.getSubscriptionId())
-                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), new UUID(subProto.getEntityIdMSB(), subProto.getEntityIdLSB())))
-                .tenantId(new TenantId(new UUID(subProto.getTenantIdMSB(), subProto.getTenantIdLSB())));
+                .entityId(EntityIdFactory.getByTypeAndUuid(subProto.getEntityType(), subProto.getEntityIdMSB()+""))
+                .tenantId(subProto.getTenantIdMSB()+"");
         builder.ts(alarmSub.getTs());
         return builder.build();
     }
@@ -168,10 +168,10 @@ public class TbSubscriptionUtils {
     public static ToCoreMsg toTimeseriesUpdateProto(TenantId tenantId, EntityId entityId, List<AttributeKv> ts) {
         TbTimeSeriesUpdateProto.Builder builder = TbTimeSeriesUpdateProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
-        builder.setEntityIdMSB(entityId.getId().getMostSignificantBits());
-        builder.setEntityIdLSB(entityId.getId().getLeastSignificantBits());
-        builder.setTenantIdMSB(tenantId.getId().getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getId().getLeastSignificantBits());
+        builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
+        builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
+        builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
+        builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
         ts.forEach(v -> builder.addData(toKeyValueProto(v.getCreateTime().getTime(), v).build()));
         SubscriptionMgrMsgProto.Builder msgBuilder = SubscriptionMgrMsgProto.newBuilder();
         msgBuilder.setTsUpdate(builder);
@@ -181,10 +181,10 @@ public class TbSubscriptionUtils {
     public static ToCoreMsg toAttributesUpdateProto(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes) {
         TbAttributeUpdateProto.Builder builder = TbAttributeUpdateProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
-        builder.setEntityIdMSB(entityId.getId().getMostSignificantBits());
-        builder.setEntityIdLSB(entityId.getId().getLeastSignificantBits());
-        builder.setTenantIdMSB(tenantId.getId().getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getId().getLeastSignificantBits());
+        builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
+        builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
+        builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
+        builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
         builder.setScope(scope);
         attributes.forEach(v -> builder.addData(toKeyValueProto(v.getLastupdatets().getTime(), v).build()));
 
@@ -196,10 +196,10 @@ public class TbSubscriptionUtils {
     public static ToCoreMsg toAttributesDeleteProto(TenantId tenantId, EntityId entityId, String scope, List<String> keys) {
         TbAttributeDeleteProto.Builder builder = TbAttributeDeleteProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
-        builder.setEntityIdMSB(entityId.getId().getMostSignificantBits());
-        builder.setEntityIdLSB(entityId.getId().getLeastSignificantBits());
-        builder.setTenantIdMSB(tenantId.getId().getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getId().getLeastSignificantBits());
+        builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
+        builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
+        builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
+        builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
         builder.setScope(scope);
         builder.addAllKeys(keys);
 
@@ -234,7 +234,7 @@ public class TbSubscriptionUtils {
     }
 
     public static EntityId toEntityId(String entityType, long entityIdMSB, long entityIdLSB) {
-        return EntityIdFactory.getByTypeAndUuid(entityType, new UUID(entityIdMSB, entityIdLSB));
+        return EntityIdFactory.getByTypeAndUuid(entityType, entityIdMSB+"");
     }
 
     public static List<AttributeKv> toTsKvEntityList(List<TsKvProto> dataList) {
@@ -275,10 +275,10 @@ public class TbSubscriptionUtils {
     public static ToCoreMsg toAlarmUpdateProto(TenantId tenantId, EntityId entityId, Alarm alarm) {
         TbAlarmUpdateProto.Builder builder = TbAlarmUpdateProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
-        builder.setEntityIdMSB(entityId.getId().getMostSignificantBits());
-        builder.setEntityIdLSB(entityId.getId().getLeastSignificantBits());
-        builder.setTenantIdMSB(tenantId.getId().getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getId().getLeastSignificantBits());
+        builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
+        builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
+        builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
+        builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
         builder.setAlarm(JacksonUtil.toString(alarm));
         SubscriptionMgrMsgProto.Builder msgBuilder = SubscriptionMgrMsgProto.newBuilder();
         msgBuilder.setAlarmUpdate(builder);
@@ -288,10 +288,10 @@ public class TbSubscriptionUtils {
     public static ToCoreMsg toAlarmDeletedProto(TenantId tenantId, EntityId entityId, Alarm alarm) {
         TbAlarmDeleteProto.Builder builder = TbAlarmDeleteProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
-        builder.setEntityIdMSB(entityId.getId().getMostSignificantBits());
-        builder.setEntityIdLSB(entityId.getId().getLeastSignificantBits());
-        builder.setTenantIdMSB(tenantId.getId().getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getId().getLeastSignificantBits());
+        builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
+        builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
+        builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
+        builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
         builder.setAlarm(JacksonUtil.toString(alarm));
         SubscriptionMgrMsgProto.Builder msgBuilder = SubscriptionMgrMsgProto.newBuilder();
         msgBuilder.setAlarmDelete(builder);

@@ -1,10 +1,14 @@
 package org.jeecg.modules.tenant.entity;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.tenant.entity.DefaultTenantProfileConfiguration;
+import com.ciat.bim.tenant.entity.TenantProfileData;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -76,4 +80,33 @@ public class TenantProfile implements Serializable {
 	@Excel(name = "配置数据", width = 15)
     @ApiModelProperty(value = "配置数据")
     private java.lang.String profileData;
+
+
+    public TenantProfileData fetchProfileData() {
+        return  createDefaultTenantProfileData();
+//        if (profileData != null) {
+//            return profileData;
+//        } else {
+//            if (profileDataBytes != null) {
+//                try {
+//                    profileData = mapper.readValue(new ByteArrayInputStream(profileDataBytes), TenantProfileData.class);
+//                } catch (IOException e) {
+//                    log.warn("Can't deserialize tenant profile data: ", e);
+//                    return createDefaultTenantProfileData();
+//                }
+//                return profileData;
+//            } else {
+//                return createDefaultTenantProfileData();
+//            }
+//        }
+    }
+    public TenantProfileData createDefaultTenantProfileData() {
+        TenantProfileData tpd = new TenantProfileData();
+        tpd.setConfiguration(new DefaultTenantProfileConfiguration());
+        return tpd;
+    }
+
+    public boolean isIsolatedTbRuleEngine() {
+       return  "Y".equals(isolatedTbRuleEngine);
+    }
 }

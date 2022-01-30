@@ -45,8 +45,8 @@ public class ToDeviceRpcRequestActorMsg implements ToDeviceActorNotificationMsg 
     }
 
     @Override
-    public TenantId getTenantId() {
-        return msg.getTenantId();
+    public String getTenantId() {
+        return msg.getTenantId().getId();
     }
 
     @Override

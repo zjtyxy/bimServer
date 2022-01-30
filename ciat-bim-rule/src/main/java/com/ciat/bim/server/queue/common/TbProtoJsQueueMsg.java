@@ -25,11 +25,11 @@ import java.util.UUID;
 
 public class TbProtoJsQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> extends TbProtoQueueMsg<T> {
 
-    public TbProtoJsQueueMsg(UUID key, T value) {
+    public TbProtoJsQueueMsg(String key, T value) {
         super(key, value);
     }
 
-    public TbProtoJsQueueMsg(UUID key, T value, TbQueueMsgHeaders headers) {
+    public TbProtoJsQueueMsg(String key, T value, TbQueueMsgHeaders headers) {
         super(key, value, headers);
     }
 

@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 package com.ciat.bim.rule.engine;
-
-
-
-import com.ciat.bim.data.device.profile.DeviceProfile;
 import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
+import org.jeecg.modules.device.entity.DeviceProfile;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -31,12 +28,12 @@ import java.util.function.Consumer;
  */
 public interface RuleEngineDeviceProfileCache {
 
-    DeviceProfile get(TenantId tenantId, DeviceProfileId deviceProfileId);
+    DeviceProfile get(String tenantId, DeviceProfileId deviceProfileId);
 
-    DeviceProfile get(TenantId tenantId, DeviceId deviceId);
+    DeviceProfile get(String tenantId, DeviceId deviceId);
 
-    void addListener(TenantId tenantId, EntityId listenerId, Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> devicelistener);
+    void addListener(String tenantId, EntityId listenerId, Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> devicelistener);
 
-    void removeListener(TenantId tenantId, EntityId listenerId);
+    void removeListener(String tenantId, EntityId listenerId);
 
 }

@@ -1,11 +1,18 @@
 package org.jeecg.modules.device.entity;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.function.Supplier;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -99,4 +106,28 @@ public class Device implements Serializable {
 	@Excel(name = "地理数据", width = 15)
     @ApiModelProperty(value = "地理数据")
     private java.lang.String geoInfo;
+
+    public JsonNode fetchAdditionalInfo() {
+        return null;
+       // return getJson(() -> additionalInfo, () -> additionalInfoBytes);
+    }
+    public static final ObjectMapper mapper = new ObjectMapper();
+    public static JsonNode getJson(Supplier<JsonNode> jsonData, Supplier<byte[]> binaryData) {
+        JsonNode json = jsonData.get();
+        if (json != null) {
+            return json;
+        } else {
+            byte[] data = binaryData.get();
+            if (data != null) {
+                try {
+                    return mapper.readTree(new ByteArrayInputStream(data));
+                } catch (IOException e) {
+                   // log.warn("Can't deserialize json data: ", e);
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    }
 }

@@ -18,15 +18,15 @@ package com.ciat.bim.server.edge.rpc;
 
 import com.ciat.bim.data.id.EdgeId;
 import com.ciat.bim.data.id.TenantId;
-import com.ciat.bim.server.edge.Edge;
+import org.jeecg.modules.edge.entity.Edge;
 
 public interface EdgeRpcService {
 
-    void updateEdge(TenantId tenantId, Edge edge);
+    void updateEdge(String tenantId, Edge edge);
 
-    void deleteEdge(TenantId tenantId, EdgeId edgeId);
+    void deleteEdge(String tenantId, EdgeId edgeId);
 
-    void onEdgeEvent(TenantId tenantId, EdgeId edgeId);
+    void onEdgeEvent(String tenantId, EdgeId edgeId);
 
-    void startSyncProcess(TenantId tenantId, EdgeId edgeId);
+    void startSyncProcess(String tenantId, EdgeId edgeId);
 }

@@ -115,7 +115,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     public void addSubscription(TbSubscription subscription, TbCallback callback) {
         log.trace("[{}][{}][{}] Registering subscription for entity [{}]",
                 subscription.getServiceId(), subscription.getSessionId(), subscription.getSubscriptionId(), subscription.getEntityId());
-        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId());
+        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, subscription.getTenantId(), subscription.getEntityId().getId());
         if (currentPartitions.contains(tpi)) {
             partitionedSubscriptions.computeIfAbsent(tpi, k -> ConcurrentHashMap.newKeySet()).add(subscription);
             callback.onSuccess();
@@ -378,7 +378,7 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
     }
 
     private void removeSubscriptionFromPartitionMap(TbSubscription sub) {
-        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, sub.getTenantId(), sub.getEntityId());
+        TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, sub.getTenantId(), sub.getEntityId().getId());
         Set<TbSubscription> subs = partitionedSubscriptions.get(tpi);
         if (subs != null) {
             subs.remove(sub);

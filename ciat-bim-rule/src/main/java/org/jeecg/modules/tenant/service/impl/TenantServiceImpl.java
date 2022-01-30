@@ -1,5 +1,10 @@
 package org.jeecg.modules.tenant.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ciat.bim.server.common.data.page.PageData;
+import com.ciat.bim.server.common.data.page.PageLink;
+import org.jeecg.modules.device.entity.DeviceProfile;
 import org.jeecg.modules.tenant.entity.Tenant;
 import org.jeecg.modules.tenant.mapper.TenantMapper;
 import org.jeecg.modules.tenant.service.ITenantService;
@@ -15,5 +20,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 public class TenantServiceImpl extends ServiceImpl<TenantMapper, Tenant> implements ITenantService {
+
 
 }

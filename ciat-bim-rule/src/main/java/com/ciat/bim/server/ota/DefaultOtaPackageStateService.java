@@ -15,11 +15,12 @@
  */
 package com.ciat.bim.server.ota;
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
+
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.server.transport.TransportProtos.ToOtaPackageStateServiceMsg;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.device.entity.Device;
+import org.jeecg.modules.device.entity.DeviceProfile;
 import org.springframework.stereotype.Service;
 
 
@@ -115,8 +116,8 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
 
     @Override
     public void update(DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged) {
-        TenantId tenantId = deviceProfile.getTenantId();
-
+//        TenantId tenantId = deviceProfile.getTenantId();
+//
 //        if (isFirmwareChanged) {
 //            update(tenantId, deviceProfile, FIRMWARE);
 //        }

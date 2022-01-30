@@ -20,9 +20,10 @@ import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.EntityType;
 import com.ciat.bim.msg.MsgType;
 import com.ciat.bim.rule.RuleChainId;
+import com.ciat.bim.server.common.data.ComponentLifecycleEvent;
 import com.ciat.bim.server.common.msg.aware.TenantAwareMsg;
 import com.ciat.bim.server.common.msg.cluster.ToAllNodesMsg;
-import com.ciat.bim.server.queue.ComponentLifecycleEvent;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -35,13 +36,13 @@ import java.util.Optional;
 @ToString
 public class ComponentLifecycleMsg implements TenantAwareMsg, ToAllNodesMsg {
     @Getter
-    private final TenantId tenantId;
+    private final String tenantId;
     @Getter
     private final EntityId entityId;
     @Getter
     private final ComponentLifecycleEvent event;
 
-    public ComponentLifecycleMsg(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent event) {
+    public ComponentLifecycleMsg(String tenantId, EntityId entityId, ComponentLifecycleEvent event) {
         this.tenantId = tenantId;
         this.entityId = entityId;
         this.event = event;

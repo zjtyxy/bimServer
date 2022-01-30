@@ -17,7 +17,6 @@ package com.ciat.bim.server.edge.rpc.processor;
 
 import com.ciat.bim.rule.RuleChainId;
 import com.ciat.bim.server.common.data.edge.EdgeEventActionType;
-import com.ciat.bim.server.edge.Edge;
 import com.ciat.bim.server.edge.EdgeEvent;
 import com.ciat.bim.server.edge.gen.DownlinkMsg;
 import com.ciat.bim.server.edge.gen.RuleChainMetadataUpdateMsg;

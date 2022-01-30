@@ -13,13 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.queue.queue;
+package com.ciat.bim.server.actors.ruleChain;
 
-import java.io.Serializable;
+import com.ciat.bim.msg.MsgType;
+import com.ciat.bim.msg.TbMsg;
+import com.ciat.bim.rule.TbContext;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * @author Andrew Shvayka
+ * Created by ashvayka on 19.03.18.
  */
-public enum ComponentLifecycleEvent implements Serializable {
-    CREATED, STARTED, ACTIVATED, SUSPENDED, UPDATED, STOPPED, DELETED
+@EqualsAndHashCode(callSuper = true)
+@ToString
+final class RuleNodeToSelfMsg extends TbToRuleNodeActorMsg {
+
+    public RuleNodeToSelfMsg(TbContext ctx, TbMsg tbMsg) {
+        super(ctx, tbMsg);
+    }
+
+    @Override
+    public MsgType getMsgType() {
+        return MsgType.RULE_TO_SELF_MSG;
+    }
+
 }

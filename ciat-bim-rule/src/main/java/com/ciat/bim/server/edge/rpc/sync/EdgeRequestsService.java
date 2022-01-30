@@ -16,7 +16,6 @@
 package com.ciat.bim.server.edge.rpc.sync;
 
 import com.ciat.bim.data.id.TenantId;
-import com.ciat.bim.server.edge.Edge;
 import com.ciat.bim.server.edge.gen.*;
 import com.google.common.util.concurrent.ListenableFuture;
 

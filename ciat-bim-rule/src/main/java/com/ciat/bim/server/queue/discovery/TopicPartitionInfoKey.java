@@ -25,7 +25,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TopicPartitionInfoKey {
     private ServiceQueue serviceQueue;
-    private TenantId isolatedTenantId;
+    private String isolatedTenantId;
     private int partition;
 
     @Override

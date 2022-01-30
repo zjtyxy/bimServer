@@ -16,7 +16,7 @@
 package com.ciat.bim.server.edge.rpc.processor;
 
 import com.ciat.bim.data.DataConstants;
-import com.ciat.bim.data.device.profile.DeviceProfile;
+
 import com.ciat.bim.data.id.*;
 import com.ciat.bim.msg.EntityType;
 import com.ciat.bim.msg.ServiceQueue;

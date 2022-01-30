@@ -16,19 +16,19 @@
 package com.ciat.bim.server.profile;
 
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
 import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
+import org.jeecg.modules.device.entity.DeviceProfile;
 
 public interface TbDeviceProfileCache extends RuleEngineDeviceProfileCache {
 
-//    void evict(TenantId tenantId, DeviceProfileId id);
+    void evict(String tenantId, DeviceProfileId id);
+
+    void evict(String tenantId, DeviceId id);
 //
-//    void evict(TenantId tenantId, DeviceId id);
-//
-//    DeviceProfile find(DeviceProfileId deviceProfileId);
-//
-//    DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String deviceType);
+    DeviceProfile find(DeviceProfileId deviceProfileId);
+
+    DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String deviceType);
 }

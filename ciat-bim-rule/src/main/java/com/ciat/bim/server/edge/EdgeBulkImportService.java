@@ -25,6 +25,7 @@ import com.ciat.bim.server.utils.JacksonUtil;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import lombok.RequiredArgsConstructor;
+import org.jeecg.modules.edge.entity.Edge;
 import org.springframework.stereotype.Service;
 
 

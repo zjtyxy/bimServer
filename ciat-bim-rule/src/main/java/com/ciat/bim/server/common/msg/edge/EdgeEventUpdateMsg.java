@@ -27,11 +27,11 @@ import lombok.ToString;
 @ToString
 public class EdgeEventUpdateMsg implements TenantAwareMsg, ToAllNodesMsg {
     @Getter
-    private final TenantId tenantId;
+    private final String tenantId;
     @Getter
     private final EdgeId edgeId;
 
-    public EdgeEventUpdateMsg(TenantId tenantId, EdgeId edgeId) {
+    public EdgeEventUpdateMsg(String tenantId, EdgeId edgeId) {
         this.tenantId = tenantId;
         this.edgeId = edgeId;
     }

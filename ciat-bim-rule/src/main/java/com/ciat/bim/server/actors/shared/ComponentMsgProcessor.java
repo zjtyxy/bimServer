@@ -18,27 +18,33 @@ package com.ciat.bim.server.actors.shared;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.msg.PartitionChangeMsg;
 import com.ciat.bim.data.id.TenantId;
+import com.ciat.bim.msg.TbMsg;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorCtx;
+import com.ciat.bim.server.common.msg.queue.RuleNodeException;
+import com.ciat.bim.server.stats.StatsPersistTick;
+import com.ciat.bim.tenant.TenantProfileConfiguration;
+import com.ciat.bim.tenant.entity.DefaultTenantProfileConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public abstract class ComponentMsgProcessor<T extends EntityId> extends AbstractContextAwareMsgProcessor {
 
-    protected final TenantId tenantId;
-    protected final T entityId;
+    protected final String tenantId;
+    protected final String entityId;
     protected ComponentLifecycleState state;
 
-    protected ComponentMsgProcessor(ActorSystemContext systemContext, TenantId tenantId, T id) {
+    protected ComponentMsgProcessor(ActorSystemContext systemContext, String tenantId, String id) {
         super(systemContext);
         this.tenantId = tenantId;
         this.entityId = id;
     }
 
-//    protected TenantProfileConfiguration getTenantProfileConfiguration() {
-//        return systemContext.getTenantProfileCache().get(tenantId).getProfileData().getConfiguration();
-//    }
+    protected TenantProfileConfiguration getTenantProfileConfiguration() {
+        return  new DefaultTenantProfileConfiguration();
+      //  return systemContext.getTenantProfileCache().get(tenantId).getProfileData().getConfiguration();
+    }
 
     public abstract String getComponentName();
 
@@ -72,22 +78,22 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         stop(context);
         start(context);
     }
-//
-//    public void scheduleStatsPersistTick(TbActorCtx context, long statsPersistFrequency) {
-//        schedulePeriodicMsgWithDelay(context, new StatsPersistTick(), statsPersistFrequency, statsPersistFrequency);
-//    }
-//
-//    protected void checkActive(TbMsg tbMsg) throws RuleNodeException {
-//        if (state != ComponentLifecycleState.ACTIVE) {
-//            log.debug("Component is not active. Current state [{}] for processor [{}][{}] tenant [{}]", state, entityId.getEntityType(), entityId, tenantId);
-//            RuleNodeException ruleNodeException = getInactiveException();
-//            if (tbMsg != null) {
-//                tbMsg.getCallback().onFailure(ruleNodeException);
-//            }
-//            throw ruleNodeException;
-//        }
-//    }
-//
-//    abstract protected RuleNodeException getInactiveException();
+
+    public void scheduleStatsPersistTick(TbActorCtx context, long statsPersistFrequency) {
+        schedulePeriodicMsgWithDelay(context, new StatsPersistTick(), statsPersistFrequency, statsPersistFrequency);
+    }
+
+    protected void checkActive(TbMsg tbMsg) throws RuleNodeException {
+        if (state != ComponentLifecycleState.ACTIVE) {
+            log.debug("Component is not active. Current state [{}] for processor [{}][{}] tenant [{}]", state, entityId, entityId, tenantId);
+            RuleNodeException ruleNodeException = getInactiveException();
+            if (tbMsg != null) {
+                tbMsg.getCallback().onFailure(ruleNodeException);
+            }
+            throw ruleNodeException;
+        }
+    }
+
+    abstract protected RuleNodeException getInactiveException();
 
 }

@@ -30,12 +30,12 @@ import java.util.UUID;
 public class ApiUsageStateId extends UUIDBased implements EntityId {
 
     @JsonCreator
-    public ApiUsageStateId(@JsonProperty("id") UUID id) {
+    public ApiUsageStateId(@JsonProperty("id") String id) {
         super(id);
     }
 
     public static ApiUsageStateId fromString(String userId) {
-        return new ApiUsageStateId(UUID.fromString(userId));
+        return new ApiUsageStateId(userId);
     }
 
     @ApiModelProperty(position = 2, required = true, value = "string", example = "API_USAGE_STATE", allowableValues = "API_USAGE_STATE")

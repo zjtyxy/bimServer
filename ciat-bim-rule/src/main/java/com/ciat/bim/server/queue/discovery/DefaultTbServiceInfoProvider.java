@@ -81,15 +81,15 @@ public class DefaultTbServiceInfoProvider implements TbServiceInfoProvider {
         TransportProtos.ServiceInfo.Builder builder = ServiceInfo.newBuilder()
                 .setServiceId(serviceId)
                 .addAllServiceTypes(serviceTypes.stream().map(ServiceType::name).collect(Collectors.toList()));
-        UUID tenantId;
+        String tenantId;
         if (!StringUtils.isEmpty(tenantIdStr)) {
-            tenantId = UUID.fromString(tenantIdStr);
-            isolatedTenant = new TenantId(tenantId);
+            tenantId = tenantIdStr;
+            isolatedTenant = new TenantId(tenantIdStr);
         } else {
-            tenantId = TenantId.NULL_UUID;
+            tenantId = TenantId.NULL_UUID.toString();
         }
-        builder.setTenantIdMSB(tenantId.getMostSignificantBits());
-        builder.setTenantIdLSB(tenantId.getLeastSignificantBits());
+        builder.setTenantIdMSB(Long.parseLong(tenantId));
+        builder.setTenantIdLSB(Long.parseLong(tenantId));
 
         if (serviceTypes.contains(ServiceType.TB_RULE_ENGINE) && ruleEngineSettings != null) {
             for (TbRuleEngineQueueConfiguration queue : ruleEngineSettings.getQueues()) {

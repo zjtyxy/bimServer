@@ -16,23 +16,24 @@
 package com.ciat.bim.server.cluster;
 
 
-import com.ciat.bim.data.device.profile.DeviceProfile;
+
 import com.ciat.bim.data.id.EdgeId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.TbMsg;
 import com.ciat.bim.msg.TopicPartitionInfo;
 import com.ciat.bim.server.common.data.ApiUsageState;
+import com.ciat.bim.server.common.data.ComponentLifecycleEvent;
 import com.ciat.bim.server.common.data.edge.EdgeEventActionType;
 import com.ciat.bim.server.common.data.edge.EdgeEventType;
 import com.ciat.bim.server.common.msg.ToDeviceActorNotificationMsg;
 import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
-import com.ciat.bim.server.queue.ComponentLifecycleEvent;
 import com.ciat.bim.server.queue.queue.TbQueueCallback;
 import com.ciat.bim.server.transport.TransportProtos;
 import com.ciat.bim.server.transport.TransportProtos.ToTransportMsg;
 import com.ciat.bim.server.transport.TransportProtos.ToCoreMsg;
 import org.jeecg.modules.device.entity.Device;
+import org.jeecg.modules.device.entity.DeviceProfile;
 import org.jeecg.modules.resource.entity.TbResource;
 import org.jeecg.modules.tenant.entity.Tenant;
 import org.jeecg.modules.tenant.entity.TenantProfile;
@@ -41,23 +42,23 @@ import java.util.UUID;
 
 public interface TbClusterService {
 
-    void pushMsgToCore(TopicPartitionInfo tpi, UUID msgKey, ToCoreMsg msg, TbQueueCallback callback);
+    void pushMsgToCore(TopicPartitionInfo tpi, String msgKey, ToCoreMsg msg, TbQueueCallback callback);
 
-    void pushMsgToCore(TenantId tenantId, EntityId entityId, ToCoreMsg msg, TbQueueCallback callback);
+    void pushMsgToCore(String tenantId, String entityId, ToCoreMsg msg, TbQueueCallback callback);
 
     void pushMsgToCore(ToDeviceActorNotificationMsg msg, TbQueueCallback callback);
 
     void pushNotificationToCore(String targetServiceId, FromDeviceRpcResponse response, TbQueueCallback callback);
 
-    void pushMsgToRuleEngine(TopicPartitionInfo tpi, UUID msgId, TransportProtos.ToRuleEngineMsg msg, TbQueueCallback callback);
+    void pushMsgToRuleEngine(TopicPartitionInfo tpi, String msgId, TransportProtos.ToRuleEngineMsg msg, TbQueueCallback callback);
 
-    void pushMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbMsg msg, TbQueueCallback callback);
+    void pushMsgToRuleEngine(String tenantId, EntityId entityId, TbMsg msg, TbQueueCallback callback);
 
     void pushNotificationToRuleEngine(String targetServiceId, FromDeviceRpcResponse response, TbQueueCallback callback);
 
     void pushNotificationToTransport(String targetServiceId, ToTransportMsg response, TbQueueCallback callback);
 
-    void broadcastEntityStateChangeEvent(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent state);
+    void broadcastEntityStateChangeEvent(String tenantId, EntityId entityId, ComponentLifecycleEvent state);
 
     void onDeviceProfileChange(DeviceProfile deviceProfile, TbQueueCallback callback);
 
@@ -83,7 +84,7 @@ public interface TbClusterService {
 
     void onResourceDeleted(TbResource resource, TbQueueCallback callback);
 
-    void onEdgeEventUpdate(TenantId tenantId, EdgeId edgeId);
+    void onEdgeEventUpdate(String tenantId, EdgeId edgeId);
 
-    void sendNotificationMsgToEdgeService(TenantId tenantId, EdgeId edgeId, EntityId entityId, String body, EdgeEventType type, EdgeEventActionType action);
+    void sendNotificationMsgToEdgeService(String tenantId, EdgeId edgeId, EntityId entityId, String body, EdgeEventType type, EdgeEventActionType action);
 }

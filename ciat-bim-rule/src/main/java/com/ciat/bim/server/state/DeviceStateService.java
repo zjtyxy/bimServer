@@ -28,13 +28,13 @@ import org.springframework.context.ApplicationListener;
  */
 public interface DeviceStateService extends ApplicationListener<PartitionChangeEvent> {
 
-    void onDeviceConnect(TenantId tenantId, DeviceId deviceId);
+    void onDeviceConnect(String tenantId, DeviceId deviceId);
 
-    void onDeviceActivity(TenantId tenantId, DeviceId deviceId, long lastReportedActivityTime);
+    void onDeviceActivity(String tenantId, DeviceId deviceId, long lastReportedActivityTime);
 
-    void onDeviceDisconnect(TenantId tenantId, DeviceId deviceId);
+    void onDeviceDisconnect(String tenantId, DeviceId deviceId);
 
-    void onDeviceInactivityTimeoutUpdate(TenantId tenantId, DeviceId deviceId, long inactivityTimeout);
+    void onDeviceInactivityTimeoutUpdate(String tenantId, DeviceId deviceId, long inactivityTimeout);
 
     void onQueueMsg(TransportProtos.DeviceStateServiceMsgProto proto, TbCallback bytes);
 

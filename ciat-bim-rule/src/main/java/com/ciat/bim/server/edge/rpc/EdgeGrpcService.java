@@ -18,7 +18,6 @@ package com.ciat.bim.server.edge.rpc;
 import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.id.EdgeId;
 import com.ciat.bim.data.id.TenantId;
-import com.ciat.bim.server.edge.Edge;
 import com.ciat.bim.server.edge.EdgeContextComponent;
 import com.ciat.bim.server.edge.gen.EdgeRpcServiceGrpc;
 import com.ciat.bim.server.edge.gen.RequestMsg;
@@ -35,6 +34,7 @@ import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.edge.entity.Edge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -156,7 +156,7 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
 //    }
 
     @Override
-    public void updateEdge(TenantId tenantId, Edge edge) {
+    public void updateEdge(String tenantId, Edge edge) {
         EdgeGrpcSession session = sessions.get(edge.getId());
         if (session != null && session.isConnected()) {
             log.debug("[{}] Updating configuration for edge [{}] [{}]", tenantId, edge.getName(), edge.getId());
@@ -167,7 +167,7 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
     }
 
     @Override
-    public void deleteEdge(TenantId tenantId, EdgeId edgeId) {
+    public void deleteEdge(String tenantId, EdgeId edgeId) {
         EdgeGrpcSession session = sessions.get(edgeId);
         if (session != null && session.isConnected()) {
             log.info("[{}] Closing and removing session for edge [{}]", tenantId, edgeId);
@@ -185,7 +185,7 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
     }
 
     @Override
-    public void onEdgeEvent(TenantId tenantId, EdgeId edgeId) {
+    public void onEdgeEvent(String tenantId, EdgeId edgeId) {
         log.trace("[{}] onEdgeEvent [{}]", tenantId, edgeId.getId());
         final Lock newEventLock = sessionNewEventsLocks.computeIfAbsent(edgeId, id -> new ReentrantLock());
         newEventLock.lock();
@@ -216,7 +216,7 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
     }
 
     @Override
-    public void startSyncProcess(TenantId tenantId, EdgeId edgeId) {
+    public void startSyncProcess(String tenantId, EdgeId edgeId) {
         EdgeGrpcSession session = sessions.get(edgeId);
         if (session != null && session.isConnected()) {
             //session.startSyncProcess(tenantId, edgeId);

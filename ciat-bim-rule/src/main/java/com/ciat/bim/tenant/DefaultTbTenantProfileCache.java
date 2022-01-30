@@ -75,7 +75,7 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache {
         if (profileId == null) {
             Tenant tenant = tenantService.getById(tenantId.getId());
             if (tenant != null) {
-                profileId = new TenantProfileId(UUID.fromString(tenant.getTenantProfileId()));
+                profileId = new TenantProfileId(tenant.getTenantProfileId());
                 tenantsMap.put(tenantId, profileId);
             } else {
                 return null;

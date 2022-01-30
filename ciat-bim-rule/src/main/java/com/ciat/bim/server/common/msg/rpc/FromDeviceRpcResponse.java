@@ -31,7 +31,7 @@ import java.util.UUID;
 @ToString
 public class FromDeviceRpcResponse implements Serializable {
     @Getter
-    private final UUID id;
+    private final String id;
     private final String response;
     private final RpcError error;
 

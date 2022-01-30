@@ -32,7 +32,7 @@ public class TbAttributeSubscription extends TbSubscription<TelemetrySubscriptio
     @Getter private final TbAttributeSubscriptionScope scope;
 
     @Builder
-    public TbAttributeSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
+    public TbAttributeSubscription(String serviceId, String sessionId, int subscriptionId, String tenantId, EntityId entityId,
                                    BiConsumer<String, TelemetrySubscriptionUpdate> updateConsumer,
                                    boolean allKeys, Map<String, Long> keyStates, TbAttributeSubscriptionScope scope) {
         super(serviceId, sessionId, subscriptionId, tenantId, entityId, TbSubscriptionType.ATTRIBUTES, updateConsumer);

@@ -28,12 +28,12 @@ public class EdgeId extends UUIDBased implements EntityId {
     private static final long serialVersionUID = 1L;
 
     @JsonCreator
-    public EdgeId(@JsonProperty("id") UUID id) {
+    public EdgeId(@JsonProperty("id") String id) {
         super(id);
     }
 
     public static EdgeId fromString(String integrationId) {
-        return new EdgeId(UUID.fromString(integrationId));
+        return new EdgeId(integrationId);
     }
 
     @ApiModelProperty(position = 2, required = true, value = "string", example = "EDGE", allowableValues = "EDGE")
