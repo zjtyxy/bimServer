@@ -1,10 +1,14 @@
 package org.jeecg.modules.device.service.impl;
 
+import com.ciat.bim.data.id.EntityId;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.mapper.AttributeKvMapper;
 import org.jeecg.modules.device.service.IAttributeKvService;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,5 +27,10 @@ public class AttributeKvServiceImpl extends ServiceImpl<AttributeKvMapper, Attri
 	@Override
 	public List<AttributeKv> selectByMainId(String mainId) {
 		return attributeKvMapper.selectByMainId(mainId);
+	}
+
+	@Override
+	public ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Set<String> keySet) {
+		return null;
 	}
 }

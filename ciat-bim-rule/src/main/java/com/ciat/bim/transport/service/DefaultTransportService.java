@@ -770,7 +770,8 @@ public class DefaultTransportService implements TransportService {
         TenantId tenantId = new TenantId(sessionInfo.getTenantIdMSB()+"");
         DeviceId deviceId = new DeviceId(sessionInfo.getDeviceIdMSB()+"");
 
-        EntityType rateLimitedEntityType = rateLimitService.checkLimits(tenantId, deviceId, dataPoints);
+     //   EntityType rateLimitedEntityType = rateLimitService.checkLimits(tenantId, deviceId, dataPoints);
+        EntityType rateLimitedEntityType = null;
         if (rateLimitedEntityType == null) {
             return true;
         } else {

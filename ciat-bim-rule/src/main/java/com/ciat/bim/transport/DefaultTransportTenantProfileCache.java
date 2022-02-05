@@ -121,10 +121,10 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
         if (profile == null) {
             tenantProfileFetchLock.lock();
             try {
-                tenantProfileId = tenantIds.get(tenantId);
-                if (tenantProfileId != null) {
-                    profile = profiles.get(tenantProfileId);
-                }
+//                tenantProfileId = tenantIds.get(tenantId);
+//                if (tenantProfileId != null) {
+//                    profile = profiles.get(tenantProfileId);
+//                }
                 if (profile == null) {
                     TransportProtos.GetEntityProfileRequestMsg msg = TransportProtos.GetEntityProfileRequestMsg.newBuilder()
                             .setEntityType(EntityType.TENANT.name())

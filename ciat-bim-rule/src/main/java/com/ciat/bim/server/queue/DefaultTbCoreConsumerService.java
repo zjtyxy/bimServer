@@ -29,19 +29,25 @@ import com.ciat.bim.server.ota.OtaPackageStateService;
 import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
 import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
+import com.ciat.bim.server.queue.processing.IdMsgPair;
 import com.ciat.bim.server.queue.provider.TbCoreQueueFactory;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
 import com.ciat.bim.server.rpc.TbCoreDeviceRpcService;
+import com.ciat.bim.server.rpc.ToDeviceRpcRequestActorMsg;
 import com.ciat.bim.server.state.DeviceStateService;
 import com.ciat.bim.server.subscription.SubscriptionManagerService;
 import com.ciat.bim.server.subscription.TbLocalSubscriptionService;
 import com.ciat.bim.server.transport.TransportProtos;
 import com.ciat.bim.server.transport.TransportProtos.*;
+import com.ciat.bim.server.transport.TransportToDeviceActorMsgWrapper;
+import com.ciat.bim.server.utils.JacksonUtil;
+import com.ciat.bim.server.utils.TbSubscriptionUtils;
 import com.ciat.bim.server.utils.ThingsBoardThreadFactory;
 import com.ciat.bim.tenant.TbTenantProfileCache;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.alarm.entity.Alarm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -166,83 +172,83 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 
     @Override
     protected void launchMainConsumers() {
-//        consumersExecutor.submit(() -> {
-//            while (!stopped) {
-//                try {
-//                    List<TbProtoQueueMsg<ToCoreMsg>> msgs = mainConsumer.poll(pollDuration);
-//                    if (msgs.isEmpty()) {
-//                        continue;
-//                    }
-//                    List<IdMsgPair<ToCoreMsg>> orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).collect(Collectors.toList());
-//                    ConcurrentMap<UUID, TbProtoQueueMsg<ToCoreMsg>> pendingMap = orderedMsgList.stream().collect(
-//                            Collectors.toConcurrentMap(IdMsgPair::getUuid, IdMsgPair::getMsg));
-//                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
-//                    TbPackProcessingContext<TbProtoQueueMsg<ToCoreMsg>> ctx = new TbPackProcessingContext<>(
-//                            processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
-//                    PendingMsgHolder pendingMsgHolder = new PendingMsgHolder();
-//                    Future<?> packSubmitFuture = consumersExecutor.submit(() -> {
-//                        orderedMsgList.forEach((element) -> {
-//                            UUID id = element.getUuid();
-//                            TbProtoQueueMsg<ToCoreMsg> msg = element.getMsg();
-//                            log.trace("[{}] Creating main callback for message: {}", id, msg.getValue());
-//                            TbCallback callback = new TbPackCallback<>(id, ctx);
-//                            try {
-//                                ToCoreMsg toCoreMsg = msg.getValue();
-//                                pendingMsgHolder.setToCoreMsg(toCoreMsg);
-//                                if (toCoreMsg.hasToSubscriptionMgrMsg()) {
-//                                    log.trace("[{}] Forwarding message to subscription manager service {}", id, toCoreMsg.getToSubscriptionMgrMsg());
-//                                    forwardToSubMgrService(toCoreMsg.getToSubscriptionMgrMsg(), callback);
-//                                } else if (toCoreMsg.hasToDeviceActorMsg()) {
-//                                    log.trace("[{}] Forwarding message to device actor {}", id, toCoreMsg.getToDeviceActorMsg());
-//                                    forwardToDeviceActor(toCoreMsg.getToDeviceActorMsg(), callback);
-//                                } else if (toCoreMsg.hasDeviceStateServiceMsg()) {
-//                                    log.trace("[{}] Forwarding message to state service {}", id, toCoreMsg.getDeviceStateServiceMsg());
-//                                    forwardToStateService(toCoreMsg.getDeviceStateServiceMsg(), callback);
-//                                } else if (toCoreMsg.hasEdgeNotificationMsg()) {
-//                                    log.trace("[{}] Forwarding message to edge service {}", id, toCoreMsg.getEdgeNotificationMsg());
-//                                    forwardToEdgeNotificationService(toCoreMsg.getEdgeNotificationMsg(), callback);
-//                                } else if (!toCoreMsg.getToDeviceActorNotificationMsg().isEmpty()) {
-//                                    Optional<TbActorMsg> actorMsg = encodingService.decode(toCoreMsg.getToDeviceActorNotificationMsg().toByteArray());
-//                                    if (actorMsg.isPresent()) {
-//                                        TbActorMsg tbActorMsg = actorMsg.get();
-//                                        if (tbActorMsg.getMsgType().equals(MsgType.DEVICE_RPC_REQUEST_TO_DEVICE_ACTOR_MSG)) {
-//                                            tbCoreDeviceRpcService.forwardRpcRequestToDeviceActor((ToDeviceRpcRequestActorMsg) tbActorMsg);
-//                                        } else {
-//                                            log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
-//                                            actorContext.tell(actorMsg.get());
-//                                        }
-//                                    }
-//                                    callback.onSuccess();
-//                                }
-//                            } catch (Throwable e) {
-//                                log.warn("[{}] Failed to process message: {}", id, msg, e);
-//                                callback.onFailure(e);
-//                            }
-//                        });
-//                    });
-//                    if (!processingTimeoutLatch.await(packProcessingTimeout, TimeUnit.MILLISECONDS)) {
-//                        if (!packSubmitFuture.isDone()) {
-//                            packSubmitFuture.cancel(true);
-//                            ToCoreMsg lastSubmitMsg = pendingMsgHolder.getToCoreMsg();
-//                            log.info("Timeout to process message: {}", lastSubmitMsg);
-//                        }
-//                        ctx.getAckMap().forEach((id, msg) -> log.debug("[{}] Timeout to process message: {}", id, msg.getValue()));
-//                        ctx.getFailedMap().forEach((id, msg) -> log.warn("[{}] Failed to process message: {}", id, msg.getValue()));
-//                    }
-//                    mainConsumer.commit();
-//                } catch (Exception e) {
-//                    if (!stopped) {
-//                        log.warn("Failed to obtain messages from queue.", e);
-//                        try {
-//                            Thread.sleep(pollDuration);
-//                        } catch (InterruptedException e2) {
-//                            log.trace("Failed to wait until the server has capacity to handle new requests", e2);
-//                        }
-//                    }
-//                }
-//            }
-//            log.info("TB Core Consumer stopped.");
-//        });
+        consumersExecutor.submit(() -> {
+            while (!stopped) {
+                try {
+                    List<TbProtoQueueMsg<ToCoreMsg>> msgs = mainConsumer.poll(pollDuration);
+                    if (msgs.isEmpty()) {
+                        continue;
+                    }
+                    List<IdMsgPair<ToCoreMsg>> orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).collect(Collectors.toList());
+                    ConcurrentMap<UUID, TbProtoQueueMsg<ToCoreMsg>> pendingMap = orderedMsgList.stream().collect(
+                            Collectors.toConcurrentMap(IdMsgPair::getUuid, IdMsgPair::getMsg));
+                    CountDownLatch processingTimeoutLatch = new CountDownLatch(1);
+                    TbPackProcessingContext<TbProtoQueueMsg<ToCoreMsg>> ctx = new TbPackProcessingContext<>(
+                            processingTimeoutLatch, pendingMap, new ConcurrentHashMap<>());
+                    PendingMsgHolder pendingMsgHolder = new PendingMsgHolder();
+                    Future<?> packSubmitFuture = consumersExecutor.submit(() -> {
+                        orderedMsgList.forEach((element) -> {
+                            UUID id = element.getUuid();
+                            TbProtoQueueMsg<ToCoreMsg> msg = element.getMsg();
+                            log.trace("[{}] Creating main callback for message: {}", id, msg.getValue());
+                            TbCallback callback = new TbPackCallback<>(id, ctx);
+                            try {
+                                ToCoreMsg toCoreMsg = msg.getValue();
+                                pendingMsgHolder.setToCoreMsg(toCoreMsg);
+                                if (toCoreMsg.hasToSubscriptionMgrMsg()) {
+                                    log.trace("[{}] Forwarding message to subscription manager service {}", id, toCoreMsg.getToSubscriptionMgrMsg());
+                                    forwardToSubMgrService(toCoreMsg.getToSubscriptionMgrMsg(), callback);
+                                } else if (toCoreMsg.hasToDeviceActorMsg()) {
+                                    log.trace("[{}] Forwarding message to device actor {}", id, toCoreMsg.getToDeviceActorMsg());
+                                    forwardToDeviceActor(toCoreMsg.getToDeviceActorMsg(), callback);
+                                } else if (toCoreMsg.hasDeviceStateServiceMsg()) {
+                                    log.trace("[{}] Forwarding message to state service {}", id, toCoreMsg.getDeviceStateServiceMsg());
+                                    forwardToStateService(toCoreMsg.getDeviceStateServiceMsg(), callback);
+                                } else if (toCoreMsg.hasEdgeNotificationMsg()) {
+                                    log.trace("[{}] Forwarding message to edge service {}", id, toCoreMsg.getEdgeNotificationMsg());
+                                    forwardToEdgeNotificationService(toCoreMsg.getEdgeNotificationMsg(), callback);
+                                } else if (!toCoreMsg.getToDeviceActorNotificationMsg().isEmpty()) {
+                                    Optional<TbActorMsg> actorMsg = encodingService.decode(toCoreMsg.getToDeviceActorNotificationMsg().toByteArray());
+                                    if (actorMsg.isPresent()) {
+                                        TbActorMsg tbActorMsg = actorMsg.get();
+                                        if (tbActorMsg.getMsgType().equals(MsgType.DEVICE_RPC_REQUEST_TO_DEVICE_ACTOR_MSG)) {
+                                            tbCoreDeviceRpcService.forwardRpcRequestToDeviceActor((ToDeviceRpcRequestActorMsg) tbActorMsg);
+                                        } else {
+                                            log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
+                                            actorContext.tell(actorMsg.get());
+                                        }
+                                    }
+                                    callback.onSuccess();
+                                }
+                            } catch (Throwable e) {
+                                log.warn("[{}] Failed to process message: {}", id, msg, e);
+                                callback.onFailure(e);
+                            }
+                        });
+                    });
+                    if (!processingTimeoutLatch.await(packProcessingTimeout, TimeUnit.MILLISECONDS)) {
+                        if (!packSubmitFuture.isDone()) {
+                            packSubmitFuture.cancel(true);
+                            ToCoreMsg lastSubmitMsg = pendingMsgHolder.getToCoreMsg();
+                            log.info("Timeout to process message: {}", lastSubmitMsg);
+                        }
+                        ctx.getAckMap().forEach((id, msg) -> log.debug("[{}] Timeout to process message: {}", id, msg.getValue()));
+                        ctx.getFailedMap().forEach((id, msg) -> log.warn("[{}] Failed to process message: {}", id, msg.getValue()));
+                    }
+                    mainConsumer.commit();
+                } catch (Exception e) {
+                    if (!stopped) {
+                        log.warn("Failed to obtain messages from queue.", e);
+                        try {
+                            Thread.sleep(pollDuration);
+                        } catch (InterruptedException e2) {
+                            log.trace("Failed to wait until the server has capacity to handle new requests", e2);
+                        }
+                    }
+                }
+            }
+            log.info("TB Core Consumer stopped.");
+        });
     }
 
     private static class PendingMsgHolder {
@@ -413,91 +419,91 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 //        }
 //    }
 //
-//    private void forwardToSubMgrService(SubscriptionMgrMsgProto msg, TbCallback callback) {
-//        if (msg.hasAttributeSub()) {
-//            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAttributeSub()), callback);
-//        } else if (msg.hasTelemetrySub()) {
-//            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getTelemetrySub()), callback);
-//        } else if (msg.hasAlarmSub()) {
-//            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAlarmSub()), callback);
-//        } else if (msg.hasSubClose()) {
-//            TbSubscriptionCloseProto closeProto = msg.getSubClose();
-//            subscriptionManagerService.cancelSubscription(closeProto.getSessionId(), closeProto.getSubscriptionId(), callback);
-//        } else if (msg.hasTsUpdate()) {
-//            TbTimeSeriesUpdateProto proto = msg.getTsUpdate();
-//            subscriptionManagerService.onTimeSeriesUpdate(
-//                    new TenantId(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB())),
-//                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
-//                    TbSubscriptionUtils.toTsKvEntityList(proto.getDataList()), callback);
-//        } else if (msg.hasAttrUpdate()) {
-//            TbAttributeUpdateProto proto = msg.getAttrUpdate();
-//            subscriptionManagerService.onAttributesUpdate(
-//                    new TenantId(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB())),
-//                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
-//                    proto.getScope(), TbSubscriptionUtils.toAttributeKvList(proto.getDataList()), callback);
-//        } else if (msg.hasAttrDelete()) {
-//            TbAttributeDeleteProto proto = msg.getAttrDelete();
-//            subscriptionManagerService.onAttributesDelete(
-//                    new TenantId(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB())),
-//                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
-//                    proto.getScope(), proto.getKeysList(), callback);
-//        } else if (msg.hasAlarmUpdate()) {
-//            TbAlarmUpdateProto proto = msg.getAlarmUpdate();
-//            subscriptionManagerService.onAlarmUpdate(
-//                    new TenantId(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB())),
-//                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
-//                    JacksonUtil.fromString(proto.getAlarm(), Alarm.class), callback);
-//        } else if (msg.hasAlarmDelete()) {
-//            TbAlarmDeleteProto proto = msg.getAlarmDelete();
-//            subscriptionManagerService.onAlarmDeleted(
-//                    new TenantId(new UUID(proto.getTenantIdMSB(), proto.getTenantIdLSB())),
-//                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
-//                    JacksonUtil.fromString(proto.getAlarm(), Alarm.class), callback);
-//        } else {
-//            throwNotHandled(msg, callback);
-//        }
-//        if (statsEnabled) {
-//            stats.log(msg);
-//        }
-//    }
-//
-//    private void forwardToStateService(DeviceStateServiceMsgProto deviceStateServiceMsg, TbCallback callback) {
-//        if (statsEnabled) {
-//            stats.log(deviceStateServiceMsg);
-//        }
-//        stateService.onQueueMsg(deviceStateServiceMsg, callback);
-//    }
-//
-//    private void forwardToEdgeNotificationService(EdgeNotificationMsgProto edgeNotificationMsg, TbCallback callback) {
-//        if (statsEnabled) {
-//            stats.log(edgeNotificationMsg);
-//        }
-//        edgeNotificationService.pushNotificationToEdge(edgeNotificationMsg, callback);
-//    }
-//
-//    private void forwardToDeviceActor(TransportToDeviceActorMsg toDeviceActorMsg, TbCallback callback) {
-//        if (statsEnabled) {
-//            stats.log(toDeviceActorMsg);
-//        }
-//        actorContext.tell(new TransportToDeviceActorMsgWrapper(toDeviceActorMsg, callback));
-//    }
-//
-//    private void throwNotHandled(Object msg, TbCallback callback) {
-//        log.warn("Message not handled: {}", msg);
-//        callback.onFailure(new RuntimeException("Message not handled!"));
-//    }
+    private void forwardToSubMgrService(SubscriptionMgrMsgProto msg, TbCallback callback) {
+        if (msg.hasAttributeSub()) {
+            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAttributeSub()), callback);
+        } else if (msg.hasTelemetrySub()) {
+            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getTelemetrySub()), callback);
+        } else if (msg.hasAlarmSub()) {
+            subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAlarmSub()), callback);
+        } else if (msg.hasSubClose()) {
+            TbSubscriptionCloseProto closeProto = msg.getSubClose();
+            subscriptionManagerService.cancelSubscription(closeProto.getSessionId(), closeProto.getSubscriptionId(), callback);
+        } else if (msg.hasTsUpdate()) {
+            TbTimeSeriesUpdateProto proto = msg.getTsUpdate();
+            subscriptionManagerService.onTimeSeriesUpdate(
+                    new TenantId(proto.getTenantIdMSB()+""),
+                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
+                    TbSubscriptionUtils.toTsKvEntityList(proto.getDataList()), callback);
+        } else if (msg.hasAttrUpdate()) {
+            TbAttributeUpdateProto proto = msg.getAttrUpdate();
+            subscriptionManagerService.onAttributesUpdate(
+                    new TenantId(proto.getTenantIdMSB()+""),
+                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
+                    proto.getScope(), TbSubscriptionUtils.toAttributeKvList(proto.getDataList()), callback);
+        } else if (msg.hasAttrDelete()) {
+            TbAttributeDeleteProto proto = msg.getAttrDelete();
+            subscriptionManagerService.onAttributesDelete(
+                    new TenantId(proto.getTenantIdMSB()+""),
+                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
+                    proto.getScope(), proto.getKeysList(), callback);
+        } else if (msg.hasAlarmUpdate()) {
+            TbAlarmUpdateProto proto = msg.getAlarmUpdate();
+            subscriptionManagerService.onAlarmUpdate(
+                    new TenantId(proto.getTenantIdMSB()+""),
+                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
+                    JacksonUtil.fromString(proto.getAlarm(), Alarm.class), callback);
+        } else if (msg.hasAlarmDelete()) {
+            TbAlarmDeleteProto proto = msg.getAlarmDelete();
+            subscriptionManagerService.onAlarmDeleted(
+                    new TenantId(proto.getTenantIdMSB()+""),
+                    TbSubscriptionUtils.toEntityId(proto.getEntityType(), proto.getEntityIdMSB(), proto.getEntityIdLSB()),
+                    JacksonUtil.fromString(proto.getAlarm(), Alarm.class), callback);
+        } else {
+            throwNotHandled(msg, callback);
+        }
+        if (statsEnabled) {
+            stats.log(msg);
+        }
+    }
+
+    private void forwardToStateService(DeviceStateServiceMsgProto deviceStateServiceMsg, TbCallback callback) {
+        if (statsEnabled) {
+            stats.log(deviceStateServiceMsg);
+        }
+        stateService.onQueueMsg(deviceStateServiceMsg, callback);
+    }
+
+    private void forwardToEdgeNotificationService(EdgeNotificationMsgProto edgeNotificationMsg, TbCallback callback) {
+        if (statsEnabled) {
+            stats.log(edgeNotificationMsg);
+        }
+       // edgeNotificationService.pushNotificationToEdge(edgeNotificationMsg, callback);
+    }
+
+    private void forwardToDeviceActor(TransportToDeviceActorMsg toDeviceActorMsg, TbCallback callback) {
+        if (statsEnabled) {
+            stats.log(toDeviceActorMsg);
+        }
+        actorContext.tell(new TransportToDeviceActorMsgWrapper(toDeviceActorMsg, callback));
+    }
+
+    private void throwNotHandled(Object msg, TbCallback callback) {
+        log.warn("Message not handled: {}", msg);
+        callback.onFailure(new RuntimeException("Message not handled!"));
+    }
 
     @Override
     protected void stopMainConsumers() {
-//        if (mainConsumer != null) {
-//            mainConsumer.unsubscribe();
-//        }
-//        if (usageStatsConsumer != null) {
-//            usageStatsConsumer.unsubscribe();
-//        }
-//        if (firmwareStatesConsumer != null) {
-//            firmwareStatesConsumer.unsubscribe();
-//        }
+        if (mainConsumer != null) {
+            mainConsumer.unsubscribe();
+        }
+        if (usageStatsConsumer != null) {
+            usageStatsConsumer.unsubscribe();
+        }
+        if (firmwareStatesConsumer != null) {
+            firmwareStatesConsumer.unsubscribe();
+        }
     }
 
 }

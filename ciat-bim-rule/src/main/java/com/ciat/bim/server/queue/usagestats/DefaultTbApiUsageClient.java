@@ -120,8 +120,9 @@ public class DefaultTbApiUsageClient implements TbApiUsageClient {
             //TODO: figure out how to minimize messages into the queue. Maybe group by 100s of messages?
 
             String tenantId = ownerId.getTenantId();
-           // EntityId entityId = Optional.ofNullable(ownerId.getEntityId()).orElse(new EntityId(tenantId));
-            EntityId entityId = ownerId.getEntityId();
+            EntityId entityId = Optional.ofNullable(ownerId.getEntityId()).orElse(TenantId.fromString(tenantId));
+
+           // EntityId entityId = ownerId.getEntityId();
             TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId.getId()).newByTopic(msgProducer.getDefaultTopic());
             msgProducer.send(tpi, new TbProtoQueueMsg<>(UUID.randomUUID().toString(), statsMsg.build()), null);
         }));

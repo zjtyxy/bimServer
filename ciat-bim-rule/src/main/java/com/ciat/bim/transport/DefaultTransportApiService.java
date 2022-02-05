@@ -167,8 +167,9 @@ public class DefaultTransportApiService implements TransportApiService {
                 return getEmptyTransportApiResponseFuture();
             }
         } else {
-            credentials = deviceCredentialsService.getById(
-                    EncryptionUtil.getSha3Hash("|", mqtt.getClientId(), mqtt.getUserName()));
+//            credentials = deviceCredentialsService.getById(
+//                    EncryptionUtil.getSha3Hash("|", mqtt.getClientId(), mqtt.getUserName()));
+            credentials = deviceCredentialsService.getById(mqtt.getUserName());
             if (checkIsMqttCredentials(credentials)) {
                 BasicCredentialsValidationResult validationResult = validateMqttCredentials(mqtt, credentials);
                 if (VALID.equals(validationResult)) {

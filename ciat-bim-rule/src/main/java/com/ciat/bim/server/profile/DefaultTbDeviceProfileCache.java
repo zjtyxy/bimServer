@@ -56,22 +56,26 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
     @Override
     public DeviceProfile get(String tenantId, DeviceProfileId deviceProfileId) {
         DeviceProfile profile = deviceProfilesMap.get(deviceProfileId);
-//        if (profile == null) {
-//            deviceProfileFetchLock.lock();
-//            try {
-//                profile = deviceProfilesMap.get(deviceProfileId);
-//                if (profile == null) {
-//                    profile = deviceProfileService.findDeviceProfileById(tenantId, deviceProfileId);
-//                    if (profile != null) {
-//                        deviceProfilesMap.put(deviceProfileId, profile);
-//                        log.debug("[{}] Fetch device profile into cache: {}", profile.getId(), profile);
-//                    }
-//                }
-//            } finally {
-//                deviceProfileFetchLock.unlock();
-//            }
-//        }
-//        log.trace("[{}] Found device profile in cache: {}", deviceProfileId, profile);
+        if (profile == null) {
+            deviceProfileFetchLock.lock();
+            try {
+                profile = deviceProfilesMap.get(deviceProfileId);
+                if (profile == null) {
+                    profile = deviceProfileService.getById(deviceProfileId.getId());
+                    if (profile != null) {
+                        deviceProfilesMap.put(deviceProfileId, profile);
+                        log.debug("[{}] Fetch device profile into cache: {}", profile.getId(), profile);
+                    }
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally {
+                deviceProfileFetchLock.unlock();
+            }
+        }
+        log.trace("[{}] Found device profile in cache: {}", deviceProfileId, profile);
         return profile;
     }
 

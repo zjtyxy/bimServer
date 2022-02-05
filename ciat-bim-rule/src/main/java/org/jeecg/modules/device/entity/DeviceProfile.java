@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ciat.bim.data.device.DeviceTransportType;
 import com.ciat.bim.data.device.profile.DeviceProfileData;
+import com.ciat.bim.data.device.profile.DeviceProfileTransportConfiguration;
+import com.ciat.bim.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -126,7 +128,10 @@ public class DeviceProfile implements Serializable {
     private java.lang.String profileData;
 
     public DeviceProfileData fetchProfileData() {
-        return null;
+        DeviceProfileData rst = new DeviceProfileData();
+        DeviceProfileTransportConfiguration dptc = new MqttDeviceProfileTransportConfiguration();
+        rst.setTransportConfiguration(dptc);
+        return rst;
         // return getJson(() -> additionalInfo, () -> additionalInfoBytes);
     }
 }
