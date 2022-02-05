@@ -1,5 +1,7 @@
 package org.jeecg.modules.device.service.impl;
 
+import com.ciat.bim.server.dao.JpaExecutorService;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.device.mapper.AttributeKvMapper;
@@ -26,7 +28,8 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 	private DeviceMapper deviceMapper;
 	@Autowired
 	private AttributeKvMapper attributeKvMapper;
-
+	@Autowired
+	protected JpaExecutorService service;
 	@Override
 	@Transactional
 	public void saveMain(Device device, List<AttributeKv> attributeKvList) {
@@ -72,6 +75,11 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 			attributeKvMapper.deleteByMainId(id.toString());
 			deviceMapper.deleteById(id);
 		}
+	}
+
+	@Override
+	public ListenableFuture<Device> getByIdFuture(String deviceId) {
+		return service.submit(()-> this.getById(deviceId));
 	}
 
 }

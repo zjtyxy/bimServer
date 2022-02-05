@@ -1,4 +1,4 @@
-package org.jeecg.modules.resource.entity;
+package org.jeecg.modules.device.entity;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ciat.bim.server.common.data.ResourceType;
+import com.ciat.bim.data.security.DeviceCredentialsType;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,17 +19,17 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * @Description: TB资源表
+ * @Description: 认证信息
  * @Author: jeecg-boot
- * @Date:   2022-01-24
+ * @Date:   2022-02-04
  * @Version: V1.0
  */
 @Data
-@TableName("tb_resource")
+@TableName("device_credentials")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="tb_resource对象", description="TB资源表")
-public class TbResource implements Serializable {
+@ApiModel(value="device_credentials对象", description="认证信息")
+public class DeviceCredentials implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	/**主键*/
@@ -52,28 +52,20 @@ public class TbResource implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新日期")
     private java.util.Date updateTime;
-	/**租户*/
-	@Excel(name = "租户", width = 15)
-    @ApiModelProperty(value = "租户")
-    private java.lang.String tenantId;
-	/**名称*/
-	@Excel(name = "名称", width = 15)
-    @ApiModelProperty(value = "名称")
-    private java.lang.String title;
-	/**资源类型*/
-	@Excel(name = "资源类型", width = 15)
-    @ApiModelProperty(value = "资源类型")
-    private ResourceType resourceType;
-	/**资源标识*/
-	@Excel(name = "资源标识", width = 15)
-    @ApiModelProperty(value = "资源标识")
-    private java.lang.String resourceKey;
-	/**搜索内容*/
-	@Excel(name = "搜索内容", width = 15)
-    @ApiModelProperty(value = "搜索内容")
-    private java.lang.String searchText;
-	/**数据*/
-	@Excel(name = "数据", width = 15)
-    @ApiModelProperty(value = "数据")
-    private java.lang.String data;
+	/**设备*/
+	@Excel(name = "设备", width = 15)
+    @ApiModelProperty(value = "设备")
+    private java.lang.String deviceId;
+	/**认证类型*/
+	@Excel(name = "认证类型", width = 15)
+    @ApiModelProperty(value = "认证类型")
+    private DeviceCredentialsType deviceCredentialsType;
+	/**认证ID*/
+	@Excel(name = "认证ID", width = 15)
+    @ApiModelProperty(value = "认证ID")
+    private java.lang.String credentialsId;
+	/**认证值*/
+	@Excel(name = "认证值", width = 15)
+    @ApiModelProperty(value = "认证值")
+    private java.lang.String credentialsValue;
 }

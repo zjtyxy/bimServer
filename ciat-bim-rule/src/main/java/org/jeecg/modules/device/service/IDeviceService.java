@@ -2,6 +2,7 @@ package org.jeecg.modules.device.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.Device;
 
@@ -39,4 +40,5 @@ public interface IDeviceService extends IService<Device> {
 	 */
 	public void delBatchMain (Collection<? extends Serializable> idList);
 
+	public ListenableFuture<Device> getByIdFuture(String deviceId);
 }

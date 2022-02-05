@@ -270,7 +270,7 @@ public class DefaultTbClusterService implements TbClusterService {
         TransportProtos.ResourceUpdateMsg resourceUpdateMsg = TransportProtos.ResourceUpdateMsg.newBuilder()
                 .setTenantIdMSB(Long.parseLong(tenantId.getId()))
                 .setTenantIdLSB(Long.parseLong(tenantId.getId()))
-                .setResourceType(resource.getResourceType())
+                .setResourceType(resource.getResourceType().name())
                 .setResourceKey(resource.getResourceKey())
                 .build();
         ToTransportMsg transportMsg = ToTransportMsg.newBuilder().setResourceUpdateMsg(resourceUpdateMsg).build();
@@ -283,7 +283,7 @@ public class DefaultTbClusterService implements TbClusterService {
         TransportProtos.ResourceDeleteMsg resourceUpdateMsg = TransportProtos.ResourceDeleteMsg.newBuilder()
                 .setTenantIdMSB(Long.parseLong(resource.getTenantId()))
                 .setTenantIdLSB(Long.parseLong(resource.getTenantId()))
-                .setResourceType(resource.getResourceType())
+                .setResourceType(resource.getResourceType().name())
                 .setResourceKey(resource.getResourceKey())
                 .build();
         ToTransportMsg transportMsg = ToTransportMsg.newBuilder().setResourceDeleteMsg(resourceUpdateMsg).build();
