@@ -49,8 +49,8 @@ public class EntityIdFactory {
 //                return new UserId(uuid);
 //            case DASHBOARD:
 //                return new DashboardId(uuid);
-//            case DEVICE:
-//                return new DeviceId(uuid);
+            case DEVICE:
+                return new DeviceId(uuid);
 //            case ASSET:
 //                return new AssetId(uuid);
 //            case ALARM:

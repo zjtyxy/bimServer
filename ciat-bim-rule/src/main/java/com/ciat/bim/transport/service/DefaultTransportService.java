@@ -465,7 +465,9 @@ public class DefaultTransportService implements TransportService {
             sendToDeviceActor(sessionInfo, msg, callback);
         }
     }
-
+    /*
+       处理设备信息上报
+     */
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.PostTelemetryMsg msg, TransportServiceCallback<Void> callback) {
         int dataPoints = 0;
@@ -1029,7 +1031,7 @@ public class DefaultTransportService implements TransportService {
         } else {
             ruleChainId = deviceProfile.getDefaultRuleChainId();
             String defaultQueueName = deviceProfile.getDefaultQueueName();
-            queueName = defaultQueueName != null ? defaultQueueName : ServiceQueue.MAIN;
+            queueName = StringUtils.isNotEmpty(defaultQueueName) ? defaultQueueName : ServiceQueue.MAIN;
         }
 
         TbMsg tbMsg = TbMsg.newMsg(queueName, sessionMsgType.name(), deviceId, customerId, metaData, gson.toJson(json), ruleChainId, null);

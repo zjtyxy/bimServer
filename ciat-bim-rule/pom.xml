@@ -35,7 +35,7 @@
         <cassandra-driver-core.version>3.11.0</cassandra-driver-core.version>
         <cassandra.version>4.10.0</cassandra.version>
         <bucket4j.version>4.1.1</bucket4j.version>
-        <bouncycastle.version>1.67</bouncycastle.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
         <protobuf-dynamic.version>1.0.3TB</protobuf-dynamic.version>
         <wire-schema.version>3.4.0</wire-schema.version>
     </properties>
@@ -104,11 +104,11 @@
             <artifactId>bucket4j-core</artifactId>
             <version>${bucket4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.bouncycastle</groupId>-->
+<!--            <artifactId>bcprov-jdk15on</artifactId>-->
+<!--            <version>${bouncycastle.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>

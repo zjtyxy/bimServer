@@ -17,11 +17,13 @@ package com.ciat.bim.msg;
 
 import com.ciat.bim.data.id.CustomerId;
 import com.ciat.bim.data.id.EntityId;
+import com.ciat.bim.data.id.EntityIdFactory;
 import com.ciat.bim.rule.RuleChainId;
 import com.ciat.bim.rule.RuleNodeId;
 import com.ciat.bim.server.common.msg.gen.MsgProtos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -207,31 +209,31 @@ public final class TbMsg implements Serializable {
         builder.setRuleNodeExecCounter(msg.ruleNodeExecCounter.get());
         return builder.build().toByteArray();
     }
-//
-//    public static TbMsg fromBytes(String queueName, byte[] data, TbMsgCallback callback) {
-//        try {
-//            MsgProtos.TbMsgProto proto = MsgProtos.TbMsgProto.parseFrom(data);
-//            TbMsgMetaData metaData = new TbMsgMetaData(proto.getMetaData().getDataMap());
-//            EntityId entityId = EntityIdFactory.getByTypeAndUuid(proto.getEntityType(), new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()));
-//            CustomerId customerId = null;
-//            RuleChainId ruleChainId = null;
-//            RuleNodeId ruleNodeId = null;
-//            if (proto.getCustomerIdMSB() != 0L && proto.getCustomerIdLSB() != 0L) {
-//                customerId = new CustomerId(new UUID(proto.getCustomerIdMSB(), proto.getCustomerIdLSB()));
-//            }
-//            if (proto.getRuleChainIdMSB() != 0L && proto.getRuleChainIdLSB() != 0L) {
-//                ruleChainId = new RuleChainId(new UUID(proto.getRuleChainIdMSB(), proto.getRuleChainIdLSB()));
-//            }
-//            if (proto.getRuleNodeIdMSB() != 0L && proto.getRuleNodeIdLSB() != 0L) {
-//                ruleNodeId = new RuleNodeId(new UUID(proto.getRuleNodeIdMSB(), proto.getRuleNodeIdLSB()));
-//            }
-//
-//            TbMsgDataType dataType = TbMsgDataType.values()[proto.getDataType()];
-//            return new TbMsg(queueName, UUID.fromString(proto.getId()), proto.getTs(), proto.getType(), entityId, customerId, metaData, dataType, proto.getData(), ruleChainId, ruleNodeId, proto.getRuleNodeExecCounter(), callback);
-//        } catch (InvalidProtocolBufferException e) {
-//            throw new IllegalStateException("Could not parse protobuf for TbMsg", e);
-//        }
-//    }
+
+    public static TbMsg fromBytes(String queueName, byte[] data, TbMsgCallback callback) {
+        try {
+            MsgProtos.TbMsgProto proto = MsgProtos.TbMsgProto.parseFrom(data);
+            TbMsgMetaData metaData = new TbMsgMetaData(proto.getMetaData().getDataMap());
+            EntityId entityId = EntityIdFactory.getByTypeAndUuid(proto.getEntityType(), proto.getEntityIdMSB()+"");
+            CustomerId customerId = null;
+            RuleChainId ruleChainId = null;
+            RuleNodeId ruleNodeId = null;
+            if (proto.getCustomerIdMSB() != 0L && proto.getCustomerIdLSB() != 0L) {
+                customerId = new CustomerId(proto.getCustomerIdMSB()+"");
+            }
+            if (proto.getRuleChainIdMSB() != 0L && proto.getRuleChainIdLSB() != 0L) {
+                ruleChainId = new RuleChainId(proto.getRuleChainIdMSB()+"");
+            }
+           // if (proto.getRuleNodeIdMSB() != 0L && proto.getRuleNodeIdLSB() != 0L) {
+                ruleNodeId = new RuleNodeId(proto.getRuleNodeIdMSB()+"");
+          //  }
+
+            TbMsgDataType dataType = TbMsgDataType.values()[proto.getDataType()];
+            return new TbMsg(queueName, proto.getId(), proto.getTs(), proto.getType(), entityId, customerId, metaData, dataType, proto.getData(), ruleChainId.getId(), ruleNodeId.getId(), proto.getRuleNodeExecCounter(), callback);
+        } catch (InvalidProtocolBufferException e) {
+            throw new IllegalStateException("Could not parse protobuf for TbMsg", e);
+        }
+    }
 
     public TbMsg copyWithRuleChainId(String ruleChainId) {
         return copyWithRuleChainId(ruleChainId, this.id);
