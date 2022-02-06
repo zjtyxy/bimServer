@@ -1,5 +1,6 @@
 package org.jeecg.modules.device.service.impl;
 
+import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -42,6 +43,11 @@ public class AttributeKvServiceImpl extends ServiceImpl<AttributeKvMapper, Attri
 
 	@Override
 	public ListenableFuture<List<Void>> save(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes) {
+		return null;
+	}
+
+	@Override
+	public ListenableFuture<List<AttributeKv>> findAll(TenantId tenantId, DeviceId deviceId, String scope) {
 		return null;
 	}
 }

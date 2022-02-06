@@ -75,7 +75,7 @@ public class AttributeKv implements Serializable {
 	/**双精度值*/
 	@Excel(name = "双精度值", width = 15)
     @ApiModelProperty(value = "双精度值")
-    private java.lang.String doubleValue;
+    private Double doubleValue;
 	/**Json值*/
 	@Excel(name = "Json值", width = 15)
     @ApiModelProperty(value = "Json值")

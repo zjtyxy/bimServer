@@ -22,6 +22,7 @@ import com.ciat.bim.rule.RuleChainId;
 import com.ciat.bim.rule.RuleEngineException;
 import com.ciat.bim.server.ContextBasedCreator;
 import com.ciat.bim.server.DefaultActorService;
+import com.ciat.bim.server.actors.device.DeviceActorCreator;
 import com.ciat.bim.server.actors.ruleChain.RuleChainManagerActor;
 import com.ciat.bim.server.common.data.ApiUsageState;
 import com.ciat.bim.server.common.data.ComponentLifecycleEvent;
@@ -33,8 +34,8 @@ import com.ciat.bim.server.common.msg.queue.QueueToRuleEngineMsg;
 import com.ciat.bim.server.edge.rpc.EdgeRpcService;
 import com.ciat.bim.server.transport.TransportToDeviceActorMsgWrapper;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.saxon.trans.rules.RuleChain;
 import org.jeecg.modules.edge.entity.Edge;
+import org.jeecg.modules.rule.entity.RuleChain;
 import org.jeecg.modules.tenant.entity.Tenant;
 import org.jeecg.modules.tenant.entity.TenantProfile;
 
@@ -102,6 +103,11 @@ public class TenantActor extends RuleChainManagerActor {
         log.info("[{}] Stopping tenant actor.", tenantId);
     }
 
+    /**
+     * 根据租户进行对应的数据处理
+     * @param msg
+     * @return
+     */
     @Override
     protected boolean doProcess(TbActorMsg msg) {
         if (cantFindTenant) {
@@ -206,58 +212,58 @@ public class TenantActor extends RuleChainManagerActor {
         if (!isCore) {
             log.warn("RECEIVED INVALID MESSAGE: {}", msg);
         }
-//        TbActorRef deviceActor = getOrCreateDeviceActor(msg.getDeviceId());
-//        if (priority) {
-//            deviceActor.tellWithHighPriority(msg);
-//        } else {
-//            deviceActor.tell(msg);
-//        }
+        TbActorRef deviceActor = getOrCreateDeviceActor(msg.getDeviceId());
+        if (priority) {
+            deviceActor.tellWithHighPriority(msg);
+        } else {
+            deviceActor.tell(msg);
+        }
     }
 
     private void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
-//        if (msg.getEntityId().getEntityType().equals(EntityType.API_USAGE_STATE)) {
-//            ApiUsageState old = apiUsageState;
-//            apiUsageState = new ApiUsageState(systemContext.getApiUsageStateService().getApiUsageState(tenantId));
-//            if (old.isReExecEnabled() && !apiUsageState.isReExecEnabled()) {
-//                log.info("[{}] Received API state update. Going to DISABLE Rule Engine execution.", tenantId);
-//                destroyRuleChains();
-//            } else if (!old.isReExecEnabled() && apiUsageState.isReExecEnabled()) {
-//                log.info("[{}] Received API state update. Going to ENABLE Rule Engine execution.", tenantId);
-//                initRuleChains();
-//            }
-//        } else if (msg.getEntityId().getEntityType() == EntityType.EDGE) {
-//            EdgeId edgeId = new EdgeId(msg.getEntityId().getId());
-//            EdgeRpcService edgeRpcService = systemContext.getEdgeRpcService();
-//            if (msg.getEvent() == ComponentLifecycleEvent.DELETED) {
-//                edgeRpcService.deleteEdge(tenantId, edgeId);
-//            } else {
-//                Edge edge = systemContext.getEdgeService().getById(edgeId);
-//                if (msg.getEvent() == ComponentLifecycleEvent.UPDATED) {
-//                    edgeRpcService.updateEdge(tenantId, edge);
-//                }
-//            }
-//        } else if (isRuleEngineForCurrentTenant) {
-//            TbActorRef target = getEntityActorRef(msg.getEntityId());
-//            if (target != null) {
-//                if (msg.getEntityId().getEntityType() == EntityType.RULE_CHAIN) {
-//                    RuleChain ruleChain = systemContext.getRuleChainService().
-//                            findRuleChainById(tenantId, new RuleChainId(msg.getEntityId().getId()));
-//                    if (ruleChain != null && RuleChainType.CORE.equals(ruleChain.getType())) {
-//                        visit(ruleChain, target);
-//                    }
-//                }
-//                target.tellWithHighPriority(msg);
-//            } else {
-//                log.debug("[{}] Invalid component lifecycle msg: {}", tenantId, msg);
-//            }
-//        }
+        if (msg.getEntityId().getEntityType().equals(EntityType.API_USAGE_STATE)) {
+            ApiUsageState old = apiUsageState;
+            apiUsageState = new ApiUsageState(systemContext.getApiUsageStateService().getApiUsageState(TenantId.fromString(tenantId)));
+            if (old.isReExecEnabled() && !apiUsageState.isReExecEnabled()) {
+                log.info("[{}] Received API state update. Going to DISABLE Rule Engine execution.", tenantId);
+                destroyRuleChains();
+            } else if (!old.isReExecEnabled() && apiUsageState.isReExecEnabled()) {
+                log.info("[{}] Received API state update. Going to ENABLE Rule Engine execution.", tenantId);
+                initRuleChains();
+            }
+        } else if (msg.getEntityId().getEntityType() == EntityType.EDGE) {
+            EdgeId edgeId = new EdgeId(msg.getEntityId().getId());
+            EdgeRpcService edgeRpcService = systemContext.getEdgeRpcService();
+            if (msg.getEvent() == ComponentLifecycleEvent.DELETED) {
+                edgeRpcService.deleteEdge(tenantId, edgeId);
+            } else {
+                Edge edge = systemContext.getEdgeService().getById(edgeId);
+                if (msg.getEvent() == ComponentLifecycleEvent.UPDATED) {
+                    edgeRpcService.updateEdge(tenantId, edge);
+                }
+            }
+        } else if (isRuleEngineForCurrentTenant) {
+            TbActorRef target = getEntityActorRef(msg.getEntityId());
+            if (target != null) {
+                if (msg.getEntityId().getEntityType() == EntityType.RULE_CHAIN) {
+                    RuleChain ruleChain = systemContext.getRuleChainService().
+                            getById(msg.getEntityId().getId());
+                    if (ruleChain != null && RuleChainType.CORE.equals(ruleChain.getType())) {
+                        visit(ruleChain, target);
+                    }
+                }
+                target.tellWithHighPriority(msg);
+            } else {
+                log.debug("[{}] Invalid component lifecycle msg: {}", tenantId, msg);
+            }
+        }
     }
 
-//    private TbActorRef getOrCreateDeviceActor(DeviceId deviceId) {
-//        return ctx.getOrCreateChildActor(new TbEntityActorId(deviceId),
-//                () -> DefaultActorService.DEVICE_DISPATCHER_NAME,
-//                () -> new DeviceActorCreator(systemContext, tenantId, deviceId));
-//    }
+    private TbActorRef getOrCreateDeviceActor(DeviceId deviceId) {
+        return ctx.getOrCreateChildActor(new TbEntityActorId(deviceId),
+                () -> DefaultActorService.DEVICE_DISPATCHER_NAME,
+                () -> new DeviceActorCreator(systemContext,TenantId.fromString(tenantId), deviceId));
+    }
 
     private void onToEdgeSessionMsg(EdgeEventUpdateMsg msg) {
         log.trace("[{}] onToEdgeSessionMsg [{}]", msg.getTenantId(), msg);

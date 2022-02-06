@@ -1,6 +1,7 @@
 package org.jeecg.modules.device.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -24,4 +25,6 @@ public interface IAttributeKvService extends IService<AttributeKv> {
     ListenableFuture<List<Void>> removeAll(TenantId tenantId, EntityId entityId, String scope, List<String> keys);
 
     ListenableFuture<List<Void>> save(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes);
+
+    ListenableFuture<List<AttributeKv>> findAll(TenantId tenantId, DeviceId deviceId, String scope);
 }

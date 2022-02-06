@@ -137,6 +137,12 @@ public class DefaultTbActorSystem implements TbActorSystem {
         tell(target, actorMsg, false);
     }
 
+    /**
+     * 根据相应的actor处理
+     * @param target
+     * @param actorMsg
+     * @param highPriority
+     */
     private void tell(TbActorId target, TbActorMsg actorMsg, boolean highPriority) {
         TbActorMailbox mailbox = actors.get(target);
         if (mailbox == null) {

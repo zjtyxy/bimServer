@@ -54,6 +54,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Andrew Shvayka
+ * 会负责消息的具体处理
  */
 @Slf4j
 public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleChainId> {

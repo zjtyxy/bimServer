@@ -33,7 +33,11 @@ import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.discovery.PartitionService;
 import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
 import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
+import com.ciat.bim.server.rpc.TbRpcService;
+import com.ciat.bim.server.session.DeviceSessionCacheService;
+import com.ciat.bim.server.state.DeviceStateService;
 import com.ciat.bim.tenant.TbTenantProfileCache;
+import com.ciat.bim.transport.TbCoreToTransportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.util.concurrent.FutureCallback;
@@ -41,6 +45,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.device.service.IAttributeKvService;
+import org.jeecg.modules.device.service.IDeviceService;
 import org.jeecg.modules.edge.service.IEdgeService;
 import org.jeecg.modules.rule.service.IRuleChainService;
 import org.jeecg.modules.rule.service.IRuleNodeStateService;
@@ -99,10 +105,10 @@ public class ActorSystemContext {
 //    @Autowired
 //    @Getter
 //    private DataDecodingEncodingService encodingService;
-//
-//    @Autowired
-//    @Getter
-//    private DeviceService deviceService;
+
+    @Autowired
+    @Getter
+    private IDeviceService deviceService;
 //
     @Autowired
     @Getter
@@ -154,11 +160,11 @@ public class ActorSystemContext {
 //    @Autowired
 //    @Getter
 //    private TimeseriesService tsService;
-//
-//    @Autowired
-//    @Getter
-//    private AttributesService attributesService;
-//
+
+    @Autowired
+    @Getter
+    private IAttributeKvService attributesService;
+
     @Autowired
     @Getter
     private EventService eventService;
@@ -229,18 +235,18 @@ public class ActorSystemContext {
 //    private JsInvokeStats jsInvokeStats;
 //
 //    //TODO: separate context for TbCore and TbRuleEngine
-//    @Autowired(required = false)
-//    @Getter
-//    private DeviceStateService deviceStateService;
-//
-//    @Autowired(required = false)
-//    @Getter
-//    private DeviceSessionCacheService deviceSessionCacheService;
-//
-//    @Autowired(required = false)
-//    @Getter
-//    private TbCoreToTransportService tbCoreToTransportService;
-//
+    @Autowired(required = false)
+    @Getter
+    private DeviceStateService deviceStateService;
+
+    @Autowired(required = false)
+    @Getter
+    private DeviceSessionCacheService deviceSessionCacheService;
+
+    @Autowired(required = false)
+    @Getter
+    private TbCoreToTransportService tbCoreToTransportService;
+
 //    /**
 //     * The following Service will be null if we operate in tb-core mode
 //     */
@@ -261,12 +267,12 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private IEdgeService edgeService;
-//
+
 //    @Lazy
 //    @Autowired(required = false)
 //    @Getter
 //    private EdgeEventService edgeEventService;
-//
+
     @Lazy
     @Autowired(required = false)
     @Getter
@@ -282,19 +288,19 @@ public class ActorSystemContext {
 //    @Getter
 //    private OtaPackageService otaPackageService;
 //
-//    @Lazy
-//    @Autowired(required = false)
-//    @Getter
-//    private TbRpcService tbRpcService;
-//
-//    @Value("${actors.session.max_concurrent_sessions_per_device:1}")
-//    @Getter
-//    private long maxConcurrentSessionsPerDevice;
-//
-//    @Value("${actors.session.sync.timeout}")
-//    @Getter
-//    private long syncSessionTimeout;
-//
+    @Lazy
+    @Autowired(required = false)
+    @Getter
+    private TbRpcService tbRpcService;
+
+    @Value("${actors.session.max_concurrent_sessions_per_device:1}")
+    @Getter
+    private long maxConcurrentSessionsPerDevice;
+
+    @Value("${actors.session.sync.timeout}")
+    @Getter
+    private long syncSessionTimeout;
+
     @Value("${actors.rule.chain.error_persist_frequency}")
     @Getter
     private long ruleChainErrorPersistFrequency;
@@ -306,14 +312,14 @@ public class ActorSystemContext {
     @Value("${actors.statistics.enabled}")
     @Getter
     private boolean statisticsEnabled;
-//
-//    @Value("${actors.statistics.persist_frequency}")
-//    @Getter
-//    private long statisticsPersistFrequency;
-//
-//    @Value("${edges.enabled}")
-//    @Getter
-//    private boolean edgesEnabled;
+
+    @Value("${actors.statistics.persist_frequency}")
+    @Getter
+    private long statisticsPersistFrequency;
+
+    @Value("${edges.enabled}")
+    @Getter
+    private boolean edgesEnabled;
 //
 //    @Scheduled(fixedDelayString = "${actors.statistics.js_print_interval_ms}")
 //    public void printStats() {

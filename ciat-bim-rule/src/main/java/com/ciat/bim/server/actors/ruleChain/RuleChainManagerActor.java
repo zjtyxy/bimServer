@@ -57,7 +57,8 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
     }
 
     protected void initRuleChains() {
-        for (RuleChain ruleChain : new PageDataIterable<>(link -> ruleChainService.findTenantRuleChainsByType(tenantId, RuleChainType.CORE, link), ContextAwareActor.ENTITY_PACK_LIMIT)) {
+        for (RuleChain ruleChain : new PageDataIterable<>(link -> ruleChainService.findTenantRuleChainsByType(tenantId, RuleChainType.CORE, link),
+                ContextAwareActor.ENTITY_PACK_LIMIT)) {
             String ruleChainId = ruleChain.getId();
             log.debug("[{}] Creating rule chain actor", ruleChain.getId());
             TbActorRef actorRef = getOrCreateActor(ruleChainId, id -> ruleChain);

@@ -1,5 +1,6 @@
 package org.jeecg.modules.rule.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ciat.bim.common.data.rule.RuleChainType;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.rule.RuleChainId;
@@ -28,7 +29,11 @@ public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain
 
     @Override
     public PageData<RuleChain> findTenantRuleChainsByType(String tenantId, RuleChainType core, PageLink link) {
-        return null;
+
+        QueryWrapper<RuleChain>  qw = new QueryWrapper<>();
+        List<RuleChain> rcs = this.list(qw);
+        PageData<RuleChain> rst = new PageData<>(rcs,rcs.size(),rcs.size(),false);
+        return rst;
     }
 
     @Override
