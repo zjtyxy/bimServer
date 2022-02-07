@@ -56,6 +56,9 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
         this.ruleChainService = systemContext.getRuleChainService();
     }
 
+    /**
+     * 初始化RuleChain
+     */
     protected void initRuleChains() {
         for (RuleChain ruleChain : new PageDataIterable<>(link -> ruleChainService.findTenantRuleChainsByType(tenantId, RuleChainType.CORE, link),
                 ContextAwareActor.ENTITY_PACK_LIMIT)) {

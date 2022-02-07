@@ -68,7 +68,7 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
     private final TbApiUsageClient apiUsageClient;
     private String ruleChainName;
 
-    private RuleNodeId firstId;
+    private String firstId;
     private RuleNodeCtx firstNode;
     private boolean started;
 
@@ -89,7 +89,9 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
     public String getComponentName() {
         return null;
     }
-
+    /*
+    初始化NodeActor
+     */
     @Override
     public void start(TbActorCtx context) {
         if (!started) {
@@ -186,7 +188,7 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             }
         }
 
-        firstId = ruleChain.getFirstRuleNodeId();
+        firstId = ruleChain.getRuleNodeId();
         firstNode = nodeActors.get(firstId);
         state = ComponentLifecycleState.ACTIVE;
     }
@@ -199,7 +201,8 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
                 checkActive(envelope.getMsg());
                 String targetId = msg.getRuleNodeId();
                 RuleNodeCtx targetCtx;
-                if (targetId == null) {
+                if (targetId == null || targetId.equals("0")) //收割节点
+                {
                     targetCtx = firstNode;
                     msg = msg.copyWithRuleChainId(entityId);
                 } else {

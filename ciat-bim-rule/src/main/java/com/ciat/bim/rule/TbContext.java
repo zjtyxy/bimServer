@@ -20,6 +20,7 @@ import com.ciat.bim.data.id.EdgeId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.*;
+import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import io.netty.channel.EventLoopGroup;
 import org.jeecg.modules.rule.entity.RuleNode;
 import org.jeecg.modules.tenant.entity.TenantProfile;
@@ -166,8 +167,8 @@ public interface TbContext {
 //    RuleChainService getRuleChainService();
 //
 //    RuleEngineRpcService getRpcService();
-//
-//    RuleEngineTelemetryService getTelemetryService();
+
+      RuleEngineTelemetryService getTelemetryService();
 //
 //    TimeseriesService getTimeseriesService();
 //
@@ -207,7 +208,7 @@ public interface TbContext {
 //
 //    void logJsEvalFailure();
 //
-//    String getServiceId();
+    String getServiceId();
 //
     EventLoopGroup getSharedEventLoop();
 //
@@ -226,12 +227,12 @@ public interface TbContext {
 //    RuleNodeState saveRuleNodeState(RuleNodeState state);
 //
 //    void clearRuleNodeStates();
-//
-//    void addTenantProfileListener(Consumer<TenantProfile> listener);
-//
+
+    void addTenantProfileListener(Consumer<TenantProfile> listener);
+
 //    void addDeviceProfileListeners(Consumer<DeviceProfile> listener, BiConsumer<DeviceId, DeviceProfile> deviceListener);
 //
-//    void removeListeners();
-//
+    void removeListeners();
+
     TenantProfile getTenantProfile();
 }

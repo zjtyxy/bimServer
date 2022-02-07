@@ -19,6 +19,7 @@ package com.ciat.bim.rule;
 import com.ciat.bim.common.data.rule.ComponentScope;
 import com.ciat.bim.common.data.rule.ComponentType;
 import com.ciat.bim.common.data.rule.RuleChainType;
+import com.ciat.bim.rule.engine.api.NodeConfiguration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -24,6 +24,7 @@ import com.ciat.bim.rule.RuleChainId;
 import com.ciat.bim.rule.RuleNodeId;
 import com.ciat.bim.rule.TbContext;
 import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
+import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorRef;
 import com.ciat.bim.server.cluster.TbClusterService;
@@ -382,12 +383,12 @@ class DefaultTbContext implements TbContext {
 //            mainCtx.getJsInvokeStats().incrementFailures();
 //        }
 //    }
-//
-//    @Override
-//    public String getServiceId() {
-//        return mainCtx.getServiceInfoProvider().getServiceId();
-//    }
-//
+
+    @Override
+    public String getServiceId() {
+        return mainCtx.getServiceInfoProvider().getServiceId();
+    }
+
 //    @Override
 //    public AttributesService getAttributesService() {
 //        return mainCtx.getAttributesService();
@@ -442,12 +443,12 @@ class DefaultTbContext implements TbContext {
 //    public TimeseriesService getTimeseriesService() {
 //        return mainCtx.getTsService();
 //    }
-//
-//    @Override
-//    public RuleEngineTelemetryService getTelemetryService() {
-//        return mainCtx.getTsSubService();
-//    }
-//
+
+    @Override
+    public RuleEngineTelemetryService getTelemetryService() {
+        return mainCtx.getTsSubService();
+    }
+
 //    @Override
 //    public RelationService getRelationService() {
 //        return mainCtx.getRelationService();
@@ -571,22 +572,22 @@ class DefaultTbContext implements TbContext {
 //        }
 //        mainCtx.getRuleNodeStateService().removeByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
 //    }
-//
-//    @Override
-//    public void addTenantProfileListener(Consumer<TenantProfile> listener) {
-//        mainCtx.getTenantProfileCache().addListener(getTenantId(), getSelfId(), listener);
-//    }
-//
+
+    @Override
+    public void addTenantProfileListener(Consumer<TenantProfile> listener) {
+        mainCtx.getTenantProfileCache().addListener(TenantId.fromString(getTenantId()), getSelfId(), listener);
+    }
+
 //    @Override
 //    public void addDeviceProfileListeners(Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> deviceListener) {
 //        mainCtx.getDeviceProfileCache().addListener(getTenantId(), getSelfId(), profileListener, deviceListener);
 //    }
 //
-//    @Override
-//    public void removeListeners() {
-//        mainCtx.getDeviceProfileCache().removeListener(getTenantId(), getSelfId());
-//        mainCtx.getTenantProfileCache().removeListener(getTenantId(), getSelfId());
-//    }
+    @Override
+    public void removeListeners() {
+        mainCtx.getDeviceProfileCache().removeListener(getTenantId(), getSelfId());
+        mainCtx.getTenantProfileCache().removeListener(TenantId.fromString(getTenantId()), getSelfId());
+    }
 
     @Override
     public TenantProfile getTenantProfile() {

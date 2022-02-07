@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.common.data.rule.RuleChainType;
 import com.ciat.bim.rule.RuleNodeId;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -64,7 +65,7 @@ public class RuleChain implements Serializable {
 	@Excel(name = "类型", width = 15, dicCode = "rule_chain_type")
 	@Dict(dicCode = "rule_chain_type")
     @ApiModelProperty(value = "类型")
-    private java.lang.String type;
+    private RuleChainType type;
 	/**规则首节点*/
 	@Excel(name = "规则首节点", width = 15)
     @ApiModelProperty(value = "规则首节点")
@@ -86,7 +87,7 @@ public class RuleChain implements Serializable {
         return  "Y".equals(this.root);
     }
 
-    public RuleNodeId getFirstRuleNodeId() {
-        return null;
-    }
+//    public String getFirstRuleNodeId() {
+//        return RuleNodeId.fromString(ruleNodeId);
+//    }
 }

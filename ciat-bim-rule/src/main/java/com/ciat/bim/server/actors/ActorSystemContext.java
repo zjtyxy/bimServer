@@ -36,6 +36,8 @@ import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
 import com.ciat.bim.server.rpc.TbRpcService;
 import com.ciat.bim.server.session.DeviceSessionCacheService;
 import com.ciat.bim.server.state.DeviceStateService;
+import com.ciat.bim.server.telemetry.TelemetrySubscriptionService;
+import com.ciat.bim.server.timeseries.TimeseriesService;
 import com.ciat.bim.tenant.TbTenantProfileCache;
 import com.ciat.bim.transport.TbCoreToTransportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -157,9 +159,9 @@ public class ActorSystemContext {
     @Getter
     private TbClusterService clusterService;
 
-//    @Autowired
-//    @Getter
-//    private TimeseriesService tsService;
+    @Autowired
+    @Getter
+    private TimeseriesService tsService;
 
     @Autowired
     @Getter
@@ -181,9 +183,9 @@ public class ActorSystemContext {
 //    @Getter
 //    private EntityViewService entityViewService;
 //
-//    @Autowired
-//    @Getter
-//    private TelemetrySubscriptionService tsSubService;
+    @Autowired
+    @Getter
+    private TelemetrySubscriptionService tsSubService;
 //
 //    @Autowired
 //    @Getter

@@ -13,10 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.rule;
+package com.ciat.bim.rule.engine.telemetry;
 
-public interface NodeConfiguration<T extends NodeConfiguration> {
+import com.ciat.bim.rule.engine.api.NodeConfiguration;
+import lombok.Data;
 
-    T defaultConfiguration();
 
+@Data
+public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsgTimeseriesNodeConfiguration> {
+
+    private long defaultTTL;
+
+    @Override
+    public TbMsgTimeseriesNodeConfiguration defaultConfiguration() {
+        TbMsgTimeseriesNodeConfiguration configuration = new TbMsgTimeseriesNodeConfiguration();
+        configuration.setDefaultTTL(0L);
+        return configuration;
+    }
 }

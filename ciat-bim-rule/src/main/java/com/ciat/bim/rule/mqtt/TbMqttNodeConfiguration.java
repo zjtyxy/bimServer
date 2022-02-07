@@ -15,9 +15,10 @@
  */
 package com.ciat.bim.rule.mqtt;
 
-import com.ciat.bim.rule.NodeConfiguration;
+
 import com.ciat.bim.rule.credentials.AnonymousCredentials;
 import com.ciat.bim.rule.credentials.ClientCredentials;
+import com.ciat.bim.rule.engine.api.NodeConfiguration;
 import lombok.Data;
 
 

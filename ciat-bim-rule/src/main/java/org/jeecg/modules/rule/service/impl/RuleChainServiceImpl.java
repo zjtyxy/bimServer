@@ -12,10 +12,13 @@ import org.jeecg.modules.rule.entity.RuleChain;
 import org.jeecg.modules.rule.entity.RuleNode;
 import org.jeecg.modules.rule.mapper.RuleChainMapper;
 import org.jeecg.modules.rule.service.IRuleChainService;
+import org.jeecg.modules.rule.service.IRuleNodeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,11 +29,13 @@ import java.util.List;
  */
 @Service
 public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain> implements IRuleChainService {
-
+    @Autowired
+    private IRuleNodeService ruleNodeService;
     @Override
     public PageData<RuleChain> findTenantRuleChainsByType(String tenantId, RuleChainType core, PageLink link) {
 
         QueryWrapper<RuleChain>  qw = new QueryWrapper<>();
+        qw.eq("tenant_id",tenantId);
         List<RuleChain> rcs = this.list(qw);
         PageData<RuleChain> rst = new PageData<>(rcs,rcs.size(),rcs.size(),false);
         return rst;
@@ -38,16 +43,19 @@ public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain
 
     @Override
     public List<RuleNode> getRuleChainNodes(String tenantId, String entityId) {
-        return null;
+        QueryWrapper<RuleNode>  qw = new QueryWrapper<>();
+      //  qw.eq("tenant_id",tenantId);
+        qw.eq("rule_chain_id",entityId);
+        return  ruleNodeService.list(qw);
     }
 
     @Override
     public RuleNode findRuleNodeById(String tenantId, String entityId) {
-        return null;
+        return ruleNodeService.getById(entityId);
     }
 
     @Override
     public List<EntityRelation> getRuleNodeRelations(String sysTenantId, String id) {
-        return null;
+        return new ArrayList<EntityRelation>();
     }
 }
