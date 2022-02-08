@@ -20,8 +20,12 @@ import com.ciat.bim.data.id.EdgeId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.*;
+import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
+import com.ciat.bim.server.utils.ListeningExecutor;
 import io.netty.channel.EventLoopGroup;
+import org.jeecg.modules.alarm.entity.Alarm;
+import org.jeecg.modules.alarm.service.IAlarmService;
 import org.jeecg.modules.rule.entity.RuleNode;
 import org.jeecg.modules.tenant.entity.TenantProfile;
 import org.jeecg.modules.tenant.service.ITenantService;
@@ -126,8 +130,8 @@ public interface TbContext {
 //    TbMsg assetCreatedMsg(Asset asset, RuleNodeId ruleNodeId);
 //
 //    // TODO: Does this changes the message?
-//    TbMsg alarmActionMsg(Alarm alarm, RuleNodeId ruleNodeId, String action);
-//
+    TbMsg alarmActionMsg(Alarm alarm, RuleNodeId ruleNodeId, String action);
+
     void onEdgeEventUpdate(String tenantId, EdgeId edgeId);
 
     /*
@@ -162,7 +166,7 @@ public interface TbContext {
 //
 //    DashboardService getDashboardService();
 //
-//    RuleEngineAlarmService getAlarmService();
+      IAlarmService getAlarmService();
 //
 //    RuleChainService getRuleChainService();
 //
@@ -190,7 +194,7 @@ public interface TbContext {
 //
 //    ListeningExecutor getSmsExecutor();
 //
-//    ListeningExecutor getDbCallbackExecutor();
+      ListeningExecutor getDbCallbackExecutor();
 //
 //    ListeningExecutor getExternalCallExecutor();
 //
@@ -200,14 +204,14 @@ public interface TbContext {
 //
 //    SmsSenderFactory getSmsSenderFactory();
 //
-//    ScriptEngine createJsScriptEngine(String script, String... argNames);
-//
-//    void logJsEvalRequest();
-//
-//    void logJsEvalResponse();
-//
-//    void logJsEvalFailure();
-//
+    ScriptEngine createJsScriptEngine(String script, String... argNames);
+
+    void logJsEvalRequest();
+
+    void logJsEvalResponse();
+
+    void logJsEvalFailure();
+
     String getServiceId();
 //
     EventLoopGroup getSharedEventLoop();

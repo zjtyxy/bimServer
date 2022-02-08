@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
 * 单体启动类（采用此类启动为单体模式）
 */
 @Slf4j
-@SpringBootApplication(scanBasePackages = {"org.jeecg", "com.ciat.bim.transport", "com.ciat.bim.server","com.ciat.bim.tenant"},
+@SpringBootApplication(scanBasePackages = {"org.jeecg","com.ciat.bim.rule", "com.ciat.bim.transport", "com.ciat.bim.server","com.ciat.bim.tenant"},
         exclude = {ShiroAnnotationProcessorAutoConfiguration.class, ShiroAutoConfiguration.class, ShiroBeanAutoConfiguration.class})
 public class BimApplication extends SpringBootServletInitializer {
 

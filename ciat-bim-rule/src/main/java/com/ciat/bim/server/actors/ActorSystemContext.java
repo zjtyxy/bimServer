@@ -20,6 +20,7 @@ import com.ciat.bim.data.Event;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.*;
+import com.ciat.bim.rule.engine.action.JsInvokeStats;
 import com.ciat.bim.server.ActorService;
 import com.ciat.bim.server.actors.tenant.DebugTbRateLimits;
 import com.ciat.bim.server.apiusage.TbApiUsageStateService;
@@ -28,12 +29,14 @@ import com.ciat.bim.server.common.data.ComponentLifecycleEvent;
 import com.ciat.bim.server.common.msg.TbRateLimits;
 import com.ciat.bim.server.edge.rpc.EdgeRpcService;
 import com.ciat.bim.server.event.EventService;
+import com.ciat.bim.server.executors.DbCallbackExecutorService;
 import com.ciat.bim.server.executors.SharedEventLoopGroupService;
 import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.discovery.PartitionService;
 import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
 import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
 import com.ciat.bim.server.rpc.TbRpcService;
+import com.ciat.bim.server.script.JsInvokeService;
 import com.ciat.bim.server.session.DeviceSessionCacheService;
 import com.ciat.bim.server.state.DeviceStateService;
 import com.ciat.bim.server.telemetry.TelemetrySubscriptionService;
@@ -47,6 +50,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.alarm.service.IAlarmService;
 import org.jeecg.modules.device.service.IAttributeKvService;
 import org.jeecg.modules.device.service.IDeviceService;
 import org.jeecg.modules.edge.service.IEdgeService;
@@ -186,15 +190,15 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private TelemetrySubscriptionService tsSubService;
-//
-//    @Autowired
-//    @Getter
-//    private AlarmSubscriptionService alarmService;
-//
-//    @Autowired
-//    @Getter
-//    private JsInvokeService jsSandbox;
-//
+
+    @Autowired
+    @Getter
+    private IAlarmService alarmService;
+
+    @Autowired
+    @Getter
+    private JsInvokeService jsSandbox;
+
 //    @Autowired
 //    @Getter
 //    private MailExecutorService mailExecutor;
@@ -202,11 +206,11 @@ public class ActorSystemContext {
 //    @Autowired
 //    @Getter
 //    private SmsExecutorService smsExecutor;
-//
-//    @Autowired
-//    @Getter
-//    private DbCallbackExecutorService dbCallbackExecutor;
-//
+
+    @Autowired
+    @Getter
+    private DbCallbackExecutorService dbCallbackExecutor;
+
 //    @Autowired
 //    @Getter
 //    private ExternalCallExecutorService externalCallExecutorService;
@@ -231,11 +235,11 @@ public class ActorSystemContext {
 //    @Autowired(required = false)
 //    @Getter
 //    private ClaimDevicesService claimDevicesService;
-//
-//    @Autowired
-//    @Getter
-//    private JsInvokeStats jsInvokeStats;
-//
+
+    @Autowired
+    @Getter
+    private JsInvokeStats jsInvokeStats;
+
 //    //TODO: separate context for TbCore and TbRuleEngine
     @Autowired(required = false)
     @Getter

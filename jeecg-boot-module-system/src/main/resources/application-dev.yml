@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8888
   tomcat:
     max-swallow-size: -1
   error:
@@ -188,7 +188,7 @@ jeecg :
     #webapp文件路径
     webapp: /opt/webapp
   shiro:
-    excludeUrls: /bim/**,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
+    excludeUrls: /base/**,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
     accessKey: ??
@@ -205,7 +205,7 @@ jeecg :
     # 主题颜色（仅支持 16进制颜色代码）
     theme-color: "#1890ff"
     # 文件、图片上传方式，可选项：qiniu（七牛云）、system（跟随系统配置）
-    upload-type: system
+    upload-type: qiniu
     map:
       # 配置百度地图的AK，申请地址：https://lbs.baidu.com/apiconsole/key?application=key#/home
       baidu: ??

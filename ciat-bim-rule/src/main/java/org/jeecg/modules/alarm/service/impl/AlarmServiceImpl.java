@@ -1,5 +1,8 @@
 package org.jeecg.modules.alarm.service.impl;
 
+import com.ciat.bim.data.id.EntityId;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.alarm.mapper.AlarmMapper;
 import org.jeecg.modules.alarm.service.IAlarmService;
@@ -16,4 +19,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 @Service
 public class AlarmServiceImpl extends ServiceImpl<AlarmMapper, Alarm> implements IAlarmService {
 
+    @Override
+    public ListenableFuture<Alarm> findLatestByOriginatorAndType(String tenantId, EntityId originator, String alarmType) {
+        ListenableFuture<Alarm> rst = SettableFuture.create();
+        return rst;
+    }
+
+    @Override
+    public Alarm saveOrUpdateL(Alarm alarm) {
+        this.save(alarm);
+        return alarm;
+    }
 }

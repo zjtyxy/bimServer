@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.data.device.AlarmSeverity;
 import com.ciat.bim.data.id.EntityId;
+import lombok.Builder;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +31,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="alarm对象", description="报警信息")
+@Builder
 public class Alarm implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -75,11 +78,11 @@ public class Alarm implements Serializable {
 	/**严重程度*/
 	@Excel(name = "严重程度", width = 15)
     @ApiModelProperty(value = "严重程度")
-    private java.lang.String severity;
+    private AlarmSeverity severity;
 	/**状态*/
 	@Excel(name = "状态", width = 15)
     @ApiModelProperty(value = "状态")
-    private java.lang.String status;
+    private AlarmStatus status;
 	/**开始时间*/
 	@Excel(name = "开始时间", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -119,5 +122,10 @@ public class Alarm implements Serializable {
 
     public EntityId getOriginator() {
         return null;
+    }
+
+    public void setOriginator(EntityId originator) {
+        this.originatorId =  originator.getId();
+        this.originatorType = originator.getEntityType().name();
     }
 }

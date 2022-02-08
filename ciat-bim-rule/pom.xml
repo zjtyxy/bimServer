@@ -38,6 +38,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <protobuf-dynamic.version>1.0.3TB</protobuf-dynamic.version>
         <wire-schema.version>3.4.0</wire-schema.version>
+        <delight-nashorn-sandbox.version>0.2.1</delight-nashorn-sandbox.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
@@ -123,6 +124,11 @@
             <groupId>com.squareup.wire</groupId>
             <artifactId>wire-schema</artifactId>
             <version>${wire-schema.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javadelight</groupId>
+            <artifactId>delight-nashorn-sandbox</artifactId>
+            <version>${delight-nashorn-sandbox.version}</version>
         </dependency>
         <!--引入微服务启动依赖 starter
       <dependency>

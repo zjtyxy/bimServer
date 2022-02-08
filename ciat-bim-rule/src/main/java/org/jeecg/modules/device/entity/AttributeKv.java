@@ -106,6 +106,7 @@ public class AttributeKv implements Serializable {
     public AttributeKv(AttributeKv key,Long value)
     {
         this.setLastupdatets(new Date(value));
+        this.setEntityId(key.entityId);
         this.setAttributeType(key.getAttributeType());
         this.setAttributeKey(key.getAttributeKey());
         this.setBooleanValue(key.getBooleanValue());

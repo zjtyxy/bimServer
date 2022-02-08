@@ -57,26 +57,25 @@
 			<version>1.4.0</version>
 		</dependency>
 
-
 		<!-- DEMO 示例模块【微服务启动请注释掉】 -->
-		<dependency>
-			<groupId>org.jeecgframework.boot</groupId>
-			<artifactId>ciat-bim-cesium</artifactId>
-			<version>3.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.jeecgframework.boot</groupId>-->
+<!--			<artifactId>ciat-bim-cesium</artifactId>-->
+<!--			<version>3.0</version>-->
+<!--		</dependency>-->
 
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<!--微服务模式下修改为true,跳过此打包插件，否则微服务模块无法引用-->
-					<skip>false</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+<!--	<build>-->
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					&lt;!&ndash;微服务模式下修改为true,跳过此打包插件，否则微服务模块无法引用&ndash;&gt;-->
+<!--					<skip>false</skip>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+<!--		</plugins>-->
+<!--	</build>-->
 </project>

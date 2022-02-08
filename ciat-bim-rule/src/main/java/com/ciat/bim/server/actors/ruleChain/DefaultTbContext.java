@@ -24,6 +24,8 @@ import com.ciat.bim.rule.RuleChainId;
 import com.ciat.bim.rule.RuleNodeId;
 import com.ciat.bim.rule.TbContext;
 import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
+import com.ciat.bim.rule.engine.action.RuleNodeJsScriptEngine;
+import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorRef;
@@ -34,11 +36,13 @@ import com.ciat.bim.server.queue.queue.TbQueueMsgMetadata;
 import com.ciat.bim.server.rpc.RuleEngineRpcService;
 import com.ciat.bim.server.timeseries.TimeseriesService;
 import com.ciat.bim.server.transport.TransportProtos;
+import com.ciat.bim.server.utils.ListeningExecutor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.EventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.alarm.entity.Alarm;
+import org.jeecg.modules.alarm.service.IAlarmService;
 import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.device.entity.DeviceProfile;
 import org.jeecg.modules.rule.entity.RuleNode;
@@ -47,6 +51,7 @@ import org.jeecg.modules.tenant.service.ITenantService;
 import org.springframework.util.StringUtils;
 
 import javax.management.relation.RelationService;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -348,41 +353,41 @@ class DefaultTbContext implements TbContext {
 //        return mainCtx.getSmsExecutor();
 //    }
 //
-//    @Override
-//    public ListeningExecutor getDbCallbackExecutor() {
-//        return mainCtx.getDbCallbackExecutor();
-//    }
+    @Override
+    public ListeningExecutor getDbCallbackExecutor() {
+        return mainCtx.getDbCallbackExecutor();
+    }
 //
 //    @Override
 //    public ListeningExecutor getExternalCallExecutor() {
 //        return mainCtx.getExternalCallExecutorService();
 //    }
 //
-//    @Override
-//    public ScriptEngine createJsScriptEngine(String script, String... argNames) {
-//        return new RuleNodeJsScriptEngine(getTenantId(), mainCtx.getJsSandbox(), nodeCtx.getSelf().getId(), script, argNames);
-//    }
-//
-//    @Override
-//    public void logJsEvalRequest() {
-//        if (mainCtx.isStatisticsEnabled()) {
-//            mainCtx.getJsInvokeStats().incrementRequests();
-//        }
-//    }
-//
-//    @Override
-//    public void logJsEvalResponse() {
-//        if (mainCtx.isStatisticsEnabled()) {
-//            mainCtx.getJsInvokeStats().incrementResponses();
-//        }
-//    }
-//
-//    @Override
-//    public void logJsEvalFailure() {
-//        if (mainCtx.isStatisticsEnabled()) {
-//            mainCtx.getJsInvokeStats().incrementFailures();
-//        }
-//    }
+    @Override
+    public ScriptEngine createJsScriptEngine(String script, String... argNames) {
+        return new RuleNodeJsScriptEngine(TenantId.fromString(getTenantId()), mainCtx.getJsSandbox(),RuleNodeId.fromString(nodeCtx.getSelf().getId()), script, argNames);
+    }
+
+    @Override
+    public void logJsEvalRequest() {
+        if (mainCtx.isStatisticsEnabled()) {
+            mainCtx.getJsInvokeStats().incrementRequests();
+        }
+    }
+
+    @Override
+    public void logJsEvalResponse() {
+        if (mainCtx.isStatisticsEnabled()) {
+            mainCtx.getJsInvokeStats().incrementResponses();
+        }
+    }
+
+    @Override
+    public void logJsEvalFailure() {
+        if (mainCtx.isStatisticsEnabled()) {
+            mainCtx.getJsInvokeStats().incrementFailures();
+        }
+    }
 
     @Override
     public String getServiceId() {
@@ -429,11 +434,11 @@ class DefaultTbContext implements TbContext {
 //        return mainCtx.getDashboardService();
 //    }
 //
-//    @Override
-//    public RuleEngineAlarmService getAlarmService() {
-//        return mainCtx.getAlarmService();
-//    }
-//
+    @Override
+    public IAlarmService getAlarmService() {
+        return mainCtx.getAlarmService();
+    }
+
 //    @Override
 //    public RuleChainService getRuleChainService() {
 //        return mainCtx.getRuleChainService();

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 55001
   tomcat:
     max-swallow-size: -1
   error:
@@ -22,8 +22,8 @@ management:
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 1000MB
+      max-request-size: 1000MB
   mail:
     host: smtp.163.com
     username: jeecgos@163.com
@@ -131,9 +131,9 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-          username: root
-          password: root
+          url: jdbc:mysql://127.0.0.1:3306/ciat_bim?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+          username: ciat_bim
+          password: Ja5si6jX5wi25BRf
           driver-class-name: com.mysql.cj.jdbc.Driver
           # 多数据源配置
           #multi-datasource1:
