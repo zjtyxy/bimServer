@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 设备上传当前状态
+ */
 @Slf4j
 @RuleNode(
         type = ComponentType.ACTION,

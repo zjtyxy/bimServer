@@ -31,6 +31,9 @@ import org.jeecg.modules.device.entity.AttributeKv;
 import java.util.ArrayList;
 import java.util.Set;
 
+/**
+ * 设备属性上报
+ */
 @Slf4j
 @RuleNode(
         type = ComponentType.ACTION,

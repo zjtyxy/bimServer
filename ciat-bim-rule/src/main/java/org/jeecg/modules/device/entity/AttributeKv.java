@@ -59,7 +59,7 @@ public class AttributeKv implements Serializable {
 	/**属性类型*/
 	@Excel(name = "属性类型", width = 15, dicCode = "attr_value_type")
     @ApiModelProperty(value = "属性类型")
-    private java.lang.String attributeType;
+    private DataType attributeType;
 	/**布尔值*/
 	@Excel(name = "布尔值", width = 15)
     @ApiModelProperty(value = "布尔值")
@@ -71,7 +71,7 @@ public class AttributeKv implements Serializable {
 	/**整数值*/
 	@Excel(name = "整数值", width = 15)
     @ApiModelProperty(value = "整数值")
-    private java.lang.Integer longValue;
+    private java.lang.Long longValue;
 	/**双精度值*/
 	@Excel(name = "双精度值", width = 15)
     @ApiModelProperty(value = "双精度值")
@@ -95,16 +95,23 @@ public class AttributeKv implements Serializable {
         return "";
     }
 
-    public DataType getDataType() {
-
-        return null;
-    }
+//    public DataType getDataType() {
+//
+//        return null;
+//    }
     public AttributeKv()
     {
 
     }
     public AttributeKv(AttributeKv key,Long value)
     {
-
+        this.setLastupdatets(new Date(value));
+        this.setAttributeType(key.getAttributeType());
+        this.setAttributeKey(key.getAttributeKey());
+        this.setBooleanValue(key.getBooleanValue());
+        this.setLongValue(key.getLongValue());
+        this.setDoubleValue(key.getDoubleValue());
+        this.setStrValue(key.getStrValue());
+        this.setJsonValue(key.getJsonValue());
     }
 }

@@ -212,23 +212,26 @@ public class TbSubscriptionUtils {
     private static TsKvProto.Builder toKeyValueProto(long ts, AttributeKv attr) {
         KeyValueProto.Builder dataBuilder = KeyValueProto.newBuilder();
         dataBuilder.setKey(attr.getKey());
-        dataBuilder.setType(KeyValueType.forNumber(attr.getDataType().ordinal()));
-        switch (attr.getDataType()) {
-//            case BOOLEAN:
-//                attr.getBooleanValue().ifPresent(dataBuilder::setBoolV);
-//                break;
-//            case LONG:
-//                attr.getLongValue().ifPresent(dataBuilder::setLongV);
-//                break;
-//            case DOUBLE:
-//                attr.getDoubleValue().ifPresent(dataBuilder::setDoubleV);
-//                break;
-//            case JSON:
-//                attr.getJsonValue().ifPresent(dataBuilder::setJsonV);
-//                break;
-//            case STRING:
-//                attr.getStrValue().ifPresent(dataBuilder::setStringV);
-//                break;
+        dataBuilder.setType(KeyValueType.forNumber(attr.getAttributeType().ordinal()));
+        switch (attr.getAttributeType()) {
+            case BOOLEAN:
+                dataBuilder.setBoolV(attr.getBooleanValue()==1);
+              //  attr.getBooleanValue().ifPresent(dataBuilder::setBoolV);
+                break;
+            case LONG:
+                dataBuilder.setLongV(attr.getLongValue());
+                break;
+            case DOUBLE:
+                dataBuilder.setDoubleV(attr.getDoubleValue());
+                break;
+            case JSON:
+                dataBuilder.setJsonV(attr.getJsonValue());
+
+                break;
+            case STRING:
+                dataBuilder.setStringV(attr.getStrValue());
+
+                break;
         }
         return TsKvProto.newBuilder().setTs(ts).setKv(dataBuilder);
     }

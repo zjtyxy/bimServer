@@ -364,7 +364,7 @@ public class JsonConverter {
 
     private static Consumer<AttributeKv> addToObject(JsonObject result) {
         return de -> {
-            switch (de.getDataType()) {
+            switch (de.getAttributeType()) {
                 case BOOLEAN:
                     result.add(de.getKey(), new JsonPrimitive(de.getBooleanValue()));
                     break;
@@ -381,7 +381,7 @@ public class JsonConverter {
                     result.add(de.getKey(), JSON_PARSER.parse(de.getJsonValue()));
                     break;
                 default:
-                    throw new IllegalArgumentException("Unsupported data type: " + de.getDataType());
+                    throw new IllegalArgumentException("Unsupported data type: " + de.getAttributeType());
             }
         };
     }
@@ -457,7 +457,8 @@ public class JsonConverter {
     public static Set<AttributeKv> convertToAttributes(JsonElement element) {
         Set<AttributeKv> result = new HashSet<>();
         long ts = System.currentTimeMillis();
-        result.addAll(parseValues(element.getAsJsonObject()).stream().map(kv -> new AttributeKv(kv, ts)).collect(Collectors.toList()));
+        List<AttributeKv> vals = parseValues(element.getAsJsonObject()).stream().map(kv -> new AttributeKv(kv, ts)).collect(Collectors.toList());
+        result.addAll(vals);
         return result;
     }
 
