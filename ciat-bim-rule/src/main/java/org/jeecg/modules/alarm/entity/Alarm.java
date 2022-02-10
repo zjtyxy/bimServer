@@ -31,7 +31,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="alarm对象", description="报警信息")
-@Builder
 public class Alarm implements Serializable {
     private static final long serialVersionUID = 1L;
 

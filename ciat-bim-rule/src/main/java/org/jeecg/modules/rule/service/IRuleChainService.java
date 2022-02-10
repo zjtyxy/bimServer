@@ -11,6 +11,8 @@ import org.jeecg.modules.rule.entity.RuleChain;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.rule.entity.RuleNode;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,4 +30,15 @@ public interface IRuleChainService extends IService<RuleChain> {
     RuleNode findRuleNodeById(String tenantId, String entityId);
 
     List<EntityRelation> getRuleNodeRelations(String sysTenantId, String id);
+
+    /**
+     * 删除一对多
+     */
+    public void delMain (String id);
+
+    /**
+     * 批量删除一对多
+     */
+    public void delBatchMain (Collection<? extends Serializable> idList);
+
 }

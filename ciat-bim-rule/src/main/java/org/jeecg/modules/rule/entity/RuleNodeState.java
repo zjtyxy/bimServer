@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.data.id.DeviceId;
+import com.ciat.bim.data.id.EntityId;
+import com.ciat.bim.msg.EntityType;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,4 +70,9 @@ public class RuleNodeState implements Serializable {
 	@Excel(name = "状态数据", width = 15)
     @ApiModelProperty(value = "状态数据")
     private java.lang.String stateData;
+
+    public EntityId fetchEntityId() {
+        EntityId entityId = new DeviceId(this.getEntityId()) ;
+        return  entityId;
+    }
 }

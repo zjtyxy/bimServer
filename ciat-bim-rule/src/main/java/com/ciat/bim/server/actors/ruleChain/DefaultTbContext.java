@@ -30,6 +30,7 @@ import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorRef;
 import com.ciat.bim.server.cluster.TbClusterService;
+import com.ciat.bim.server.common.data.page.PageData;
 import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.queue.queue.TbQueueCallback;
 import com.ciat.bim.server.queue.queue.TbQueueMsgMetadata;
@@ -45,7 +46,10 @@ import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.alarm.service.IAlarmService;
 import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.device.entity.DeviceProfile;
+import org.jeecg.modules.device.service.IAttributeKvService;
+import org.jeecg.modules.device.service.IDeviceService;
 import org.jeecg.modules.rule.entity.RuleNode;
+import org.jeecg.modules.rule.entity.RuleNodeState;
 import org.jeecg.modules.tenant.entity.TenantProfile;
 import org.jeecg.modules.tenant.service.ITenantService;
 import org.springframework.util.StringUtils;
@@ -394,11 +398,11 @@ class DefaultTbContext implements TbContext {
         return mainCtx.getServiceInfoProvider().getServiceId();
     }
 
-//    @Override
-//    public AttributesService getAttributesService() {
-//        return mainCtx.getAttributesService();
-//    }
-//
+    @Override
+    public IAttributeKvService getAttributesService() {
+        return mainCtx.getAttributesService();
+    }
+
 //    @Override
 //    public CustomerService getCustomerService() {
 //        return mainCtx.getCustomerService();
@@ -418,12 +422,12 @@ class DefaultTbContext implements TbContext {
 //    public AssetService getAssetService() {
 //        return mainCtx.getAssetService();
 //    }
-//
-//    @Override
-//    public DeviceService getDeviceService() {
-//        return mainCtx.getDeviceService();
-//    }
-//
+
+    @Override
+    public IDeviceService getDeviceService() {
+        return mainCtx.getDeviceService();
+    }
+
 //    @Override
 //    public TbClusterService getClusterService() {
 //        return mainCtx.getClusterService();
@@ -443,11 +447,11 @@ class DefaultTbContext implements TbContext {
 //    public RuleChainService getRuleChainService() {
 //        return mainCtx.getRuleChainService();
 //    }
-//
-//    @Override
-//    public TimeseriesService getTimeseriesService() {
-//        return mainCtx.getTsService();
-//    }
+
+    @Override
+    public TimeseriesService getTimeseriesService() {
+        return mainCtx.getTsService();
+    }
 
     @Override
     public RuleEngineTelemetryService getTelemetryService() {
@@ -474,11 +478,11 @@ class DefaultTbContext implements TbContext {
 //        return mainCtx.getOtaPackageService();
 //    }
 //
-//    @Override
-//    public RuleEngineDeviceProfileCache getDeviceProfileCache() {
-//        return mainCtx.getDeviceProfileCache();
-//    }
-//
+    @Override
+    public RuleEngineDeviceProfileCache getDeviceProfileCache() {
+        return mainCtx.getDeviceProfileCache();
+    }
+
 //    @Override
 //    public EdgeService getEdgeService() {
 //        return mainCtx.getEdgeService();
@@ -536,58 +540,60 @@ class DefaultTbContext implements TbContext {
 //    public TbResultSetFuture submitCassandraWriteTask(CassandraStatementTask task) {
 //        return mainCtx.getCassandraBufferedRateWriteExecutor().submit(task);
 //    }
-//
-//    @Override
-//    public PageData<RuleNodeState> findRuleNodeStates(PageLink pageLink) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("[{}][{}] Fetch Rule Node States.", getTenantId(), getSelfId());
-//        }
-//        return mainCtx.getRuleNodeStateService().findByRuleNodeId(getTenantId(), getSelfId(), pageLink);
-//    }
-//
-//    @Override
-//    public RuleNodeState findRuleNodeStateForEntity(EntityId entityId) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("[{}][{}][{}] Fetch Rule Node State for entity.", getTenantId(), getSelfId(), entityId);
-//        }
-//        return mainCtx.getRuleNodeStateService().findByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
-//    }
-//
-//    @Override
-//    public RuleNodeState saveRuleNodeState(RuleNodeState state) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("[{}][{}][{}] Persist Rule Node State for entity: {}", getTenantId(), getSelfId(), state.getEntityId(), state.getStateData());
-//        }
-//        state.setRuleNodeId(getSelfId());
-//        return mainCtx.getRuleNodeStateService().save(getTenantId(), state);
-//    }
-//
-//    @Override
-//    public void clearRuleNodeStates() {
-//        if (log.isDebugEnabled()) {
-//            log.debug("[{}][{}] Going to clear rule node states", getTenantId(), getSelfId());
-//        }
-//        mainCtx.getRuleNodeStateService().removeByRuleNodeId(getTenantId(), getSelfId());
-//    }
-//
-//    @Override
-//    public void removeRuleNodeStateForEntity(EntityId entityId) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("[{}][{}][{}] Remove Rule Node State for entity.", getTenantId(), getSelfId(), entityId);
-//        }
-//        mainCtx.getRuleNodeStateService().removeByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
-//    }
+
+    @Override
+    public PageData<RuleNodeState> findRuleNodeStates(PageLink pageLink) {
+        if (log.isDebugEnabled()) {
+            log.debug("[{}][{}] Fetch Rule Node States.", getTenantId(), getSelfId());
+        }
+        return mainCtx.getRuleNodeStateService().findByRuleNodeId(getTenantId(), getSelfId(), pageLink);
+    }
+
+    @Override
+    public RuleNodeState findRuleNodeStateForEntity(EntityId entityId) {
+        if (log.isDebugEnabled()) {
+            log.debug("[{}][{}][{}] Fetch Rule Node State for entity.", getTenantId(), getSelfId(), entityId);
+        }
+        return mainCtx.getRuleNodeStateService().findByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
+    }
+
+    @Override
+    public RuleNodeState saveRuleNodeState(RuleNodeState state) {
+        if (log.isDebugEnabled()) {
+            log.debug("[{}][{}][{}] Persist Rule Node State for entity: {}", getTenantId(), getSelfId(), state.getEntityId(), state.getStateData());
+        }
+        state.setRuleNodeId(getSelfId().getId());
+        //getTenantId(),
+          mainCtx.getRuleNodeStateService().save( state);
+          return  state;
+    }
+
+    @Override
+    public void clearRuleNodeStates() {
+        if (log.isDebugEnabled()) {
+            log.debug("[{}][{}] Going to clear rule node states", getTenantId(), getSelfId());
+        }
+        mainCtx.getRuleNodeStateService().removeByRuleNodeId(getTenantId(), getSelfId());
+    }
+
+    @Override
+    public void removeRuleNodeStateForEntity(EntityId entityId) {
+        if (log.isDebugEnabled()) {
+            log.debug("[{}][{}][{}] Remove Rule Node State for entity.", getTenantId(), getSelfId(), entityId);
+        }
+        mainCtx.getRuleNodeStateService().removeByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
+    }
 
     @Override
     public void addTenantProfileListener(Consumer<TenantProfile> listener) {
         mainCtx.getTenantProfileCache().addListener(TenantId.fromString(getTenantId()), getSelfId(), listener);
     }
 
-//    @Override
-//    public void addDeviceProfileListeners(Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> deviceListener) {
-//        mainCtx.getDeviceProfileCache().addListener(getTenantId(), getSelfId(), profileListener, deviceListener);
-//    }
-//
+    @Override
+    public void addDeviceProfileListeners(Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> deviceListener) {
+        mainCtx.getDeviceProfileCache().addListener(getTenantId(), getSelfId(), profileListener, deviceListener);
+    }
+
     @Override
     public void removeListeners() {
         mainCtx.getDeviceProfileCache().removeListener(getTenantId(), getSelfId());

@@ -1,9 +1,11 @@
 package org.jeecg.modules.alarm.service.impl;
 
 import com.ciat.bim.data.id.EntityId;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import org.jeecg.modules.alarm.entity.Alarm;
+import org.jeecg.modules.alarm.entity.AlarmOperationResult;
 import org.jeecg.modules.alarm.mapper.AlarmMapper;
 import org.jeecg.modules.alarm.service.IAlarmService;
 import org.springframework.stereotype.Service;
@@ -29,5 +31,10 @@ public class AlarmServiceImpl extends ServiceImpl<AlarmMapper, Alarm> implements
     public Alarm saveOrUpdateL(Alarm alarm) {
         this.save(alarm);
         return alarm;
+    }
+
+    @Override
+    public ListenableFuture<AlarmOperationResult> clearAlarmForResult(String tenantId, String id, JsonNode details, long currentTimeMillis) {
+        return null;
     }
 }

@@ -164,7 +164,9 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
                 () -> DefaultActorService.RULE_DISPATCHER_NAME,
                 () -> new RuleNodeActor.ActorCreator(systemContext, tenantId, entityId, ruleChainName, ruleNode.getId()));
     }
-
+    /*
+      初始化规则链路径
+     */
     private void initRoutes(RuleChain ruleChain, List<RuleNode> ruleNodeList) {
         nodeRoutes.clear();
         // Populating the routes map;

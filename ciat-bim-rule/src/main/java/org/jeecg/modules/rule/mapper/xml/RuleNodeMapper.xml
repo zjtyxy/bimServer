@@ -2,4 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.rule.mapper.RuleNodeMapper">
 
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  rule_node 
+		WHERE
+			 rule_chain_id = #{mainId} 
+	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="org.jeecg.modules.rule.entity.RuleNode">
+		SELECT * 
+		FROM  rule_node
+		WHERE
+			 rule_chain_id = #{mainId} 
+	</select>
 </mapper>

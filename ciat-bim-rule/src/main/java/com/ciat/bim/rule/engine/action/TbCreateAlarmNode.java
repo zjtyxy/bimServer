@@ -165,18 +165,20 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
     }
 
     private Alarm buildAlarm(TbMsg msg, JsonNode details, TenantId tenantId) {
-        return Alarm.builder()
-                .tenantId(tenantId.getId())
-                .originatorId(msg.getOriginator().getId())
-                .status(AlarmStatus.ACTIVE_UNACK)
-                .severity(this.config.isDynamicSeverity() ? processAlarmSeverity(msg) : notDynamicAlarmSeverity)
-                .propagate(config.isPropagate()?"Y":"N")
-                .type(TbNodeUtils.processPattern(this.config.getAlarmType(), msg))
-                .propagateRelationTypes(relationTypes.toString())
-                .startTs(new Date(System.currentTimeMillis()))
-                .endTs(new Date(System.currentTimeMillis()))
-                .details(details.asText())
-                .build();
+        Alarm alarm =new Alarm();
+
+        alarm.setTenantId(tenantId.getId());
+        alarm.setOriginatorId(msg.getOriginator().getId());
+        alarm.setStatus(AlarmStatus.ACTIVE_UNACK);
+        alarm.setSeverity(this.config.isDynamicSeverity() ? processAlarmSeverity(msg) : notDynamicAlarmSeverity);
+        alarm.setPropagate(config.isPropagate()?"Y":"N");
+        alarm.setType(TbNodeUtils.processPattern(this.config.getAlarmType(), msg));
+        alarm.setPropagateRelationTypes(relationTypes.toString());
+        alarm.setStartTs(new Date(System.currentTimeMillis()));
+        alarm.setEndTs(new Date(System.currentTimeMillis()));
+        alarm.setDetails(details.asText());
+
+        return alarm;
     }
 
     private AlarmSeverity processAlarmSeverity(TbMsg msg) {

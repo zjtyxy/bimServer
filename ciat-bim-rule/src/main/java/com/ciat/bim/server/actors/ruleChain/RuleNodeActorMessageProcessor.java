@@ -32,6 +32,7 @@ import com.ciat.bim.server.actors.shared.ComponentMsgProcessor;
 import com.ciat.bim.server.common.data.ApiUsageRecordKey;
 import com.ciat.bim.server.common.msg.queue.RuleNodeException;
 import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
+import com.ciat.bim.server.utils.RuleNodeTypeUtils;
 import org.jeecg.modules.rule.entity.RuleNode;
 
 /**
@@ -147,10 +148,17 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
         return ruleNode.getName();
     }
 
+    /***
+     * 创建RuleNode
+     * @param ruleNode
+     * @return
+     * @throws Exception
+     */
     private TbNode initComponent(RuleNode ruleNode) throws Exception {
         TbNode tbNode = null;
         if (ruleNode != null) {
-            Class<?> componentClazz = Class.forName(ruleNode.getType());
+          //  Class<?> componentClazz = Class.forName(ruleNode.getType());
+            Class<?> componentClazz =  RuleNodeTypeUtils.getNodeType(ruleNode.getType());
             tbNode = (TbNode) (componentClazz.getDeclaredConstructor().newInstance());
             tbNode.init(defaultCtx, new TbNodeConfiguration(ruleNode.getConfiguration()));
         }

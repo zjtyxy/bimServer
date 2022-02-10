@@ -115,4 +115,21 @@ public class AttributeKv implements Serializable {
         this.setStrValue(key.getStrValue());
         this.setJsonValue(key.getJsonValue());
     }
+
+    public Object getValue() {
+        switch (this.attributeType)
+        {
+            case STRING:
+                return this.strValue;
+            case DOUBLE:
+                return this.doubleValue;
+            case LONG:
+                return this.longValue;
+            case BOOLEAN:
+                return this.booleanValue;
+            case JSON:
+                return this.jsonValue;
+        }
+        return  null;
+    }
 }

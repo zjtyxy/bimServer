@@ -10,7 +10,9 @@ import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.common.data.relation.EntityRelation;
 import org.jeecg.modules.rule.entity.RuleChain;
 import org.jeecg.modules.rule.entity.RuleNode;
+import org.jeecg.modules.rule.mapper.NodeRelationMapper;
 import org.jeecg.modules.rule.mapper.RuleChainMapper;
+import org.jeecg.modules.rule.mapper.RuleNodeMapper;
 import org.jeecg.modules.rule.service.IRuleChainService;
 import org.jeecg.modules.rule.service.IRuleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import org.springframework.transaction.annotation.Transactional;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -57,5 +62,30 @@ public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain
     @Override
     public List<EntityRelation> getRuleNodeRelations(String sysTenantId, String id) {
         return new ArrayList<EntityRelation>();
+    }
+
+    @Autowired
+    private RuleChainMapper ruleChainMapper;
+    @Autowired
+    private RuleNodeMapper ruleNodeMapper;
+    @Autowired
+    private NodeRelationMapper nodeRelationMapper;
+
+    @Override
+    @Transactional
+    public void delMain(String id) {
+        ruleNodeMapper.deleteByMainId(id);
+        nodeRelationMapper.deleteByMainId(id);
+        ruleChainMapper.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void delBatchMain(Collection<? extends Serializable> idList) {
+        for(Serializable id:idList) {
+            ruleNodeMapper.deleteByMainId(id.toString());
+            nodeRelationMapper.deleteByMainId(id.toString());
+            ruleChainMapper.deleteById(id);
+        }
     }
 }

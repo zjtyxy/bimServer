@@ -15,22 +15,28 @@
  */
 package com.ciat.bim.rule;
 
-import com.ciat.bim.data.id.CustomerId;
-import com.ciat.bim.data.id.EdgeId;
-import com.ciat.bim.data.id.EntityId;
-import com.ciat.bim.data.id.TenantId;
+import com.ciat.bim.data.id.*;
 import com.ciat.bim.msg.*;
+import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
 import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
+import com.ciat.bim.server.common.data.page.PageData;
+import com.ciat.bim.server.common.data.page.PageLink;
+import com.ciat.bim.server.timeseries.TimeseriesService;
 import com.ciat.bim.server.utils.ListeningExecutor;
 import io.netty.channel.EventLoopGroup;
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.alarm.service.IAlarmService;
+import org.jeecg.modules.device.entity.DeviceProfile;
+import org.jeecg.modules.device.service.IAttributeKvService;
+import org.jeecg.modules.device.service.IDeviceService;
 import org.jeecg.modules.rule.entity.RuleNode;
+import org.jeecg.modules.rule.entity.RuleNodeState;
 import org.jeecg.modules.tenant.entity.TenantProfile;
 import org.jeecg.modules.tenant.service.ITenantService;
 
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -150,7 +156,7 @@ public interface TbContext {
 
     String getTenantId();
 
-//    AttributesService getAttributesService();
+    IAttributeKvService getAttributesService();
 //
 //    CustomerService getCustomerService();
 //
@@ -160,7 +166,7 @@ public interface TbContext {
 //
 //    AssetService getAssetService();
 //
-//    DeviceService getDeviceService();
+     IDeviceService getDeviceService();
 //
 //    TbClusterService getClusterService();
 //
@@ -173,9 +179,9 @@ public interface TbContext {
 //    RuleEngineRpcService getRpcService();
 
       RuleEngineTelemetryService getTelemetryService();
-//
-//    TimeseriesService getTimeseriesService();
-//
+
+    TimeseriesService getTimeseriesService();
+
 //    RelationService getRelationService();
 //
 //    EntityViewService getEntityViewService();
@@ -183,9 +189,9 @@ public interface TbContext {
 //    ResourceService getResourceService();
 //
 //    OtaPackageService getOtaPackageService();
-//
-//    RuleEngineDeviceProfileCache getDeviceProfileCache();
-//
+
+    RuleEngineDeviceProfileCache getDeviceProfileCache();
+
 //    EdgeService getEdgeService();
 //
 //    EdgeEventService getEdgeEventService();
@@ -221,21 +227,21 @@ public interface TbContext {
 //    TbResultSetFuture submitCassandraReadTask(CassandraStatementTask task);
 //
 //    TbResultSetFuture submitCassandraWriteTask(CassandraStatementTask task);
-//
-//    PageData<RuleNodeState> findRuleNodeStates(PageLink pageLink);
-//
-//    RuleNodeState findRuleNodeStateForEntity(EntityId entityId);
-//
-//    void removeRuleNodeStateForEntity(EntityId entityId);
-//
-//    RuleNodeState saveRuleNodeState(RuleNodeState state);
-//
-//    void clearRuleNodeStates();
+
+    PageData<RuleNodeState> findRuleNodeStates(PageLink pageLink);
+
+    RuleNodeState findRuleNodeStateForEntity(EntityId entityId);
+
+    void removeRuleNodeStateForEntity(EntityId entityId);
+
+    RuleNodeState saveRuleNodeState(RuleNodeState state);
+
+    void clearRuleNodeStates();
 
     void addTenantProfileListener(Consumer<TenantProfile> listener);
 
-//    void addDeviceProfileListeners(Consumer<DeviceProfile> listener, BiConsumer<DeviceId, DeviceProfile> deviceListener);
-//
+    void addDeviceProfileListeners(Consumer<DeviceProfile> listener, BiConsumer<DeviceId, DeviceProfile> deviceListener);
+
     void removeListeners();
 
     TenantProfile getTenantProfile();
