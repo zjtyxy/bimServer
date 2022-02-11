@@ -82,15 +82,15 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
     @Override
     public DeviceProfile get(String tenantId, DeviceId deviceId) {
         DeviceProfileId profileId = devicesMap.get(deviceId);
-//        if (profileId == null) {
-//            Device device = deviceService.getById(deviceId.getId());
-//            if (device != null) {
-//                profileId = device.getDeviceProfileId();
-//                devicesMap.put(deviceId, profileId);
-//            } else {
-//                return null;
-//            }
-//        }
+        if (profileId == null) {
+            Device device = deviceService.getById(deviceId.getId());
+            if (device != null) {
+                profileId = DeviceProfileId.fromString(device.getDeviceProfileId());
+                devicesMap.put(deviceId, profileId);
+            } else {
+                return null;
+            }
+        }
         return get(tenantId, profileId);
     }
 

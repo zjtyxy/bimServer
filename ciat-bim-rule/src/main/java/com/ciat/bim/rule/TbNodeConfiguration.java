@@ -15,6 +15,8 @@
  */
 package com.ciat.bim.rule;
 
+import com.ciat.bim.server.utils.JacksonUtil;
+import com.ciat.bim.transport.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
@@ -26,7 +28,7 @@ public final class TbNodeConfiguration {
 
    public  TbNodeConfiguration(String jsonString)
    {
-       this.data = null;
+       this.data = JacksonUtil.toJsonNode(jsonString);
    }
 
 

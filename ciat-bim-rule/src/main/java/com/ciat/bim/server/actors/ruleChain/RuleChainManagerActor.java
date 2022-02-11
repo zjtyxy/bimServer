@@ -77,7 +77,7 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
     }
 
     protected void visit(RuleChain entity, TbActorRef actorRef) {
-        if (entity != null && entity.isRoot() && entity.getType().equals(RuleChainType.CORE)) {
+        if (entity != null && entity.fetchRoot() && entity.getType().equals(RuleChainType.CORE)) {
             rootChain = entity;
             rootChainActor = actorRef;
         }

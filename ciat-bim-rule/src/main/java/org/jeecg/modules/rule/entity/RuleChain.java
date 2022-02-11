@@ -83,7 +83,7 @@ public class RuleChain implements Serializable {
     @ApiModelProperty(value = "配置信息")
     private java.lang.String configuration;
 
-    public boolean isRoot() {
+    public boolean fetchRoot() {
         return  "Y".equals(this.root);
     }
 

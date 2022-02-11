@@ -110,7 +110,7 @@ public class DefaultTransportApiService implements TransportApiService {
 
         if (transportApiRequestMsg.hasValidateTokenRequestMsg()) {
             ValidateDeviceTokenRequestMsg msg = transportApiRequestMsg.getValidateTokenRequestMsg();
-            result = validateCredentials(msg.getToken(), DeviceCredentialsType.ACCESS_TOKEN);
+            result = validateCredentials(msg.getToken(), DeviceCredentialsType.ACCESSTOKEN);
         }
         else if (transportApiRequestMsg.hasValidateBasicMqttCredRequestMsg()) {
             TransportProtos.ValidateBasicMqttCredRequestMsg msg = transportApiRequestMsg.getValidateBasicMqttCredRequestMsg();
@@ -136,9 +136,11 @@ public class DefaultTransportApiService implements TransportApiService {
 //            result = handle(transportApiRequestMsg.getSnmpDevicesRequestMsg());
 //        } else if (transportApiRequestMsg.hasDeviceRequestMsg()) {
 //            result = handle(transportApiRequestMsg.getDeviceRequestMsg());
-//        } else if (transportApiRequestMsg.hasDeviceCredentialsRequestMsg()) {
-//            result = handle(transportApiRequestMsg.getDeviceCredentialsRequestMsg());
-//        } else if (transportApiRequestMsg.hasOtaPackageRequestMsg()) {
+//        }
+        else if (transportApiRequestMsg.hasDeviceCredentialsRequestMsg()) {
+            result = handle(transportApiRequestMsg.getDeviceCredentialsRequestMsg());
+        }
+ //       else if (transportApiRequestMsg.hasOtaPackageRequestMsg()) {
 //            result = handle(transportApiRequestMsg.getOtaPackageRequestMsg());
 //        }
 
@@ -157,6 +159,11 @@ public class DefaultTransportApiService implements TransportApiService {
         }
     }
 
+    /**
+     * 验证链接
+     * @param mqtt
+     * @return
+     */
     private ListenableFuture<TransportApiResponseMsg> validateCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg mqtt) {
         DeviceCredentials credentials;
         if (StringUtils.isEmpty(mqtt.getUserName())) {
@@ -169,7 +176,7 @@ public class DefaultTransportApiService implements TransportApiService {
         } else {
 //            credentials = deviceCredentialsService.getById(
 //                    EncryptionUtil.getSha3Hash("|", mqtt.getClientId(), mqtt.getUserName()));
-            credentials = deviceCredentialsService.getById(mqtt.getUserName());
+            credentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(mqtt.getClientId());
             if (checkIsMqttCredentials(credentials)) {
                 BasicCredentialsValidationResult validationResult = validateMqttCredentials(mqtt, credentials);
                 if (VALID.equals(validationResult)) {
@@ -189,9 +196,9 @@ public class DefaultTransportApiService implements TransportApiService {
         DeviceCredentials credentials = deviceCredentialsService.getById(mqtt.getUserName());
         if (credentials != null) {
             switch (credentials.getDeviceCredentialsType()) {
-                case ACCESS_TOKEN:
+                case ACCESSTOKEN:
                     return getDeviceInfo(credentials);
-                case MQTT_BASIC:
+                case MQTTBASIC:
                     if (VALID.equals(validateMqttCredentials(mqtt, credentials))) {
                         return getDeviceInfo(credentials);
                     } else {
@@ -203,7 +210,7 @@ public class DefaultTransportApiService implements TransportApiService {
     }
 
     private static boolean checkIsMqttCredentials(DeviceCredentials credentials) {
-        return credentials != null && DeviceCredentialsType.MQTT_BASIC.equals(credentials.getDeviceCredentialsType());
+        return credentials != null && DeviceCredentialsType.MQTTBASIC.equals(credentials.getDeviceCredentialsType());
     }
 
     private DeviceCredentials checkMqttCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, String credId) {
@@ -211,7 +218,7 @@ public class DefaultTransportApiService implements TransportApiService {
     }
 
     private DeviceCredentials checkMqttCredentials(TransportProtos.ValidateBasicMqttCredRequestMsg clientCred, DeviceCredentials deviceCredentials) {
-        if (deviceCredentials != null && deviceCredentials.getDeviceCredentialsType() == DeviceCredentialsType.MQTT_BASIC) {
+        if (deviceCredentials != null && deviceCredentials.getDeviceCredentialsType() == DeviceCredentialsType.MQTTBASIC) {
             if (VALID.equals(validateMqttCredentials(clientCred, deviceCredentials))) {
                 return deviceCredentials;
             }
@@ -380,18 +387,18 @@ public class DefaultTransportApiService implements TransportApiService {
 //
 //        return Futures.immediateFuture(responseMsg);
 //    }
-//
-//    private ListenableFuture<TransportApiResponseMsg> handle(GetDeviceCredentialsRequestMsg requestMsg) {
-//        DeviceId deviceId = new DeviceId(new UUID(requestMsg.getDeviceIdMSB(), requestMsg.getDeviceIdLSB()));
-//        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(TenantId.SYS_TENANT_ID, deviceId);
-//
-//        return Futures.immediateFuture(TransportApiResponseMsg.newBuilder()
-//                .setDeviceCredentialsResponseMsg(TransportProtos.GetDeviceCredentialsResponseMsg.newBuilder()
-//                        .setDeviceCredentialsData(ByteString.copyFrom(dataDecodingEncodingService.encode(deviceCredentials))))
-//                .build());
-//    }
-//
-//
+
+    private ListenableFuture<TransportApiResponseMsg> handle(GetDeviceCredentialsRequestMsg requestMsg) {
+        String deviceId = requestMsg.getDeviceIdMSB()+"";
+        DeviceCredentials deviceCredentials = deviceCredentialsService.findDeviceCredentialsByDeviceId(deviceId);
+
+        return Futures.immediateFuture(TransportApiResponseMsg.newBuilder()
+                .setDeviceCredentialsResponseMsg(TransportProtos.GetDeviceCredentialsResponseMsg.newBuilder()
+                        .setDeviceCredentialsData(ByteString.copyFrom(dataDecodingEncodingService.encode(deviceCredentials))))
+                .build());
+    }
+
+
 //    private ListenableFuture<TransportApiResponseMsg> handle(GetResourceRequestMsg requestMsg) {
 //        TenantId tenantId = new TenantId(new UUID(requestMsg.getTenantIdMSB(), requestMsg.getTenantIdLSB()));
 //        ResourceType resourceType = ResourceType.valueOf(requestMsg.getResourceType());

@@ -8,11 +8,13 @@ import com.ciat.bim.rule.RuleNodeId;
 import com.ciat.bim.server.common.data.page.PageData;
 import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.common.data.relation.EntityRelation;
+import org.jeecg.modules.rule.entity.NodeRelation;
 import org.jeecg.modules.rule.entity.RuleChain;
 import org.jeecg.modules.rule.entity.RuleNode;
 import org.jeecg.modules.rule.mapper.NodeRelationMapper;
 import org.jeecg.modules.rule.mapper.RuleChainMapper;
 import org.jeecg.modules.rule.mapper.RuleNodeMapper;
+import org.jeecg.modules.rule.service.INodeRelationService;
 import org.jeecg.modules.rule.service.IRuleChainService;
 import org.jeecg.modules.rule.service.IRuleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ import java.util.List;
 public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain> implements IRuleChainService {
     @Autowired
     private IRuleNodeService ruleNodeService;
+
+    @Autowired
+    private INodeRelationService nodeRelationService;
     @Override
     public PageData<RuleChain> findTenantRuleChainsByType(String tenantId, RuleChainType core, PageLink link) {
 
@@ -61,7 +66,15 @@ public class RuleChainServiceImpl extends ServiceImpl<RuleChainMapper, RuleChain
 
     @Override
     public List<EntityRelation> getRuleNodeRelations(String sysTenantId, String id) {
-        return new ArrayList<EntityRelation>();
+        List<EntityRelation> rst = new ArrayList<>();
+        QueryWrapper<NodeRelation>  qw = new QueryWrapper<>();
+        qw.eq("from_id",id);
+        List<NodeRelation> rls = nodeRelationService.list(qw);
+        for(NodeRelation rl : rls)
+        {
+            rst.add(new EntityRelation(RuleNodeId.fromString(rl.getFromId()),RuleNodeId.fromString(rl.getToId()),rl.getType()));
+        }
+        return rst;
     }
 
     @Autowired
