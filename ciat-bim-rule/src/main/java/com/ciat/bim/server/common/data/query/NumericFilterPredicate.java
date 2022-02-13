@@ -31,10 +31,10 @@ public class NumericFilterPredicate implements SimpleKeyFilterPredicate<Double> 
 
     public enum NumericOperation {
         EQUAL,
-        NOT_EQUAL,
+        NOTEQUAL,
         GREATER,
         LESS,
-        GREATER_OR_EQUAL,
-        LESS_OR_EQUAL
+        GREATEROREQUAL,
+        LESSOREQUAL
     }
 }

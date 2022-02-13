@@ -15,6 +15,9 @@
  */
 package com.ciat.bim.data.device;
 
+import com.ciat.bim.server.common.data.device.profile.AnyTimeSchedule;
+import com.ciat.bim.server.common.data.device.profile.CustomTimeSchedule;
+import com.ciat.bim.server.common.data.device.profile.SpecificTimeSchedule;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -26,10 +29,10 @@ import java.io.Serializable;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = AnyTimeSchedule.class, name = "ANY_TIME"),
-//        @JsonSubTypes.Type(value = SpecificTimeSchedule.class, name = "SPECIFIC_TIME"),
-//        @JsonSubTypes.Type(value = CustomTimeSchedule.class, name = "CUSTOM")})
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AnyTimeSchedule.class, name = "ANY_TIME"),
+        @JsonSubTypes.Type(value = SpecificTimeSchedule.class, name = "SPECIFIC_TIME"),
+        @JsonSubTypes.Type(value = CustomTimeSchedule.class, name = "CUSTOM")})
 public interface AlarmSchedule extends Serializable {
 
     AlarmScheduleType getType();

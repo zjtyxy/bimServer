@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IDeviceProfileService extends IService<DeviceProfile> {
 
     DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String profileName);
+    DeviceProfile findOrCreateDeviceProfile(String id);
 }

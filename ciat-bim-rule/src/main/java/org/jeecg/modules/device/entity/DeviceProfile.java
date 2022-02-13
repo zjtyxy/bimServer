@@ -1,17 +1,15 @@
 package org.jeecg.modules.device.entity;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ciat.bim.data.device.DeviceTransportType;
-import com.ciat.bim.data.device.profile.DeviceProfileData;
+import org.jeecg.modules.alarm.entity.DeviceProfileData;
 import com.ciat.bim.data.device.profile.DeviceProfileTransportConfiguration;
 import com.ciat.bim.server.common.data.device.profile.MqttDeviceProfileTransportConfiguration;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +19,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import javax.persistence.Column;
 
 /**
  * @Description: 设备配置
@@ -125,13 +125,17 @@ public class DeviceProfile implements Serializable {
 	/**配置数据*/
 	@Excel(name = "配置数据", width = 15)
     @ApiModelProperty(value = "配置数据")
-    private java.lang.String profileData;
+    @TableField(exist = false)
+    private DeviceProfileData profileData;
+//    @TableField(exist = false)
+//    private DeviceProfileData DeviceProfileData;
 
-    public DeviceProfileData fetchProfileData() {
-        DeviceProfileData rst = new DeviceProfileData();
-        DeviceProfileTransportConfiguration dptc = new MqttDeviceProfileTransportConfiguration();
-        rst.setTransportConfiguration(dptc);
-        return rst;
-        // return getJson(() -> additionalInfo, () -> additionalInfoBytes);
-    }
+//    public DeviceProfileData fetchProfileData() {
+//        DeviceProfileData
+//        DeviceProfileData rst = new DeviceProfileData();
+//        DeviceProfileTransportConfiguration dptc = new MqttDeviceProfileTransportConfiguration();
+//        rst.setTransportConfiguration(dptc);
+//        return rst;
+//        // return getJson(() -> additionalInfo, () -> additionalInfoBytes);
+//    }
 }

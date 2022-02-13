@@ -15,6 +15,10 @@
  */
 package com.ciat.bim.data.device;
 
+import com.ciat.bim.server.common.data.query.BooleanFilterPredicate;
+import com.ciat.bim.server.common.data.query.ComplexFilterPredicate;
+import com.ciat.bim.server.common.data.query.NumericFilterPredicate;
+import com.ciat.bim.server.common.data.query.StringFilterPredicate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -25,11 +29,11 @@ import java.io.Serializable;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = StringFilterPredicate.class, name = "STRING"),
-//        @JsonSubTypes.Type(value = NumericFilterPredicate.class, name = "NUMERIC"),
-//        @JsonSubTypes.Type(value = BooleanFilterPredicate.class, name = "BOOLEAN"),
-//        @JsonSubTypes.Type(value = ComplexFilterPredicate.class, name = "COMPLEX")})
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = StringFilterPredicate.class, name = "STRING"),
+        @JsonSubTypes.Type(value = NumericFilterPredicate.class, name = "NUMERIC"),
+        @JsonSubTypes.Type(value = BooleanFilterPredicate.class, name = "BOOLEAN"),
+        @JsonSubTypes.Type(value = ComplexFilterPredicate.class, name = "COMPLEX")})
 public interface KeyFilterPredicate extends Serializable {
 
     @JsonIgnore

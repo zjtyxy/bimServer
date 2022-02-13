@@ -31,6 +31,6 @@ public class BooleanFilterPredicate implements SimpleKeyFilterPredicate<Boolean>
 
     public enum BooleanOperation {
         EQUAL,
-        NOT_EQUAL
+        NOTEQUAL
     }
 }

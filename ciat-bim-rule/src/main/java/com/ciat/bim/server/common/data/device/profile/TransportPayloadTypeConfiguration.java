@@ -27,9 +27,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "transportPayloadType")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = JsonTransportPayloadConfiguration.class, name = "JSON"),
-//        @JsonSubTypes.Type(value = ProtoTransportPayloadConfiguration.class, name = "PROTOBUF")})
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = JsonTransportPayloadConfiguration.class, name = "JSON"),
+        @JsonSubTypes.Type(value = ProtoTransportPayloadConfiguration.class, name = "PROTOBUF")})
 public interface TransportPayloadTypeConfiguration {
 
     @JsonIgnore

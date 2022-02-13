@@ -16,7 +16,7 @@
 package com.ciat.bim.rule.engine.profile;
 
 import com.ciat.bim.data.device.*;
-import com.ciat.bim.data.device.profile.DeviceProfileAlarm;
+
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.server.common.data.device.profile.DurationAlarmConditionSpec;
 import com.ciat.bim.server.common.data.device.profile.RepeatingAlarmConditionSpec;
@@ -26,6 +26,7 @@ import com.ciat.bim.server.common.data.query.DynamicValueSourceType;
 import com.ciat.bim.server.common.data.query.SimpleKeyFilterPredicate;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.jeecg.modules.alarm.entity.DeviceProfileAlarm;
 import org.jeecg.modules.device.entity.DeviceProfile;
 
 
@@ -55,9 +56,9 @@ class ProfileState {
         alarmCreateKeys.clear();
         alarmClearKeys.clear();
         entityKeys.clear();
-        if (deviceProfile.fetchProfileData().getAlarms() != null) {
-            alarmSettings.addAll(deviceProfile.fetchProfileData().getAlarms());
-            for (DeviceProfileAlarm alarm : deviceProfile.fetchProfileData().getAlarms()) {
+        if (deviceProfile.getProfileData().getAlarms() != null) {
+            alarmSettings.addAll(deviceProfile.getProfileData().getAlarms());
+            for (DeviceProfileAlarm alarm : deviceProfile.getProfileData().getAlarms()) {
                 Map<AlarmSeverity, Set<AlarmConditionFilterKey>> createAlarmKeys = alarmCreateKeys.computeIfAbsent(alarm.getId(), id -> new HashMap<>());
                 alarm.getCreateRules().forEach(((severity, alarmRule) -> {
                     Set<AlarmConditionFilterKey> ruleKeys = createAlarmKeys.computeIfAbsent(severity, id -> new HashSet<>());

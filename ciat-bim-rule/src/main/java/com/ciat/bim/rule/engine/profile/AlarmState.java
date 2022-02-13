@@ -21,7 +21,6 @@ import com.ciat.bim.data.device.AlarmConditionFilter;
 import com.ciat.bim.data.device.AlarmConditionKeyType;
 import com.ciat.bim.data.device.AlarmConditionSpecType;
 import com.ciat.bim.data.device.AlarmSeverity;
-import com.ciat.bim.data.device.profile.DeviceProfileAlarm;
 import com.ciat.bim.data.id.DashboardId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.msg.ServiceQueue;
@@ -41,6 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.alarm.entity.AlarmOperationResult;
 import org.jeecg.modules.alarm.entity.AlarmStatus;
+import org.jeecg.modules.alarm.entity.DeviceProfileAlarm;
 
 import java.util.ArrayList;
 import java.util.Comparator;

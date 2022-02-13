@@ -297,7 +297,7 @@ class AlarmRuleState {
             case STRING:
                 value.setStrValue(valueStr);
                 break;
-            case DATE_TIME:
+            case DATETIME:
                 value.setLngValue(Long.valueOf(valueStr));
                 break;
             case NUMERIC:
@@ -358,7 +358,7 @@ class AlarmRuleState {
         switch (predicate.getOperation()) {
             case EQUAL:
                 return val.equals(predicateValue);
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 return !val.equals(predicateValue);
             default:
                 throw new RuntimeException("Operation not supported: " + predicate.getOperation());
@@ -375,17 +375,17 @@ class AlarmRuleState {
             return false;
         }
         switch (predicate.getOperation()) {
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 return !val.equals(predicateValue);
             case EQUAL:
                 return val.equals(predicateValue);
             case GREATER:
                 return val > predicateValue;
-            case GREATER_OR_EQUAL:
+            case GREATEROREQUAL:
                 return val >= predicateValue;
             case LESS:
                 return val < predicateValue;
-            case LESS_OR_EQUAL:
+            case LESSOREQUAL:
                 return val <= predicateValue;
             default:
                 throw new RuntimeException("Operation not supported: " + predicate.getOperation());
@@ -410,13 +410,13 @@ class AlarmRuleState {
                 return val.contains(predicateValue);
             case EQUAL:
                 return val.equals(predicateValue);
-            case STARTS_WITH:
+            case STARTSWITH:
                 return val.startsWith(predicateValue);
-            case ENDS_WITH:
+            case ENDSWITH:
                 return val.endsWith(predicateValue);
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 return !val.equals(predicateValue);
-            case NOT_CONTAINS:
+            case NOTCONTAINS:
                 return !val.contains(predicateValue);
             default:
                 throw new RuntimeException("Operation not supported: " + predicate.getOperation());

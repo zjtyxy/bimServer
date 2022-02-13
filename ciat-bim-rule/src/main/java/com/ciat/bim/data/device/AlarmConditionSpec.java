@@ -15,6 +15,9 @@
  */
 package com.ciat.bim.data.device;
 
+import com.ciat.bim.server.common.data.device.profile.DurationAlarmConditionSpec;
+import com.ciat.bim.server.common.data.device.profile.RepeatingAlarmConditionSpec;
+import com.ciat.bim.server.common.data.device.profile.SimpleAlarmConditionSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -27,10 +30,10 @@ import java.io.Serializable;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = SimpleAlarmConditionSpec.class, name = "SIMPLE"),
-//        @JsonSubTypes.Type(value = DurationAlarmConditionSpec.class, name = "DURATION"),
-//        @JsonSubTypes.Type(value = RepeatingAlarmConditionSpec.class, name = "REPEATING")})
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SimpleAlarmConditionSpec.class, name = "SIMPLE"),
+        @JsonSubTypes.Type(value = DurationAlarmConditionSpec.class, name = "DURATION"),
+        @JsonSubTypes.Type(value = RepeatingAlarmConditionSpec.class, name = "REPEATING")})
 public interface AlarmConditionSpec extends Serializable {
 
     @JsonIgnore

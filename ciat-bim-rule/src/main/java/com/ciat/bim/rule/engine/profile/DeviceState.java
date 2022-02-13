@@ -18,7 +18,7 @@ package com.ciat.bim.rule.engine.profile;
 import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.device.AlarmConditionFilterKey;
 import com.ciat.bim.data.device.AlarmConditionKeyType;
-import com.ciat.bim.data.device.profile.DeviceProfileAlarm;
+
 import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.DeviceProfileId;
 import com.ciat.bim.data.id.EntityId;
@@ -39,6 +39,7 @@ import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecg.modules.alarm.entity.Alarm;
+import org.jeecg.modules.alarm.entity.DeviceProfileAlarm;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.device.entity.DeviceProfile;

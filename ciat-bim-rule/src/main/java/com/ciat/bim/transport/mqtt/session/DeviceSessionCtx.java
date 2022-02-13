@@ -144,7 +144,7 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
     }
 
     private void updateDeviceSessionConfiguration(DeviceProfile deviceProfile) {
-        DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.fetchProfileData().getTransportConfiguration();
+        DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration.getType().equals(DeviceTransportType.MQTT) &&
                 transportConfiguration instanceof MqttDeviceProfileTransportConfiguration) {
             MqttDeviceProfileTransportConfiguration mqttConfig = (MqttDeviceProfileTransportConfiguration) transportConfiguration;

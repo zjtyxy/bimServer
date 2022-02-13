@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.common.data.query;
+package com.ciat.bim.server.common.data.device.profile;
 
-import com.ciat.bim.data.device.FilterPredicateType;
-import lombok.Data;
+import com.ciat.bim.data.device.AlarmSchedule;
+import com.ciat.bim.data.device.AlarmScheduleType;
 
-import javax.validation.Valid;
-
-@Data
-public class StringFilterPredicate implements SimpleKeyFilterPredicate<String> {
-
-    private StringOperation operation;
-    @Valid
-    private FilterPredicateValue<String> value;
-    private boolean ignoreCase;
+public class AnyTimeSchedule implements AlarmSchedule {
 
     @Override
-    public FilterPredicateType getType() {
-        return FilterPredicateType.STRING;
+    public AlarmScheduleType getType() {
+        return AlarmScheduleType.ANY_TIME;
     }
 
-    public enum StringOperation {
-        EQUAL,
-        NOTEQUAL,
-        STARTSWITH,
-        ENDSWITH,
-        CONTAINS,
-        NOTCONTAINS
-    }
 }

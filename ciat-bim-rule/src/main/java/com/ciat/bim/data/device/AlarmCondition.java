@@ -26,12 +26,12 @@ import java.util.List;
 @ApiModel
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AlarmCondition implements Serializable {
-
-    @Valid
-    @ApiModelProperty(position = 1, value = "JSON array of alarm condition filters")
-    private List<AlarmConditionFilter> condition;
+public class AlarmCondition implements Serializable {    @Valid
+@ApiModelProperty(position = 1, value = "JSON array of alarm condition filters")
+private List<AlarmConditionFilter> condition;
     @ApiModelProperty(position = 2, value = "JSON object representing alarm condition type")
     private AlarmConditionSpec spec;
+
+
 
 }

@@ -19,5 +19,5 @@ public enum EntityKeyValueType {
     STRING,
     NUMERIC,
     BOOLEAN,
-    DATE_TIME
+    DATETIME
 }

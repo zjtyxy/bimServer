@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.data.device.profile;
+package org.jeecg.modules.alarm.entity;
 
+
+import com.ciat.bim.data.device.profile.DeviceProfileConfiguration;
+import com.ciat.bim.data.device.profile.DeviceProfileProvisionConfiguration;
+import com.ciat.bim.data.device.profile.DeviceProfileTransportConfiguration;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

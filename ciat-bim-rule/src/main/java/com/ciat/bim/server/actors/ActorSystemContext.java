@@ -43,6 +43,7 @@ import com.ciat.bim.server.telemetry.TelemetrySubscriptionService;
 import com.ciat.bim.server.timeseries.TimeseriesService;
 import com.ciat.bim.tenant.TbTenantProfileCache;
 import com.ciat.bim.transport.TbCoreToTransportService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.util.concurrent.FutureCallback;
@@ -408,24 +409,24 @@ public class ActorSystemContext {
     public void persistError(String tenantId, String entityId, String method, Exception e) {
         Event event = new Event();
         event.setTenantId(tenantId);
-//        event.setEntityId(entityId);
-//        event.setType(DataConstants.ERROR);
-//        event.setBody(toBodyJson(serviceInfoProvider.getServiceInfo().getServiceId(), method, toString(e)));
-//        persistEvent(event);
+        event.setEntityId(entityId);
+        event.setType(DataConstants.ERROR);
+        event.setBody(toBodyJson(serviceInfoProvider.getServiceInfo().getServiceId(), method, toString(e)));
+        persistEvent(event);
     }
 
     public void persistLifecycleEvent(String tenantId, String entityId, ComponentLifecycleEvent lcEvent, Exception e) {
-//        Event event = new Event();
-//        event.setTenantId(tenantId);
-//        event.setEntityId(entityId);
-//        event.setType(DataConstants.LC_EVENT);
-//        event.setBody(toBodyJson(serviceInfoProvider.getServiceInfo().getServiceId(), lcEvent, Optional.ofNullable(e)));
-//        persistEvent(event);
+        Event event = new Event();
+        event.setTenantId(tenantId);
+        event.setEntityId(entityId);
+        event.setType(DataConstants.LC_EVENT);
+        event.setBody(toBodyJson(serviceInfoProvider.getServiceInfo().getServiceId(), lcEvent, Optional.ofNullable(e)));
+        persistEvent(event);
     }
 
-//    private void persistEvent(Event event) {
-//        eventService.save(event);
-//    }
+    private void persistEvent(Event event) {
+        eventService.save(event);
+    }
 
     private String toString(Throwable e) {
         StringWriter sw = new StringWriter();
@@ -433,21 +434,21 @@ public class ActorSystemContext {
         return sw.toString();
     }
 
-//    private JsonNode toBodyJson(String serviceId, ComponentLifecycleEvent event, Optional<Exception> e) {
-//        ObjectNode node = mapper.createObjectNode().put("server", serviceId).put("event", event.name());
-//        if (e.isPresent()) {
-//            node = node.put("success", false);
-//            node = node.put("error", toString(e.get()));
-//        } else {
-//            node = node.put("success", true);
-//        }
-//        return node;
-//    }
-//
-//    private JsonNode toBodyJson(String serviceId, String method, String body) {
-//        return mapper.createObjectNode().put("server", serviceId).put("method", method).put("error", body);
-//    }
-//
+    private JsonNode toBodyJson(String serviceId, ComponentLifecycleEvent event, Optional<Exception> e) {
+        ObjectNode node = mapper.createObjectNode().put("server", serviceId).put("event", event.name());
+        if (e.isPresent()) {
+            node = node.put("success", false);
+            node = node.put("error", toString(e.get()));
+        } else {
+            node = node.put("success", true);
+        }
+        return node;
+    }
+
+    private JsonNode toBodyJson(String serviceId, String method, String body) {
+        return mapper.createObjectNode().put("server", serviceId).put("method", method).put("error", body);
+    }
+
     public TopicPartitionInfo resolve(ServiceType serviceType, String tenantId, EntityId entityId) {
         return partitionService.resolve(serviceType, tenantId, entityId.getId());
     }

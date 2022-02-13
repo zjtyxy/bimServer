@@ -522,14 +522,14 @@ public class EntityKeyMapping {
             case EQUAL:
                 stringOperationQuery = String.format("%s = :%s)", operationField, paramName);
                 break;
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 stringOperationQuery = String.format("%s != :%s or %s is null)", operationField, paramName, operationField);
                 break;
-            case STARTS_WITH:
+            case STARTSWITH:
                 value += "%";
                 stringOperationQuery = String.format("%s like :%s)", operationField, paramName);
                 break;
-            case ENDS_WITH:
+            case ENDSWITH:
                 value = "%" + value;
                 stringOperationQuery = String.format("%s like :%s)", operationField, paramName);
                 break;
@@ -537,7 +537,7 @@ public class EntityKeyMapping {
                 value = "%" + value + "%";
                 stringOperationQuery = String.format("%s like :%s)", operationField, paramName);
                 break;
-            case NOT_CONTAINS:
+            case NOTCONTAINS:
                 value = "%" + value + "%";
                 stringOperationQuery = String.format("%s not like :%s or %s is null)", operationField, paramName, operationField);
                 break;
@@ -554,19 +554,19 @@ public class EntityKeyMapping {
             case EQUAL:
                 numericOperationQuery = String.format("%s = :%s", field, paramName);
                 break;
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 numericOperationQuery = String.format("%s != :%s", field, paramName);
                 break;
             case GREATER:
                 numericOperationQuery = String.format("%s > :%s", field, paramName);
                 break;
-            case GREATER_OR_EQUAL:
+            case GREATEROREQUAL:
                 numericOperationQuery = String.format("%s >= :%s", field, paramName);
                 break;
             case LESS:
                 numericOperationQuery = String.format("%s < :%s", field, paramName);
                 break;
-            case LESS_OR_EQUAL:
+            case LESSOREQUAL:
                 numericOperationQuery = String.format("%s <= :%s", field, paramName);
                 break;
         }
@@ -582,7 +582,7 @@ public class EntityKeyMapping {
             case EQUAL:
                 booleanOperationQuery = String.format("%s = :%s", field, paramName);
                 break;
-            case NOT_EQUAL:
+            case NOTEQUAL:
                 booleanOperationQuery = String.format("%s != :%s", field, paramName);
                 break;
         }
