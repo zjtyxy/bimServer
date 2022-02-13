@@ -51,7 +51,7 @@ public class DeviceProfileServiceImpl extends ServiceImpl<DeviceProfileMapper, D
             for(DeviceProfileAlarm dpa : dpas )
             {
                 LambdaQueryWrapper<BimAlarmRule> lqw1 = new LambdaQueryWrapper();
-                lqw1.eq(BimAlarmRule::getMainId,dp.getId());
+                lqw1.eq(BimAlarmRule::getMainId,dpa.getId());
                 List<BimAlarmRule> alarms = alarmRuleService.list(lqw1);
                 dpa.setCreateRules(new TreeMap<>());
                 for(BimAlarmRule alarm : alarms)
