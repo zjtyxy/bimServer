@@ -87,7 +87,11 @@
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>${mybatis-plus.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.github.jeffreyning</groupId>
+			<artifactId>mybatisplus-plus</artifactId>
+			<version>1.6.0-RELEASE</version>
+		</dependency>
 		<!-- druid -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
