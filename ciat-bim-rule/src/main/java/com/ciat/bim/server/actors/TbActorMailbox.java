@@ -69,6 +69,7 @@ public final class TbActorMailbox implements TbActorCtx {
                 }
             }
         } catch (Throwable t) {
+            t.printStackTrace();
             log.debug("[{}] Failed to init actor, attempt: {}", selfId, attempt, t);
             int attemptIdx = attempt + 1;
             InitFailureStrategy strategy = actor.onInitFailure(attempt, t);

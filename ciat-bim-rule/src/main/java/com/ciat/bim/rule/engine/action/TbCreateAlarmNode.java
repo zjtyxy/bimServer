@@ -78,6 +78,10 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
     @Override
     protected TbCreateAlarmNodeConfiguration loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
         TbCreateAlarmNodeConfiguration nodeConfiguration = TbNodeUtils.convert(configuration, TbCreateAlarmNodeConfiguration.class);
+        if(nodeConfiguration == null)
+        {
+            nodeConfiguration =  new TbCreateAlarmNodeConfiguration().defaultConfiguration();
+        }
         relationTypes = nodeConfiguration.getRelationTypes();
         return nodeConfiguration;
     }

@@ -90,10 +90,8 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
 
         Function<AttributeKv, Integer> hashcodeFunction = entity -> entity.hashCode();
         queue = new TbSqlBlockingQueueWrapper<>(params, hashcodeFunction, batchThreads, statsFactory);
-        queue.init(logExecutor, v -> attributeKvRepository.saveOrUpdateBatch(v),
-                Comparator.comparing((AttributeKv attributeKvEntity) -> attributeKvEntity.getId())
-                        .thenComparing(attributeKvEntity -> attributeKvEntity.getEntityType())
-                        .thenComparing(attributeKvEntity -> attributeKvEntity.getAttributeType())
+        queue.init(logExecutor, v -> attributeKvRepository.saveOrUpdateBatchByMultiId(v),
+                Comparator.comparing((AttributeKv attributeKvEntity) -> attributeKvEntity.getEntityId())
                         .thenComparing(attributeKvEntity -> attributeKvEntity.getAttributeKey())
         );
     }
@@ -160,7 +158,7 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
 //        entity.setDoubleValue(attribute.getDoubleValue());
 //        entity.setLongValue(attribute.getLongValue());
 //        entity.setBooleanValue(attribute.getBooleanValue());
-//        entity.setJsonValue(attribute.getJsonValue());
+        attribute.setEntityType(attributeType);
         attribute.setEntityId(entityId.getId());
         return addToQueue(attribute);
     }

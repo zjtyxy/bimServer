@@ -1,5 +1,7 @@
 package org.jeecg.modules.device.service.impl;
 
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
@@ -12,13 +14,16 @@ import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.mapper.AttributeKvMapper;
 import org.jeecg.modules.device.service.IAttributeKvService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
 /**
  * @Description: 属性表
  * @Author: jeecg-boot
@@ -26,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Version: V1.0
  */
 @Service
-public class AttributeKvServiceImpl extends ServiceImpl<AttributeKvMapper, AttributeKv> implements IAttributeKvService {
+public class AttributeKvServiceImpl extends MppServiceImpl<AttributeKvMapper, AttributeKv> implements IAttributeKvService {
 
 	@Autowired
 	private AttributeKvMapper attributeKvMapper;
@@ -39,7 +44,22 @@ public class AttributeKvServiceImpl extends ServiceImpl<AttributeKvMapper, Attri
 
 	@Override
 	public ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Set<String> keySet) {
-		return null;
+		//List<ListenableFuture<AttributeKv>> saveFutures = keySet.stream().map(attribute ->attributesDao.save(tenantId, entityId, scope, attribute)).collect(Collectors.toList());
+		LambdaQueryWrapper<AttributeKv> lqw = new LambdaQueryWrapper<>();
+		lqw.eq(AttributeKv::getEntityId,entityId);
+		lqw.eq(AttributeKv::getEntityType,clientScope);//属性范围字段应该有问题
+		List<AttributeKv> attrs = this.list(lqw);
+		List<AttributeKv> rest = new ArrayList<>();
+		for(AttributeKv attr :attrs)
+		{
+			if(keySet.contains(attr.getAttributeKey()))
+			{
+				rest.add(attr);
+			}
+		}
+		SettableFuture<List<AttributeKv>> future = SettableFuture.create();
+		future.set(rest);
+		return future;
 	}
 
 	@Override
@@ -82,5 +102,30 @@ public class AttributeKvServiceImpl extends ServiceImpl<AttributeKvMapper, Attri
 	@Override
 	public List<AttributeKv> findAllByEntityTypeAndEntityIdAndAttributeType(EntityType entityType, String id, String attributeType) {
 		return null;
+	}
+
+	@Override
+	public boolean updateByMultiId(AttributeKv entity) {
+		return super.updateByMultiId(entity);
+	}
+
+	@Override
+	public boolean deleteByMultiId(AttributeKv entity) {
+		return super.deleteByMultiId(entity);
+	}
+
+	@Override
+	public AttributeKv selectByMultiId(AttributeKv entity) {
+		return super.selectByMultiId(entity);
+	}
+
+	@Override
+	public boolean saveOrUpdateBatchByMultiId(Collection<AttributeKv> entityList) {
+		return super.saveOrUpdateBatchByMultiId(entityList);
+	}
+
+	@Override
+	public boolean updateBatchByMultiId(Collection<AttributeKv> entityList) {
+		return super.updateBatchByMultiId(entityList);
 	}
 }

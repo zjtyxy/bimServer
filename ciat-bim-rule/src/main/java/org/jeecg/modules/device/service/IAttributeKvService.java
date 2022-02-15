@@ -1,6 +1,6 @@
 package org.jeecg.modules.device.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+
 import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
@@ -8,6 +8,7 @@ import com.ciat.bim.msg.EntityType;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 
+import com.github.jeffreyning.mybatisplus.service.IMppService;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import java.util.Set;
  * @Date:   2022-01-19
  * @Version: V1.0
  */
-public interface IAttributeKvService extends IService<AttributeKv> {
+public interface IAttributeKvService extends IMppService<AttributeKv> {
 
 	public List<AttributeKv> selectByMainId(String mainId);
 

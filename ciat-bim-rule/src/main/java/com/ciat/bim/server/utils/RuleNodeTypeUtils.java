@@ -1,5 +1,6 @@
 package com.ciat.bim.server.utils;
 
+import com.ciat.bim.rule.engine.action.TbCreateAlarmNode;
 import com.ciat.bim.rule.engine.filter.TbMsgTypeSwitchNode;
 import com.ciat.bim.rule.engine.profile.TbDeviceProfileNode;
 import com.ciat.bim.rule.engine.telemetry.TbMsgAttributesNode;
@@ -15,6 +16,7 @@ public class RuleNodeTypeUtils {
         typeClassMap.put(TbMsgAttributesNode.class.getSimpleName(),TbMsgAttributesNode.class);
         typeClassMap.put(TbMsgTimeseriesNode.class.getSimpleName(),TbMsgTimeseriesNode.class);
         typeClassMap.put(TbMsgTypeSwitchNode.class.getSimpleName(),TbMsgTypeSwitchNode.class);
+        typeClassMap.put(TbCreateAlarmNode.class.getSimpleName(),TbCreateAlarmNode.class);
     }
 
     public static Class getNodeType(String type)

@@ -2,10 +2,13 @@ package org.jeecg.modules.device.entity;
 
 import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.jeecg.common.aspect.annotation.Dict;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import java.util.Date;
@@ -25,10 +28,10 @@ import java.io.UnsupportedEncodingException;
 public class AttributeKv implements Serializable {
     private static final long serialVersionUID = 1L;
 
-	/**主键*/
-	@TableId(type = IdType.ASSIGN_ID)
-    @ApiModelProperty(value = "主键")
-    private java.lang.String id;
+//	/**主键*/
+//	@TableId(type = IdType.ASSIGN_ID)
+//    @ApiModelProperty(value = "主键")
+//    private java.lang.String id;
 	/**创建人*/
     @ApiModelProperty(value = "创建人")
     private java.lang.String createBy;
@@ -48,16 +51,22 @@ public class AttributeKv implements Serializable {
 	/**属性范围*/
 	@Excel(name = "属性范围", width = 15, dicCode = "attr_type")
     @ApiModelProperty(value = "属性范围")
+    @Dict(dicCode = "attr_type")
     private java.lang.String entityType;
 	/**实体ID*/
+    @MppMultiId
     @ApiModelProperty(value = "实体ID")
+    @TableField(value = "entity_id")
     private java.lang.String entityId;
 	/**属性名称*/
 	@Excel(name = "属性名称", width = 15)
     @ApiModelProperty(value = "属性名称")
+    @MppMultiId
+    @TableField(value = "attribute_key")
     private java.lang.String attributeKey;
 	/**属性类型*/
 	@Excel(name = "属性类型", width = 15, dicCode = "attr_value_type")
+    @Dict(dicCode = "attr_value_type")
     @ApiModelProperty(value = "属性类型")
     private DataType attributeType;
 	/**布尔值*/
@@ -117,6 +126,7 @@ public class AttributeKv implements Serializable {
     }
 
     public Object getValue() {
+        if(this.attributeType == null) return  null;
         switch (this.attributeType)
         {
             case STRING:

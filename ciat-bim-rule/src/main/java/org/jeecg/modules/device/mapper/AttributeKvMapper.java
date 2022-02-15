@@ -13,7 +13,8 @@ import java.util.List;
  * @Date:   2022-01-19
  * @Version: V1.0
  */
-public interface AttributeKvMapper extends BaseMapper<AttributeKv> {
+import com.github.jeffreyning.mybatisplus.base.MppBaseMapper;
+public interface AttributeKvMapper extends MppBaseMapper<AttributeKv> {
 
 	public boolean deleteByMainId(@Param("mainId") String mainId);
 

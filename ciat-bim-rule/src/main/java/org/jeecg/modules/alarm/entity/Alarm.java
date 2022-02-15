@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ciat.bim.data.device.AlarmSeverity;
+import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import lombok.Builder;
 import lombok.Data;
@@ -120,7 +121,7 @@ public class Alarm implements Serializable {
     private java.lang.String propagateRelationTypes;
 
     public EntityId getOriginator() {
-        return null;
+        return  DeviceId.fromString(this.getId());
     }
 
     public void setOriginator(EntityId originator) {
