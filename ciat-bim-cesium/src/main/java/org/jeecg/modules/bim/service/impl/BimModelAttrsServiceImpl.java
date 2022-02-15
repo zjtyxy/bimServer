@@ -130,7 +130,7 @@ public class BimModelAttrsServiceImpl extends ServiceImpl<BimModelAttrsMapper, B
 	 */
 	private void updateOldParentNode(String pid) {
 		if(!IBimModelAttrsService.ROOT_PID_VALUE.equals(pid)) {
-			Integer count = baseMapper.selectCount(new QueryWrapper<BimModelAttrs>().eq("parent_id", pid));
+			Long count = baseMapper.selectCount(new QueryWrapper<BimModelAttrs>().eq("parent_id", pid));
 			if(count==null || count<=1) {
 				baseMapper.updateTreeNodeStatus(pid, IBimModelAttrsService.NOCHILD);
 			}

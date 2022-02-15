@@ -1,5 +1,6 @@
 package org.jeecg;
 
+import com.github.jeffreyning.mybatisplus.conf.EnableMPP;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.spring.boot.autoconfigure.ShiroAnnotationProcessorAutoConfiguration;
 import org.apache.shiro.spring.boot.autoconfigure.ShiroAutoConfiguration;
@@ -19,6 +20,7 @@ import java.net.UnknownHostException;
 * 单体启动类（采用此类启动为单体模式）
 */
 @Slf4j
+@EnableMPP
 @SpringBootApplication(scanBasePackages = {"org.jeecg","com.ciat.bim.rule", "com.ciat.bim.transport", "com.ciat.bim.server","com.ciat.bim.tenant"},
         exclude = {ShiroAnnotationProcessorAutoConfiguration.class, ShiroAutoConfiguration.class, ShiroBeanAutoConfiguration.class})
 public class BimApplication extends SpringBootServletInitializer {
