@@ -71,8 +71,8 @@ public class BaseTimeseriesService implements TimeseriesService {
     @Value("${database.ts_max_intervals}")
     private long maxTsIntervals;
 
-//    @Autowired
-//    private TimeseriesDao timeseriesDao;
+    @Autowired
+    private TimeseriesDao timeseriesDao;
 
 //    @Autowired
 //    private TimeseriesLatestDao timeseriesLatestDao;
@@ -171,9 +171,9 @@ public class BaseTimeseriesService implements TimeseriesService {
         if (entityId.getEntityType().equals(EntityType.ENTITY_VIEW)) {
             throw new IncorrectParameterException("Telemetry data can't be stored for entity view. Read only");
         }
-//        futures.add(timeseriesDao.savePartition(tenantId, entityId, tsKvEntry.getTs(), tsKvEntry.getKey()));
-//        futures.add(Futures.transform(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry), v -> 0, MoreExecutors.directExecutor()));
-//        futures.add(timeseriesDao.save(tenantId, entityId, tsKvEntry, ttl));
+        futures.add(timeseriesDao.savePartition(tenantId, entityId, tsKvEntry.getTs().getTime(), tsKvEntry.getKey()));
+       // futures.add(Futures.transform(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry), v -> 0, MoreExecutors.directExecutor()));
+        futures.add(timeseriesDao.save(tenantId, entityId, tsKvEntry, ttl));
     }
 
 //    private List<ReadTsKvQuery> updateQueriesForEntityView(EntityView entityView, List<ReadTsKvQuery> queries) {

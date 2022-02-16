@@ -31,6 +31,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="ts_kv对象", description="设备遥测数据")
 public class TsKv implements KvEntry {
+    private static final int MAX_CHARS_PER_DATA_POINT = 512;
     private static final long serialVersionUID = 1L;
 
 	/**主键*/
@@ -100,5 +101,20 @@ public class TsKv implements KvEntry {
     @Override
     public Object getValue() {
         return false;
+    }
+
+    public int getDataPoints() {
+        int length;
+        switch (getDataType()) {
+            case STRING:
+                length = getStrValue().length();
+                break;
+            case JSON:
+                length = getJsonValue().length();
+                break;
+            default:
+                return 1;
+        }
+        return Math.max(1, (length + MAX_CHARS_PER_DATA_POINT - 1) / MAX_CHARS_PER_DATA_POINT);
     }
 }

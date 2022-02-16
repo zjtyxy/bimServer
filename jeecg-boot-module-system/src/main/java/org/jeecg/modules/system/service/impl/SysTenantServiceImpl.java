@@ -33,7 +33,7 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
     }
 
     @Override
-    public int countUserLinkTenant(String id) {
+    public long countUserLinkTenant(String id) {
         LambdaQueryWrapper<SysUser> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(SysUser::getRelTenantIds, id);
         userQueryWrapper.or().like(SysUser::getRelTenantIds, "%," + id);
@@ -46,7 +46,7 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
     @Override
     public boolean removeTenantById(String id) {
         // 查找出已被关联的用户数量
-        int userCount = this.countUserLinkTenant(id);
+        long userCount = this.countUserLinkTenant(id);
         if (userCount > 0) {
             throw new JeecgBootException("该租户已被引用，无法删除！");
         }
