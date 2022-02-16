@@ -1,9 +1,9 @@
 package org.jeecg.modules.device.entity;
 
-public class StringDataEntry extends AttributeKv {
+public class StringDataEntry extends TsKv {
     public StringDataEntry(String key, String value) {
-        this.setAttributeType(DataType.STRING);
-        this.setAttributeKey(key);
+        this.setDataType(DataType.STRING);
+        this.setEntityKey(key);
         this.setStrValue(value);
     }
 }

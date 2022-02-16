@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.JsonDataEntry;
 import org.jeecg.modules.device.entity.LongDataEntry;
+import org.jeecg.modules.device.entity.TsKv;
 import org.springframework.stereotype.Service;
 
 
@@ -81,8 +82,8 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
             try {
                 AssetId serviceAssetId = getServiceAssetId(tenantId, queueName);
                 if (stats.getTotalMsgCounter().get() > 0) {
-                    List<AttributeKv> tsList = stats.getCounters().entrySet().stream()
-                            .map(kv -> new AttributeKv( new LongDataEntry(kv.getKey(), (long) kv.getValue().get()),ts))
+                    List<TsKv> tsList = stats.getCounters().entrySet().stream()
+                            .map(kv -> new TsKv( new LongDataEntry(kv.getKey(), (long) kv.getValue().get()),ts))
                             .collect(Collectors.toList());
                     if (!tsList.isEmpty()) {
                         tsService.saveAndNotifyInternal(tenantId, serviceAssetId, tsList, CALLBACK);
@@ -95,7 +96,7 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
             }
         });
         ruleEngineStats.getTenantExceptions().forEach((tenantId, e) -> {
-            AttributeKv tsKv = new AttributeKv( new JsonDataEntry("ruleEngineException", e.toJsonString()),ts);
+            TsKv tsKv = new TsKv( new JsonDataEntry("ruleEngineException", e.toJsonString()),ts);
             try {
                 tsService.saveAndNotifyInternal(tenantId, getServiceAssetId(tenantId, queueName), Collections.singletonList(tsKv), CALLBACK);
             } catch (DataValidationException e2) {

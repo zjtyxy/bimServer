@@ -1,10 +1,10 @@
 package org.jeecg.modules.device.entity;
 
-public class JsonDataEntry extends AttributeKv{
+public class JsonDataEntry extends TsKv{
     public JsonDataEntry(String key,String value)
     {
-        this.setAttributeType(DataType.JSON);
-        this.setAttributeKey(key);
+        this.setDataType(DataType.JSON);
+        this.setEntityKey(key);
         this.setJsonValue(value);
     }
 }

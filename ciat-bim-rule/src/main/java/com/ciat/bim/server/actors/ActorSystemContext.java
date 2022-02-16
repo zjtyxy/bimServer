@@ -454,7 +454,14 @@ public class ActorSystemContext {
     }
 
     public TopicPartitionInfo resolve(ServiceType serviceType, String queueName, String tenantId, EntityId entityId) {
-        return partitionService.resolve(serviceType, queueName, tenantId, entityId.getId());
+        try {
+            return partitionService.resolve(serviceType, queueName, tenantId, entityId.getId());
+        }catch (Exception e)
+        {
+            log.warn("entityId:{},tenantId:{},serviceType:{}",entityId,tenantId,serviceType);
+         e.printStackTrace();
+        }
+        return null;
     }
 
     public String getServiceId() {

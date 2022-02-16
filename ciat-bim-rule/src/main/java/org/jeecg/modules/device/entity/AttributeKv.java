@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 @ApiModel(value="attribute_kv对象", description="属性表")
 @Data
 @TableName("attribute_kv")
-public class AttributeKv implements Serializable {
+public class AttributeKv implements KvEntry {
     private static final long serialVersionUID = 1L;
 
 //	/**主键*/
@@ -67,12 +67,13 @@ public class AttributeKv implements Serializable {
 	/**属性类型*/
 	@Excel(name = "属性类型", width = 15, dicCode = "attr_value_type")
     @Dict(dicCode = "attr_value_type")
+    @TableField(value = "attribute_type")
     @ApiModelProperty(value = "属性类型")
-    private DataType attributeType;
+    private DataType dataType;
 	/**布尔值*/
 	@Excel(name = "布尔值", width = 15)
     @ApiModelProperty(value = "布尔值")
-    private java.lang.Integer booleanValue;
+    private java.lang.String booleanValue;
 	/**字符串值*/
 	@Excel(name = "字符串值", width = 15)
     @ApiModelProperty(value = "字符串值")
@@ -100,6 +101,11 @@ public class AttributeKv implements Serializable {
         return attributeKey;
     }
 
+    @Override
+    public DataType getDataType() {
+        return null;
+    }
+
     public String getValueAsString() {
         return "";
     }
@@ -112,12 +118,12 @@ public class AttributeKv implements Serializable {
     {
 
     }
-    public AttributeKv(AttributeKv key,Long value)
+    public AttributeKv(KvEntry key,Long value)
     {
         this.setLastupdatets(new Date(value));
-        this.setEntityId(key.entityId);
-        this.setAttributeType(key.getAttributeType());
-        this.setAttributeKey(key.getAttributeKey());
+        this.setEntityId(key.getEntityId());
+        this.setDataType(key.getDataType());
+        this.setAttributeKey(key.getKey());
         this.setBooleanValue(key.getBooleanValue());
         this.setLongValue(key.getLongValue());
         this.setDoubleValue(key.getDoubleValue());
@@ -126,8 +132,8 @@ public class AttributeKv implements Serializable {
     }
 
     public Object getValue() {
-        if(this.attributeType == null) return  null;
-        switch (this.attributeType)
+        if(this.dataType == null) return  null;
+        switch (this.dataType)
         {
             case STRING:
                 return this.strValue;

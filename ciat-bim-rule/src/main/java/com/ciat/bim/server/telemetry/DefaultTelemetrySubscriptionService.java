@@ -96,12 +96,12 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
-    public void saveAndNotify(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback) {
+    public void saveAndNotify(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback) {
         saveAndNotify(tenantId, null, entityId, ts, 0L, callback);
     }
 
     @Override
-    public void saveAndNotify(TenantId tenantId, CustomerId customerId, EntityId entityId, List<AttributeKv> ts, long ttl, FutureCallback<Void> callback) {
+    public void saveAndNotify(TenantId tenantId, CustomerId customerId, EntityId entityId, List<TsKv> ts, long ttl, FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         boolean sysTenant = TenantId.SYS_TENANT_ID.equals(tenantId) || tenantId == null;
         if (sysTenant || apiUsageStateService.getApiUsageState(tenantId).isDbStorageEnabled()) {
@@ -125,12 +125,12 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
-    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Integer> callback) {
+    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Integer> callback) {
         saveAndNotifyInternal(tenantId, entityId, ts, 0L, callback);
     }
 
     @Override
-    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, long ttl, FutureCallback<Integer> callback) {
+    public void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, long ttl, FutureCallback<Integer> callback) {
         ListenableFuture<Integer> saveFuture = tsService.save(tenantId, entityId, ts, ttl);
         addMainCallback(saveFuture, callback);
         addWsCallback(saveFuture, success -> onTimeSeriesUpdate(tenantId, entityId, ts));
@@ -202,13 +202,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
-    public void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback) {
+    public void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback) {
         checkInternalEntity(entityId);
         saveLatestAndNotifyInternal(tenantId, entityId, ts, callback);
     }
 
     @Override
-    public void saveLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback) {
+    public void saveLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback) {
         ListenableFuture<List<Void>> saveFuture = tsService.saveLatest(tenantId, entityId, ts);
         addVoidCallback(saveFuture, callback);
         addWsCallback(saveFuture, success -> onTimeSeriesUpdate(tenantId, entityId, ts));
@@ -307,7 +307,7 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
     }
 
-    private void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<AttributeKv> ts) {
+    private void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<TsKv> ts) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId.getId(), entityId.getId());
         if (currentPartitions.contains(tpi)) {
             if (subscriptionManagerService.isPresent()) {

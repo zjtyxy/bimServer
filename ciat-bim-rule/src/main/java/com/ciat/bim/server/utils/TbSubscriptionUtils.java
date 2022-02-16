@@ -28,6 +28,8 @@ import com.ciat.bim.server.transport.TransportProtos;
 import com.ciat.bim.server.transport.TransportProtos.*;
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.KvEntry;
+import org.jeecg.modules.device.entity.TsKv;
 import org.springframework.data.redis.connection.DataType;
 
 import java.util.*;
@@ -165,7 +167,7 @@ public class TbSubscriptionUtils {
     }
 
 
-    public static ToCoreMsg toTimeseriesUpdateProto(TenantId tenantId, EntityId entityId, List<AttributeKv> ts) {
+    public static ToCoreMsg toTimeseriesUpdateProto(TenantId tenantId, EntityId entityId, List<TsKv> ts) {
         TbTimeSeriesUpdateProto.Builder builder = TbTimeSeriesUpdateProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
         builder.setEntityIdMSB(Long.parseLong(entityId.getId()));
@@ -209,13 +211,13 @@ public class TbSubscriptionUtils {
     }
 
 
-    private static TsKvProto.Builder toKeyValueProto(long ts, AttributeKv attr) {
+    private static TsKvProto.Builder toKeyValueProto(long ts, KvEntry attr) {
         KeyValueProto.Builder dataBuilder = KeyValueProto.newBuilder();
         dataBuilder.setKey(attr.getKey());
-        dataBuilder.setType(KeyValueType.forNumber(attr.getAttributeType().ordinal()));
-        switch (attr.getAttributeType()) {
+        dataBuilder.setType(KeyValueType.forNumber(attr.getDataType().ordinal()));
+        switch (attr.getDataType()) {
             case BOOLEAN:
-                dataBuilder.setBoolV(attr.getBooleanValue()==1);
+                dataBuilder.setBoolV(attr.getBooleanValue().equals("Y"));
               //  attr.getBooleanValue().ifPresent(dataBuilder::setBoolV);
                 break;
             case LONG:
@@ -240,8 +242,8 @@ public class TbSubscriptionUtils {
         return EntityIdFactory.getByTypeAndUuid(entityType, entityIdMSB+"");
     }
 
-    public static List<AttributeKv> toTsKvEntityList(List<TsKvProto> dataList) {
-        List<AttributeKv> result = new ArrayList<>(dataList.size());
+    public static List<TsKv> toTsKvEntityList(List<TsKvProto> dataList) {
+        List<TsKv> result = new ArrayList<>(dataList.size());
      //   dataList.forEach(proto -> result.add(new AttributeKv(proto.getTs(), getKvEntry(proto.getKv()))));
         return result;
     }

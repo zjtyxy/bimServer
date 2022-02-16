@@ -20,6 +20,8 @@ import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.google.common.util.concurrent.FutureCallback;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
+import org.jeecg.modules.device.entity.TsKvLatest;
 
 
 import java.util.Collection;
@@ -30,15 +32,15 @@ import java.util.List;
  */
 public interface RuleEngineTelemetryService {
 
-    void saveAndNotify(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback);
+    void saveAndNotify(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback);
 
-    void saveAndNotify(TenantId tenantId, CustomerId id, EntityId entityId, List<AttributeKv> ts, long ttl, FutureCallback<Void> callback);
+    void saveAndNotify(TenantId tenantId, CustomerId id, EntityId entityId, List<TsKv> ts, long ttl, FutureCallback<Void> callback);
 
     void saveAndNotify(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, FutureCallback<Void> callback);
 
     void saveAndNotify(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, boolean notifyDevice, FutureCallback<Void> callback);
 
-    void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback);
+    void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback);
 
     void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value, FutureCallback<Void> callback);
 

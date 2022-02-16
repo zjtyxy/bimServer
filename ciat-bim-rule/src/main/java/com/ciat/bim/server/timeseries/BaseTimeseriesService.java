@@ -30,6 +30,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
+import org.jeecg.modules.device.entity.TsKvLatest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -79,7 +81,7 @@ public class BaseTimeseriesService implements TimeseriesService {
 //    private EntityViewService entityViewService;
 
     @Override
-    public ListenableFuture<List<AttributeKv>> findAll(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
+    public ListenableFuture<List<TsKv>> findAll(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
 //        validate(entityId);
 //        queries.forEach(this::validate);
 //        if (entityId.getEntityType().equals(EntityType.ENTITY_VIEW)) {
@@ -97,7 +99,7 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     @Override
-    public ListenableFuture<List<AttributeKv>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys) {
+    public ListenableFuture<List<TsKv>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys) {
 //        validate(entityId);
 //        List<ListenableFuture<AttributeKv>> futures = Lists.newArrayListWithExpectedSize(keys.size());
 //        keys.forEach(key -> Validator.validateString(key, "Incorrect key " + key));
@@ -107,7 +109,7 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     @Override
-    public ListenableFuture<List<AttributeKv>> findAllLatest(TenantId tenantId, EntityId entityId) {
+    public ListenableFuture<List<TsKv>> findAllLatest(TenantId tenantId, EntityId entityId) {
         validate(entityId);
 //        return timeseriesLatestDao.findAllLatest(tenantId, entityId);
         return  null;
@@ -131,7 +133,7 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     @Override
-    public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, AttributeKv tsKvEntry) {
+    public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKv tsKvEntry) {
         validate(entityId);
         if (tsKvEntry == null) {
             throw new IncorrectParameterException("Key value entry can't be null");
@@ -142,9 +144,9 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     @Override
-    public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, List<AttributeKv> tsKvEntries, long ttl) {
+    public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, List<TsKv> tsKvEntries, long ttl) {
         List<ListenableFuture<Integer>> futures = Lists.newArrayListWithExpectedSize(tsKvEntries.size() * INSERTS_PER_ENTRY);
-        for (AttributeKv tsKvEntry : tsKvEntries) {
+        for (TsKv tsKvEntry : tsKvEntries) {
             if (tsKvEntry == null) {
                 throw new IncorrectParameterException("Key value entry can't be null");
             }
@@ -154,7 +156,7 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     @Override
-    public ListenableFuture<List<Void>> saveLatest(TenantId tenantId, EntityId entityId, List<AttributeKv> tsKvEntries) {
+    public ListenableFuture<List<Void>> saveLatest(TenantId tenantId, EntityId entityId, List<TsKv> tsKvEntries) {
         List<ListenableFuture<Void>> futures = Lists.newArrayListWithExpectedSize(tsKvEntries.size());
 //        for (AttributeKv tsKvEntry : tsKvEntries) {
 //            if (tsKvEntry == null) {
@@ -165,7 +167,7 @@ public class BaseTimeseriesService implements TimeseriesService {
         return Futures.allAsList(futures);
     }
 
-    private void saveAndRegisterFutures(TenantId tenantId, List<ListenableFuture<Integer>> futures, EntityId entityId, AttributeKv tsKvEntry, long ttl) {
+    private void saveAndRegisterFutures(TenantId tenantId, List<ListenableFuture<Integer>> futures, EntityId entityId, TsKv tsKvEntry, long ttl) {
         if (entityId.getEntityType().equals(EntityType.ENTITY_VIEW)) {
             throw new IncorrectParameterException("Telemetry data can't be stored for entity view. Read only");
         }
@@ -220,7 +222,7 @@ public class BaseTimeseriesService implements TimeseriesService {
         validate(entityId);
         return Futures.transformAsync(this.findAllLatest(tenantId, entityId), latest -> {
             if (!latest.isEmpty()) {
-                Collection<String> keys = latest.stream().map(AttributeKv::getAttributeKey).collect(Collectors.toList());
+                Collection<String> keys = latest.stream().map(TsKv::getEntityKey).collect(Collectors.toList());
                 return Futures.transform(this.removeLatest(tenantId, entityId, keys), res -> keys, MoreExecutors.directExecutor());
             } else {
                 return Futures.immediateFuture(Collections.emptyList());

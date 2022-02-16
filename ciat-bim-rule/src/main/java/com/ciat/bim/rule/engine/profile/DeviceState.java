@@ -40,9 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.alarm.entity.DeviceProfileAlarm;
-import org.jeecg.modules.device.entity.AttributeKv;
-import org.jeecg.modules.device.entity.Device;
-import org.jeecg.modules.device.entity.DeviceProfile;
+import org.jeecg.modules.device.entity.*;
 import org.jeecg.modules.rule.entity.RuleNodeState;
 import org.springframework.util.StringUtils;
 import java.util.*;
@@ -248,11 +246,11 @@ class DeviceState {
 
     protected boolean processTelemetry(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
         boolean stateChanged = false;
-        Map<Long, List<AttributeKv>> tsKvMap = JsonConverter.convertToSortedTelemetry(new JsonParser().parse(msg.getData()), TbMsgTimeseriesNode.getTs(msg));
+        Map<Long, List<KvEntry>> tsKvMap = JsonConverter.convertToSortedTelemetry(new JsonParser().parse(msg.getData()), TbMsgTimeseriesNode.getTs(msg));
         // iterate over data by ts (ASC order).
-        for (Map.Entry<Long, List<AttributeKv>> entry : tsKvMap.entrySet()) {
+        for (Map.Entry<Long, List<KvEntry>> entry : tsKvMap.entrySet()) {
             Long ts = entry.getKey();
-            List<AttributeKv> data = entry.getValue();
+            List<KvEntry> data = entry.getValue();
             SnapshotUpdate update = merge(latestValues, ts, data);
             if (update.hasUpdate()) {
                 for (DeviceProfileAlarm alarm : deviceProfile.getAlarmSettings()) {
@@ -271,9 +269,9 @@ class DeviceState {
         return stateChanged;
     }
 
-    private SnapshotUpdate merge(DataSnapshot latestValues, Long newTs, List<AttributeKv> data) {
+    private SnapshotUpdate merge(DataSnapshot latestValues, Long newTs, List<KvEntry> data) {
         Set<AlarmConditionFilterKey> keys = new HashSet<>();
-        for (AttributeKv entry : data) {
+        for (KvEntry entry : data) {
             AlarmConditionFilterKey entityKey = new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, entry.getKey());
             if (latestValues.putValue(entityKey, newTs, toEntityValue(entry))) {
                 keys.add(entityKey);
@@ -355,8 +353,8 @@ class DeviceState {
         }
 
         if (!latestTsKeys.isEmpty()) {
-            List<AttributeKv> data = ctx.getTimeseriesService().findLatest(TenantId.fromString(ctx.getTenantId()), originator, latestTsKeys).get();
-            for (AttributeKv entry : data) {
+            List<TsKv> data = ctx.getTimeseriesService().findLatest(TenantId.fromString(ctx.getTenantId()), originator, latestTsKeys).get();
+            for (TsKv entry : data) {
                 if (entry.getValue() != null) {
                     result.putValue(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, entry.getKey()), entry.getCreateTime().getTime(), toEntityValue(entry));
                 }
@@ -379,8 +377,8 @@ class DeviceState {
         }
     }
 
-    public static EntityKeyValue toEntityValue(AttributeKv entry) {
-        switch (entry.getAttributeType()) {
+    public static EntityKeyValue toEntityValue(KvEntry entry) {
+        switch (entry.getDataType()) {
             case STRING:
                 return EntityKeyValue.fromString(entry.getStrValue());
             case LONG:
@@ -388,11 +386,11 @@ class DeviceState {
             case DOUBLE:
                 return EntityKeyValue.fromDouble(entry.getDoubleValue());
             case BOOLEAN:
-                return EntityKeyValue.fromBool(entry.getBooleanValue()==1);
+                return EntityKeyValue.fromBool(entry.getBooleanValue().equals("Y"));
             case JSON:
                 return EntityKeyValue.fromJson(entry.getJsonValue());
             default:
-                throw new RuntimeException("Can't parse entry: " + entry.getAttributeType());
+                throw new RuntimeException("Can't parse entry: " + entry.getDataType());
         }
     }
 

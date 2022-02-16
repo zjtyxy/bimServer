@@ -20,6 +20,8 @@ import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import com.google.common.util.concurrent.FutureCallback;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
+import org.jeecg.modules.device.entity.TsKvLatest;
 
 
 import java.util.List;
@@ -29,13 +31,13 @@ import java.util.List;
  */
 public interface InternalTelemetryService extends RuleEngineTelemetryService {
 
-    void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Integer> callback);
+    void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Integer> callback);
 
-    void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, long ttl, FutureCallback<Integer> callback);
+    void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, long ttl, FutureCallback<Integer> callback);
 
     void saveAndNotifyInternal(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, boolean notifyDevice, FutureCallback<Void> callback);
 
-    void saveLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, FutureCallback<Void> callback);
+    void saveLatestAndNotifyInternal(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback);
 
     void deleteAndNotifyInternal(TenantId tenantId, EntityId entityId, String scope, List<String> keys, FutureCallback<Void> callback);
 

@@ -807,10 +807,10 @@ class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {
     private KeyValueProto toKeyValueProto(AttributeKv kvEntry) {
         KeyValueProto.Builder builder = KeyValueProto.newBuilder();
         builder.setKey(kvEntry.getKey());
-        switch (kvEntry.getAttributeType()) {
+        switch (kvEntry.getDataType()) {
             case BOOLEAN:
                 builder.setType(KeyValueType.BOOLEAN_V);
-                builder.setBoolV(kvEntry.getBooleanValue()==1);
+                builder.setBoolV(kvEntry.getBooleanValue().equals("Y"));
                 break;
             case DOUBLE:
                 builder.setType(KeyValueType.DOUBLE_V);

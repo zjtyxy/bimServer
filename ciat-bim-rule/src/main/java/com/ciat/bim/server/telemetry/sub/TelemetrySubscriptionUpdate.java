@@ -18,6 +18,7 @@ package com.ciat.bim.server.telemetry.sub;
 
 
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class TelemetrySubscriptionUpdate {
     private String errorMsg;
     private Map<String, List<Object>> data;
 
-    public TelemetrySubscriptionUpdate(int subscriptionId, List<AttributeKv> data) {
+    public TelemetrySubscriptionUpdate(int subscriptionId, List<TsKv> data) {
         super();
         this.subscriptionId = subscriptionId;
 //        this.data = new TreeMap<>();

@@ -21,7 +21,8 @@ import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.server.common.data.kv.DeleteTsKvQuery;
 import com.ciat.bim.server.common.data.kv.ReadTsKvQuery;
 import com.google.common.util.concurrent.ListenableFuture;
-import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
+import org.jeecg.modules.device.entity.TsKvLatest;
 
 
 import java.util.Collection;
@@ -32,17 +33,17 @@ import java.util.List;
  */
 public interface TimeseriesService {
 
-    ListenableFuture<List<AttributeKv>> findAll(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries);
+    ListenableFuture<List<TsKv>> findAll(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries);
 
-    ListenableFuture<List<AttributeKv>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys);
+    ListenableFuture<List<TsKv>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys);
 
-    ListenableFuture<List<AttributeKv>> findAllLatest(TenantId tenantId, EntityId entityId);
+    ListenableFuture<List<TsKv>> findAllLatest(TenantId tenantId, EntityId entityId);
 
-    ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, AttributeKv tsKvEntry);
+    ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKv tsKvEntry);
 
-    ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, List<AttributeKv> tsKvEntry, long ttl);
+    ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, List<TsKv> tsKvEntry, long ttl);
 
-    ListenableFuture<List<Void>> saveLatest(TenantId tenantId, EntityId entityId, List<AttributeKv> tsKvEntry);
+    ListenableFuture<List<Void>> saveLatest(TenantId tenantId, EntityId entityId, List<TsKv> tsKvEntry);
 
     ListenableFuture<List<Void>> remove(TenantId tenantId, EntityId entityId, List<DeleteTsKvQuery> queries);
 

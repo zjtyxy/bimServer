@@ -1,10 +1,10 @@
 package org.jeecg.modules.device.entity;
 
-public class LongDataEntry extends AttributeKv{
+public class LongDataEntry extends TsKv{
    public  LongDataEntry(String key ,Long value)
    {
-      this.setAttributeType(DataType.LONG);
-      this.setAttributeKey(key);
+      this.setDataType(DataType.LONG);
+      this.setEntityKey(key);
       this.setLongValue(value);
    }
 

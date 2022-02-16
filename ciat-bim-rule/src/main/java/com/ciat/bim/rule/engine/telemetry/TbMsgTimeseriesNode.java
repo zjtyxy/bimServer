@@ -26,6 +26,8 @@ import com.ciat.bim.tenant.entity.DefaultTenantProfileConfiguration;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.KvEntry;
+import org.jeecg.modules.device.entity.TsKv;
 import org.jeecg.modules.tenant.entity.TenantProfile;
 import org.springframework.util.StringUtils;
 
@@ -35,9 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * 设备上传当前状态
- */
 @Slf4j
 @RuleNode(
         type = ComponentType.ACTION,
@@ -76,15 +75,15 @@ public class TbMsgTimeseriesNode implements TbNode {
         }
         long ts = getTs(msg);
         String src = msg.getData();
-        Map<Long, List<AttributeKv>> tsKvMap = JsonConverter.convertToTelemetry(new JsonParser().parse(src), ts);
+        Map<Long, List<KvEntry>> tsKvMap = JsonConverter.convertToTelemetry(new JsonParser().parse(src), ts);
         if (tsKvMap.isEmpty()) {
             ctx.tellFailure(msg, new IllegalArgumentException("Msg body is empty: " + src));
             return;
         }
-        List<AttributeKv> tsKvEntryList = new ArrayList<>();
-        for (Map.Entry<Long, List<AttributeKv>> tsKvEntry : tsKvMap.entrySet()) {
-            for (AttributeKv kvEntry : tsKvEntry.getValue()) {
-                tsKvEntryList.add(new AttributeKv( kvEntry,tsKvEntry.getKey()));
+        List<TsKv> tsKvEntryList = new ArrayList<>();
+        for (Map.Entry<Long, List<KvEntry>> tsKvEntry : tsKvMap.entrySet()) {
+            for (KvEntry kvEntry : tsKvEntry.getValue()) {
+                tsKvEntryList.add(new TsKv( kvEntry,tsKvEntry.getKey()));
             }
         }
         String ttlValue = msg.getMetaData().getValue("TTL");
@@ -115,3 +114,4 @@ public class TbMsgTimeseriesNode implements TbNode {
     }
 
 }
+

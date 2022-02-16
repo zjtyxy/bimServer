@@ -52,7 +52,7 @@ public class JsonConverter {
         return convertToTelemetryProto(jsonElement, System.currentTimeMillis());
     }
 
-    private static void convertToTelemetry(JsonElement jsonElement, long systemTs, Map<Long, List<AttributeKv>> result, PostTelemetryMsg.Builder builder) {
+    private static void convertToTelemetry(JsonElement jsonElement, long systemTs, Map<Long, List<KvEntry>> result, PostTelemetryMsg.Builder builder) {
         if (jsonElement.isJsonObject()) {
             parseObject(systemTs, result, builder, jsonElement.getAsJsonObject());
         } else if (jsonElement.isJsonArray()) {
@@ -68,7 +68,7 @@ public class JsonConverter {
         }
     }
 
-    private static void parseObject(long systemTs, Map<Long, List<AttributeKv>> result, PostTelemetryMsg.Builder builder, JsonObject jo) {
+    private static void parseObject(long systemTs, Map<Long, List<KvEntry>> result, PostTelemetryMsg.Builder builder, JsonObject jo) {
         if (result != null) {
             parseObject(result, systemTs, jo);
         } else {
@@ -228,7 +228,7 @@ public class JsonConverter {
         return TransportProtos.ToServerRpcRequestMsg.newBuilder().setRequestId(requestId).setMethodName(object.get("method").getAsString()).setParams(GSON.toJson(object.get("params"))).build();
     }
 
-    private static void parseNumericValue(List<AttributeKv> result, Entry<String, JsonElement> valueEntry, JsonPrimitive value) {
+    private static void parseNumericValue(List<TsKv> result, Entry<String, JsonElement> valueEntry, JsonPrimitive value) {
         String valueAsString = value.getAsString();
         String key = valueEntry.getKey();
         BigDecimal bd = new BigDecimal(valueAsString);
@@ -364,7 +364,7 @@ public class JsonConverter {
 
     private static Consumer<AttributeKv> addToObject(JsonObject result) {
         return de -> {
-            switch (de.getAttributeType()) {
+            switch (de.getDataType()) {
                 case BOOLEAN:
                     result.add(de.getKey(), new JsonPrimitive(de.getBooleanValue()));
                     break;
@@ -381,7 +381,7 @@ public class JsonConverter {
                     result.add(de.getKey(), JSON_PARSER.parse(de.getJsonValue()));
                     break;
                 default:
-                    throw new IllegalArgumentException("Unsupported data type: " + de.getAttributeType());
+                    throw new IllegalArgumentException("Unsupported data type: " + de.getDataType());
             }
         };
     }
@@ -462,8 +462,8 @@ public class JsonConverter {
         return result;
     }
 
-    private static List<AttributeKv> parseValues(JsonObject valuesObject) {
-        List<AttributeKv> result = new ArrayList<>();
+    private static List<TsKv> parseValues(JsonObject valuesObject) {
+        List<TsKv> result = new ArrayList<>();
         for (Entry<String, JsonElement> valueEntry : valuesObject.entrySet()) {
             JsonElement element = valueEntry.getValue();
             if (element.isJsonPrimitive()) {
@@ -498,25 +498,25 @@ public class JsonConverter {
         return result;
     }
 
-    public static Map<Long, List<AttributeKv>> convertToTelemetry(JsonElement jsonElement, long systemTs) throws
+    public static Map<Long, List<KvEntry>> convertToTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
         return convertToTelemetry(jsonElement, systemTs, false);
     }
 
-    public static Map<Long, List<AttributeKv>> convertToSortedTelemetry(JsonElement jsonElement, long systemTs) throws
+    public static Map<Long, List<KvEntry>> convertToSortedTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
         return convertToTelemetry(jsonElement, systemTs, true);
     }
 
-    public static Map<Long, List<AttributeKv>> convertToTelemetry(JsonElement jsonElement, long systemTs, boolean sorted) throws
+    public static Map<Long, List<KvEntry>> convertToTelemetry(JsonElement jsonElement, long systemTs, boolean sorted) throws
             JsonSyntaxException {
-        Map<Long, List<AttributeKv>> result = sorted ? new TreeMap<>() : new HashMap<>();
+        Map<Long, List<KvEntry>> result = sorted ? new TreeMap<>() : new HashMap<>();
         convertToTelemetry(jsonElement, systemTs, result, null);
         return result;
     }
 
 
-    private static void parseObject(Map<Long, List<AttributeKv>> result, long systemTs, JsonObject jo) {
+    private static void parseObject(Map<Long, List<KvEntry>> result, long systemTs, JsonObject jo) {
         if (jo.has("ts") && jo.has("values")) {
             parseWithTs(result, jo);
         } else {
@@ -524,16 +524,16 @@ public class JsonConverter {
         }
     }
 
-    private static void parseWithoutTs(Map<Long, List<AttributeKv>> result, long systemTs, JsonObject jo) {
-        for (AttributeKv entry : parseValues(jo)) {
+    private static void parseWithoutTs(Map<Long, List<KvEntry>> result, long systemTs, JsonObject jo) {
+        for (TsKv entry : parseValues(jo)) {
             result.computeIfAbsent(systemTs, tmp -> new ArrayList<>()).add(entry);
         }
     }
 
-    public static void parseWithTs(Map<Long, List<AttributeKv>> result, JsonObject jo) {
+    public static void parseWithTs(Map<Long, List<KvEntry>> result, JsonObject jo) {
         long ts = jo.get("ts").getAsLong();
         JsonObject valuesObject = jo.get("values").getAsJsonObject();
-        for (AttributeKv entry : parseValues(valuesObject)) {
+        for (TsKv entry : parseValues(valuesObject)) {
             result.computeIfAbsent(ts, tmp -> new ArrayList<>()).add(entry);
         }
     }

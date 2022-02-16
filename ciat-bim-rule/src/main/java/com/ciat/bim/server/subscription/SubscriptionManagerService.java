@@ -21,6 +21,7 @@ import com.ciat.bim.server.common.msg.queue.TbCallback;
 import com.ciat.bim.server.queue.discovery.event.PartitionChangeEvent;
 import org.jeecg.modules.alarm.entity.Alarm;
 import org.jeecg.modules.device.entity.AttributeKv;
+import org.jeecg.modules.device.entity.TsKv;
 import org.springframework.context.ApplicationListener;
 
 
@@ -32,7 +33,7 @@ public interface SubscriptionManagerService extends ApplicationListener<Partitio
 
     void cancelSubscription(String sessionId, int subscriptionId, TbCallback callback);
 
-    void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<AttributeKv> ts, TbCallback callback);
+    void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<TsKv> ts, TbCallback callback);
 
     void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKv> attributes, TbCallback callback);
 

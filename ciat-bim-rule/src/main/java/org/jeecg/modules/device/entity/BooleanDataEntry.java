@@ -1,11 +1,11 @@
 package org.jeecg.modules.device.entity;
 
-public class BooleanDataEntry extends AttributeKv{
+public class BooleanDataEntry extends TsKv{
     public BooleanDataEntry(String key,Boolean value)
     {
-        this.setAttributeType(DataType.BOOLEAN);
-        this.setAttributeKey(key);
-        this.setBooleanValue(value?1:0);
+        this.setDataType(DataType.BOOLEAN);
+        this.setEntityKey(key);
+        this.setBooleanValue(value?"Y":"N");
     }
 
 }
