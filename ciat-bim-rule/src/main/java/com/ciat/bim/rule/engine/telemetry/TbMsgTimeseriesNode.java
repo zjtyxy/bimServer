@@ -57,6 +57,7 @@ public class TbMsgTimeseriesNode implements TbNode {
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgTimeseriesNodeConfiguration.class);
+        if(config == null ) this.config = new TbMsgTimeseriesNodeConfiguration().defaultConfiguration();
         this.ctx = ctx;
         ctx.addTenantProfileListener(this::onTenantProfileUpdate);
         onTenantProfileUpdate(ctx.getTenantProfile());

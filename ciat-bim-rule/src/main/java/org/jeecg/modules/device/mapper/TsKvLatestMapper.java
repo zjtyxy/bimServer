@@ -2,7 +2,9 @@ package org.jeecg.modules.device.mapper;
 
 import java.util.List;
 
+import com.github.jeffreyning.mybatisplus.base.MppBaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.TsKvLatest;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -12,6 +14,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Date:   2022-02-16
  * @Version: V1.0
  */
-public interface TsKvLatestMapper extends BaseMapper<TsKvLatest> {
+public interface TsKvLatestMapper extends MppBaseMapper<TsKvLatest> {
 
 }

@@ -5,8 +5,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.server.dao.ToData;
+import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,13 +31,13 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="ts_kv_latest对象", description="最新遥测数据")
-public class TsKvLatest implements Serializable {
+public class TsKvLatest implements ToData<TsKv> {
     private static final long serialVersionUID = 1L;
 
-	/**主键*/
-	@TableId(type = IdType.ASSIGN_ID)
-    @ApiModelProperty(value = "主键")
-    private java.lang.String id;
+//	/**主键*/
+//	@TableId(type = IdType.ASSIGN_ID)
+//    @ApiModelProperty(value = "主键")
+//    private java.lang.String id;
 	/**创建人*/
     @ApiModelProperty(value = "创建人")
     private java.lang.String createBy;
@@ -43,10 +46,7 @@ public class TsKvLatest implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建日期")
     private java.util.Date createTime;
-	/**名称*/
-	@Excel(name = "名称", width = 15)
-    @ApiModelProperty(value = "名称")
-    private java.lang.String entityKey;
+
 	/**更新日期*/
 	@Excel(name = "更新日期", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
@@ -60,7 +60,7 @@ public class TsKvLatest implements Serializable {
 	/**整形值*/
 	@Excel(name = "整形值", width = 15)
     @ApiModelProperty(value = "整形值")
-    private java.lang.Integer longValue;
+    private java.lang.Long longValue;
 	/**字符串值*/
 	@Excel(name = "字符串值", width = 15)
     @ApiModelProperty(value = "字符串值")
@@ -75,4 +75,30 @@ public class TsKvLatest implements Serializable {
     private java.lang.String jsonValue;
 
 
+    @ApiModelProperty(value = "实体ID")
+    @TableField(value = "entity_id")
+    @MppMultiId
+    private java.lang.String entityId;
+    /**名称*/
+    @Excel(name = "名称", width = 15)
+    @ApiModelProperty(value = "名称")
+    @MppMultiId
+    private java.lang.String entityKey;
+
+    @Override
+    public TsKv toData() {
+        KvEntry kvEntry = null;
+        if (strValue != null) {
+            kvEntry = new StringDataEntry(entityKey, strValue);
+        } else if (longValue != null) {
+            kvEntry = new LongDataEntry(entityKey, longValue);
+        } else if (doubleValue != null) {
+            kvEntry = new DoubleDataEntry(entityKey, doubleValue);
+        } else if (booleanValue != null) {
+            kvEntry = new BooleanDataEntry(entityKey, booleanValue.equals("Y"));
+        } else if (jsonValue != null) {
+            kvEntry = new JsonDataEntry(entityKey, jsonValue);
+        }
+        return new TsKv(kvEntry,ts.getTime());
+    }
 }

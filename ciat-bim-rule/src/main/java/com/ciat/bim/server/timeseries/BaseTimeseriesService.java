@@ -74,8 +74,8 @@ public class BaseTimeseriesService implements TimeseriesService {
     @Autowired
     private TimeseriesDao timeseriesDao;
 
-//    @Autowired
-//    private TimeseriesLatestDao timeseriesLatestDao;
+    @Autowired
+    private TimeseriesLatestDao timeseriesLatestDao;
 
 //    @Autowired
 //    private EntityViewService entityViewService;
@@ -100,36 +100,35 @@ public class BaseTimeseriesService implements TimeseriesService {
 
     @Override
     public ListenableFuture<List<TsKv>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys) {
-//        validate(entityId);
-//        List<ListenableFuture<AttributeKv>> futures = Lists.newArrayListWithExpectedSize(keys.size());
-//        keys.forEach(key -> Validator.validateString(key, "Incorrect key " + key));
-//        keys.forEach(key -> futures.add(timeseriesLatestDao.findLatest(tenantId, entityId, key)));
-//        return Futures.allAsList(futures);
-        return  null;
+        validate(entityId);
+        List<ListenableFuture<TsKv>> futures = Lists.newArrayListWithExpectedSize(keys.size());
+        keys.forEach(key -> Validator.validateString(key, "Incorrect key " + key));
+        keys.forEach(key -> futures.add(timeseriesLatestDao.findLatest(tenantId, entityId, key)));
+        return Futures.allAsList(futures);
+
     }
 
     @Override
     public ListenableFuture<List<TsKv>> findAllLatest(TenantId tenantId, EntityId entityId) {
         validate(entityId);
-//        return timeseriesLatestDao.findAllLatest(tenantId, entityId);
-        return  null;
+        return timeseriesLatestDao.findAllLatest(tenantId, entityId);
+
     }
 
     @Override
     public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
-//        return timeseriesLatestDao.findAllKeysByDeviceProfileId(tenantId, deviceProfileId);
-        return  null;
+        return timeseriesLatestDao.findAllKeysByDeviceProfileId(tenantId, deviceProfileId);
     }
 
     @Override
     public List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
-//        return timeseriesLatestDao.findAllKeysByEntityIds(tenantId, entityIds);
-        return  null;
+        return timeseriesLatestDao.findAllKeysByEntityIds(tenantId, entityIds);
+
     }
 
     @Override
     public void cleanup(long systemTtl) {
-//        timeseriesDao.cleanup(systemTtl);
+        timeseriesDao.cleanup(systemTtl);
     }
 
     @Override
@@ -158,12 +157,12 @@ public class BaseTimeseriesService implements TimeseriesService {
     @Override
     public ListenableFuture<List<Void>> saveLatest(TenantId tenantId, EntityId entityId, List<TsKv> tsKvEntries) {
         List<ListenableFuture<Void>> futures = Lists.newArrayListWithExpectedSize(tsKvEntries.size());
-//        for (AttributeKv tsKvEntry : tsKvEntries) {
-//            if (tsKvEntry == null) {
-//                throw new IncorrectParameterException("Key value entry can't be null");
-//            }
-//            futures.add(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry));
-//        }
+        for (TsKv tsKvEntry : tsKvEntries) {
+            if (tsKvEntry == null) {
+                throw new IncorrectParameterException("Key value entry can't be null");
+            }
+            futures.add(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry));
+        }
         return Futures.allAsList(futures);
     }
 
@@ -172,7 +171,7 @@ public class BaseTimeseriesService implements TimeseriesService {
             throw new IncorrectParameterException("Telemetry data can't be stored for entity view. Read only");
         }
         futures.add(timeseriesDao.savePartition(tenantId, entityId, tsKvEntry.getTs().getTime(), tsKvEntry.getKey()));
-       // futures.add(Futures.transform(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry), v -> 0, MoreExecutors.directExecutor()));
+        futures.add(Futures.transform(timeseriesLatestDao.saveLatest(tenantId, entityId, tsKvEntry), v -> 0, MoreExecutors.directExecutor()));
         futures.add(timeseriesDao.save(tenantId, entityId, tsKvEntry, ttl));
     }
 
@@ -210,10 +209,10 @@ public class BaseTimeseriesService implements TimeseriesService {
     public ListenableFuture<List<Void>> removeLatest(TenantId tenantId, EntityId entityId, Collection<String> keys) {
         validate(entityId);
         List<ListenableFuture<Void>> futures = Lists.newArrayListWithExpectedSize(keys.size());
-//        for (String key : keys) {
-//            DeleteTsKvQuery query = new BaseDeleteTsKvQuery(key, 0, System.currentTimeMillis(), false);
-//            futures.add(timeseriesLatestDao.removeLatest(tenantId, entityId, query));
-//        }
+        for (String key : keys) {
+            DeleteTsKvQuery query = new BaseDeleteTsKvQuery(key, 0, System.currentTimeMillis(), false);
+            futures.add(timeseriesLatestDao.removeLatest(tenantId, entityId, query));
+        }
         return Futures.allAsList(futures);
     }
 
@@ -231,9 +230,9 @@ public class BaseTimeseriesService implements TimeseriesService {
     }
 
     private void deleteAndRegisterFutures(TenantId tenantId, List<ListenableFuture<Void>> futures, EntityId entityId, DeleteTsKvQuery query) {
-//        futures.add(timeseriesDao.remove(tenantId, entityId, query));
-//        futures.add(timeseriesLatestDao.removeLatest(tenantId, entityId, query));
-//        futures.add(timeseriesDao.removePartition(tenantId, entityId, query));
+        futures.add(timeseriesDao.remove(tenantId, entityId, query));
+        futures.add(timeseriesLatestDao.removeLatest(tenantId, entityId, query));
+        futures.add(timeseriesDao.removePartition(tenantId, entityId, query));
     }
 
     private static void validate(EntityId entityId) {

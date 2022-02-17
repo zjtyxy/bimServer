@@ -33,12 +33,12 @@ public abstract class DaoUtil {
 
     private DaoUtil() {
     }
-//
-//    public static <T> PageData<T> toPageData(Page<? extends ToData<T>> page) {
-//        List<T> data = convertDataList(page.getContent());
-//        return new PageData<>(data, page.getTotalPages(), page.getTotalElements(), page.hasNext());
-//    }
-//
+
+    public static <T> PageData<T> toPageData(Page<? extends ToData<T>> page) {
+        List<T> data = convertDataList(page.getContent());
+        return new PageData<>(data, page.getTotalPages(), page.getTotalElements(), page.hasNext());
+    }
+
 //    public static <T> PageData<T> pageToPageData(Page<T> page) {
 //        return new PageData<>(page.getContent(), page.getTotalPages(), page.getTotalElements(), page.hasNext());
 //    }
@@ -94,36 +94,36 @@ public abstract class DaoUtil {
 //        }
 //        return new Sort.Order(Sort.Direction.fromString(sortOrder.getDirection().name()), property, nullHandlingHint);
 //    }
-//
-//    public static <T> List<T> convertDataList(Collection<? extends ToData<T>> toDataList) {
-//        List<T> list = Collections.emptyList();
-//        if (toDataList != null && !toDataList.isEmpty()) {
-//            list = new ArrayList<>();
-//            for (ToData<T> object : toDataList) {
-//                if (object != null) {
-//                    list.add(object.toData());
-//                }
-//            }
-//        }
-//        return list;
-//    }
-//
-//    public static <T> T getData(ToData<T> data) {
-//        T object = null;
-//        if (data != null) {
-//            object = data.toData();
-//        }
-//        return object;
-//    }
-//
-//    public static <T> T getData(Optional<? extends ToData<T>> data) {
-//        T object = null;
-//        if (data.isPresent()) {
-//            object = data.get().toData();
-//        }
-//        return object;
-//    }
-//
+
+    public static <T> List<T> convertDataList(Collection<? extends ToData<T>> toDataList) {
+        List<T> list = Collections.emptyList();
+        if (toDataList != null && !toDataList.isEmpty()) {
+            list = new ArrayList<>();
+            for (ToData<T> object : toDataList) {
+                if (object != null) {
+                    list.add(object.toData());
+                }
+            }
+        }
+        return list;
+    }
+
+    public static <T> T getData(ToData<T> data) {
+        T object = null;
+        if (data != null) {
+            object = data.toData();
+        }
+        return object;
+    }
+
+    public static <T> T getData(Optional<? extends ToData<T>> data) {
+        T object = null;
+        if (data.isPresent()) {
+            object = data.get().toData();
+        }
+        return object;
+    }
+
 //    public static String getId(UUIDBased idBased) {
 //        String id = null;
 //        if (idBased != null) {

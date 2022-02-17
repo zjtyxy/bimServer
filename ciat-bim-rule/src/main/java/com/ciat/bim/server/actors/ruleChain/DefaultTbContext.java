@@ -602,7 +602,7 @@ class DefaultTbContext implements TbContext {
 
     @Override
     public TenantProfile getTenantProfile() {
-        return mainCtx.getTenantProfileCache().get(getTenantId());
+        return mainCtx.getTenantProfileCache().get(TenantId.fromString(getTenantId()));
     }
 
     private TbMsgMetaData getActionMetaData(RuleNodeId ruleNodeId) {

@@ -174,7 +174,7 @@ public class TbSubscriptionUtils {
         builder.setEntityIdLSB(Long.parseLong(entityId.getId()));
         builder.setTenantIdMSB(Long.parseLong(tenantId.getId()));
         builder.setTenantIdLSB(Long.parseLong(tenantId.getId()));
-        ts.forEach(v -> builder.addData(toKeyValueProto(v.getCreateTime().getTime(), v).build()));
+        ts.forEach(v -> builder.addData(toKeyValueProto(v.getTs().getTime(), v).build()));
         SubscriptionMgrMsgProto.Builder msgBuilder = SubscriptionMgrMsgProto.newBuilder();
         msgBuilder.setTsUpdate(builder);
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();

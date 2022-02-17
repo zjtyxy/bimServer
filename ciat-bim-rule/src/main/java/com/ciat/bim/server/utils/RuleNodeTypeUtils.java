@@ -17,6 +17,7 @@ public class RuleNodeTypeUtils {
         typeClassMap.put(TbMsgTimeseriesNode.class.getSimpleName(),TbMsgTimeseriesNode.class);
         typeClassMap.put(TbMsgTypeSwitchNode.class.getSimpleName(),TbMsgTypeSwitchNode.class);
         typeClassMap.put(TbCreateAlarmNode.class.getSimpleName(),TbCreateAlarmNode.class);
+        typeClassMap.put(TbMsgTimeseriesNode.class.getSimpleName(),TbMsgTimeseriesNode.class);
     }
 
     public static Class getNodeType(String type)

@@ -86,6 +86,15 @@ public class TsKv implements KvEntry {
     {}
 
     public TsKv(KvEntry kv, long ts) {
+        this.setTs(new Date(ts));
+        this.setEntityId(kv.getEntityId());
+        this.setDataType(kv.getDataType());
+        this.setEntityKey(kv.getKey());
+        this.setBooleanValue(kv.getBooleanValue());
+        this.setLongValue(kv.getLongValue());
+        this.setDoubleValue(kv.getDoubleValue());
+        this.setStrValue(kv.getStrValue());
+        this.setJsonValue(kv.getJsonValue());
     }
 
     @Override
