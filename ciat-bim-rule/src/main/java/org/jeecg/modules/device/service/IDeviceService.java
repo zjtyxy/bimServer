@@ -2,6 +2,8 @@ package org.jeecg.modules.device.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ciat.bim.server.common.data.page.PageData;
+import com.ciat.bim.server.common.data.page.PageLink;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 import org.jeecg.modules.device.entity.Device;
@@ -41,4 +43,6 @@ public interface IDeviceService extends IService<Device> {
 	public void delBatchMain (Collection<? extends Serializable> idList);
 
 	public ListenableFuture<Device> getByIdFuture(String deviceId);
+
+    PageData<Device> findDevicesByTenantId(String id, PageLink pageLink);
 }

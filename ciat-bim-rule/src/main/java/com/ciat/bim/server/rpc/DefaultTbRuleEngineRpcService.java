@@ -141,7 +141,8 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
             } else {
                 log.warn("Failed to find tbCoreRpcService for local service. Possible duplication of serviceIds.");
             }
-        } else {
+        }
+        else {
             log.trace("[{}] Forwarding msg {} to queue actor!", msg.getDeviceId(), msg);
             clusterService.pushMsgToCore(rpcMsg, null);
         }

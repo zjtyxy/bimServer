@@ -9,7 +9,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
 
 import com.github.jeffreyning.mybatisplus.service.IMppService;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -21,8 +24,8 @@ import java.util.Set;
 public interface IAttributeKvService extends IMppService<AttributeKv> {
 
 	public List<AttributeKv> selectByMainId(String mainId);
-
-    ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Set<String> keySet);
+    ListenableFuture<Optional<AttributeKv>> find(TenantId tenantId, EntityId entityId, String scope, String attributeKey);
+    ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Collection<String> keySet);
 
     ListenableFuture<List<Void>> removeAll(TenantId tenantId, EntityId entityId, String scope, List<String> keys);
 

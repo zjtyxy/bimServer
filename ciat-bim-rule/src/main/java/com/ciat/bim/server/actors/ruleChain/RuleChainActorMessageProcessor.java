@@ -17,6 +17,7 @@ package com.ciat.bim.server.actors.ruleChain;
 
 import com.ciat.bim.common.data.rule.RuleChainType;
 import com.ciat.bim.common.data.rule.TbRelationTypes;
+import com.ciat.bim.data.id.DeviceId;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TbEntityActorId;
 import com.ciat.bim.data.id.TenantId;
@@ -241,6 +242,10 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
     }
 
     void onTellNext(RuleNodeToRuleChainTellNextMsg envelope) {
+        if(envelope.getOriginator() == null)
+        {
+            onTellNext(envelope.getMsg(), envelope.getOriginator(), envelope.getRelationTypes(), envelope.getFailureMessage());
+        }
         onTellNext(envelope.getMsg(), envelope.getOriginator(), envelope.getRelationTypes(), envelope.getFailureMessage());
     }
 
@@ -248,6 +253,11 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
         try {
             checkActive(msg);
             EntityId entityId = msg.getOriginator();
+//            if(entityId == null)
+//            {
+//                System.out.println(msg);
+//                entityId = new DeviceId(TenantId.NULL_UUID);
+//            }
             TopicPartitionInfo tpi = systemContext.resolve(ServiceType.TB_RULE_ENGINE, msg.getQueueName(), tenantId, entityId);
 
             List<RuleNodeRelation> ruleNodeRelations = nodeRoutes.get(originatorNodeId);

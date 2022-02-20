@@ -520,12 +520,12 @@ class DefaultTbContext implements TbContext {
 //    public SmsSenderFactory getSmsSenderFactory() {
 //        return mainCtx.getSmsSenderFactory();
 //    }
-//
-//    @Override
-//    public RuleEngineRpcService getRpcService() {
-//        return mainCtx.getTbRuleEngineDeviceRpcService();
-//    }
-//
+
+    @Override
+    public RuleEngineRpcService getRpcService() {
+        return mainCtx.getTbRuleEngineDeviceRpcService();
+    }
+
 //    @Override
 //    public CassandraCluster getCassandraCluster() {
 //        return mainCtx.getCassandraCluster();

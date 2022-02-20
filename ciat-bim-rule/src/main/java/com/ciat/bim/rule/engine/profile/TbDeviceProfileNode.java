@@ -71,7 +71,7 @@ public class TbDeviceProfileNode implements TbNode {
         this.config = TbNodeUtils.convert(configuration, TbDeviceProfileNodeConfiguration.class);
         this.cache = ctx.getDeviceProfileCache();
         this.ctx = ctx;
-        scheduleAlarmHarvesting(ctx, null);
+      //  scheduleAlarmHarvesting(ctx, null);
         ctx.addDeviceProfileListeners(this::onProfileUpdate, this::onDeviceUpdate);
         if (config.isFetchAlarmRulesStateOnStart()) {
             log.info("[{}] Fetching alarm rule state", ctx.getSelfId());

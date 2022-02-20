@@ -22,6 +22,7 @@ import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
 import com.ciat.bim.server.common.data.page.PageData;
 import com.ciat.bim.server.common.data.page.PageLink;
+import com.ciat.bim.server.rpc.RuleEngineRpcService;
 import com.ciat.bim.server.timeseries.TimeseriesService;
 import com.ciat.bim.server.utils.ListeningExecutor;
 import io.netty.channel.EventLoopGroup;
@@ -176,7 +177,7 @@ public interface TbContext {
 //
 //    RuleChainService getRuleChainService();
 //
-//    RuleEngineRpcService getRpcService();
+    RuleEngineRpcService getRpcService();
 
       RuleEngineTelemetryService getTelemetryService();
 

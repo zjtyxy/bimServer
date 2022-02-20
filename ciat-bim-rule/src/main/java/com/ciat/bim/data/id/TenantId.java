@@ -21,9 +21,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.UUID;
 
 public final class TenantId extends UUIDBased implements EntityId {
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
     @JsonIgnore
     public static final String SYS_TENANT_ID = EntityId.NULL_UUID.toString();

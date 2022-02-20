@@ -22,6 +22,8 @@ import com.ciat.bim.msg.TbActorMsg;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.apiusage.TbApiUsageStateService;
 import com.ciat.bim.server.common.msg.queue.TbCallback;
+import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
+import com.ciat.bim.server.common.msg.rpc.RpcError;
 import com.ciat.bim.server.common.stats.StatsFactory;
 import com.ciat.bim.server.common.transport.util.DataDecodingEncodingService;
 import com.ciat.bim.server.edge.EdgeNotificationService;
@@ -78,10 +80,10 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     @Value("${queue.core.stats.enabled:false}")
     private boolean statsEnabled;
 
-    @Value("${queue.core.ota.pack-interval-ms:60000}")
-    private long firmwarePackInterval;
-    @Value("${queue.core.ota.pack-size:100}")
-    private int firmwarePackSize;
+//    @Value("${queue.core.ota.pack-interval-ms:60000}")
+//    private long firmwarePackInterval;
+//    @Value("${queue.core.ota.pack-size:100}")
+//    private int firmwarePackSize;
 
     private  TbQueueConsumer<TbProtoQueueMsg<ToCoreMsg>> mainConsumer;
     private  DeviceStateService stateService;
@@ -167,7 +169,7 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                             .map(tpi -> tpi.newByTopic(usageStatsConsumer.getTopic()))
                             .collect(Collectors.toSet()));
         }
-        this.firmwareStatesConsumer.subscribe();
+       // this.firmwareStatesConsumer.subscribe();
     }
 
     @Override
@@ -274,27 +276,27 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 
     @Override
     protected void handleNotification(UUID id, TbProtoQueueMsg<ToCoreNotificationMsg> msg, TbCallback callback) {
-//        ToCoreNotificationMsg toCoreNotification = msg.getValue();
-//        if (toCoreNotification.hasToLocalSubscriptionServiceMsg()) {
-//            log.trace("[{}] Forwarding message to local subscription service {}", id, toCoreNotification.getToLocalSubscriptionServiceMsg());
-//            forwardToLocalSubMgrService(toCoreNotification.getToLocalSubscriptionServiceMsg(), callback);
-//        } else if (toCoreNotification.hasFromDeviceRpcResponse()) {
-//            log.trace("[{}] Forwarding message to RPC service {}", id, toCoreNotification.getFromDeviceRpcResponse());
-//            forwardToCoreRpcService(toCoreNotification.getFromDeviceRpcResponse(), callback);
-//        } else if (toCoreNotification.getComponentLifecycleMsg() != null && !toCoreNotification.getComponentLifecycleMsg().isEmpty()) {
-//            handleComponentLifecycleMsg(id, toCoreNotification.getComponentLifecycleMsg());
-//            callback.onSuccess();
-//        } else if (toCoreNotification.getEdgeEventUpdateMsg() != null && !toCoreNotification.getEdgeEventUpdateMsg().isEmpty()) {
-//            Optional<TbActorMsg> actorMsg = encodingService.decode(toCoreNotification.getEdgeEventUpdateMsg().toByteArray());
-//            if (actorMsg.isPresent()) {
-//                log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
-//                actorContext.tellWithHighPriority(actorMsg.get());
-//            }
-//            callback.onSuccess();
-//        }
-//        if (statsEnabled) {
-//            stats.log(toCoreNotification);
-//        }
+        ToCoreNotificationMsg toCoreNotification = msg.getValue();
+        if (toCoreNotification.hasToLocalSubscriptionServiceMsg()) {
+            log.trace("[{}] Forwarding message to local subscription service {}", id, toCoreNotification.getToLocalSubscriptionServiceMsg());
+            forwardToLocalSubMgrService(toCoreNotification.getToLocalSubscriptionServiceMsg(), callback);
+        } else if (toCoreNotification.hasFromDeviceRpcResponse()) {
+            log.trace("[{}] Forwarding message to RPC service {}", id, toCoreNotification.getFromDeviceRpcResponse());
+            forwardToCoreRpcService(toCoreNotification.getFromDeviceRpcResponse(), callback);
+        } else if (toCoreNotification.getComponentLifecycleMsg() != null && !toCoreNotification.getComponentLifecycleMsg().isEmpty()) {
+            handleComponentLifecycleMsg(id, toCoreNotification.getComponentLifecycleMsg());
+            callback.onSuccess();
+        } else if (toCoreNotification.getEdgeEventUpdateMsg() != null && !toCoreNotification.getEdgeEventUpdateMsg().isEmpty()) {
+            Optional<TbActorMsg> actorMsg = encodingService.decode(toCoreNotification.getEdgeEventUpdateMsg().toByteArray());
+            if (actorMsg.isPresent()) {
+                log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
+                actorContext.tellWithHighPriority(actorMsg.get());
+            }
+            callback.onSuccess();
+        }
+        if (statsEnabled) {
+            stats.log(toCoreNotification);
+        }
     }
 
     private void launchUsageStatsConsumer() {
@@ -393,32 +395,32 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
 //        return firmwareStateService.process(msg.getValue());
 //    }
 //
-//    private void forwardToCoreRpcService(FromDeviceRPCResponseProto proto, TbCallback callback) {
-//        RpcError error = proto.getError() > 0 ? RpcError.values()[proto.getError()] : null;
-//        FromDeviceRpcResponse response = new FromDeviceRpcResponse(new UUID(proto.getRequestIdMSB(), proto.getRequestIdLSB())
-//                , proto.getResponse(), error);
-//        tbCoreDeviceRpcService.processRpcResponseFromRuleEngine(response);
-//        callback.onSuccess();
-//    }
-//
-//    @Scheduled(fixedDelayString = "${queue.core.stats.print-interval-ms}")
-//    public void printStats() {
-//        if (statsEnabled) {
-//            stats.printStats();
-//            stats.reset();
-//        }
-//    }
-//
-//    private void forwardToLocalSubMgrService(LocalSubscriptionServiceMsgProto msg, TbCallback callback) {
-//        if (msg.hasSubUpdate()) {
-//            localSubscriptionService.onSubscriptionUpdate(msg.getSubUpdate().getSessionId(), TbSubscriptionUtils.fromProto(msg.getSubUpdate()), callback);
-//        } else if (msg.hasAlarmSubUpdate()) {
-//            localSubscriptionService.onSubscriptionUpdate(msg.getAlarmSubUpdate().getSessionId(), TbSubscriptionUtils.fromProto(msg.getAlarmSubUpdate()), callback);
-//        } else {
-//            throwNotHandled(msg, callback);
-//        }
-//    }
-//
+    private void forwardToCoreRpcService(FromDeviceRPCResponseProto proto, TbCallback callback) {
+        RpcError error = proto.getError() > 0 ? RpcError.values()[proto.getError()] : null;
+        FromDeviceRpcResponse response = new FromDeviceRpcResponse(proto.getRequestIdMSB()+""
+                , proto.getResponse(), error);
+        tbCoreDeviceRpcService.processRpcResponseFromRuleEngine(response);
+        callback.onSuccess();
+    }
+
+    @Scheduled(fixedDelayString = "${queue.core.stats.print-interval-ms}")
+    public void printStats() {
+        if (statsEnabled) {
+            stats.printStats();
+            stats.reset();
+        }
+    }
+
+    private void forwardToLocalSubMgrService(LocalSubscriptionServiceMsgProto msg, TbCallback callback) {
+        if (msg.hasSubUpdate()) {
+            localSubscriptionService.onSubscriptionUpdate(msg.getSubUpdate().getSessionId(), TbSubscriptionUtils.fromProto(msg.getSubUpdate()), callback);
+        } else if (msg.hasAlarmSubUpdate()) {
+            localSubscriptionService.onSubscriptionUpdate(msg.getAlarmSubUpdate().getSessionId(), TbSubscriptionUtils.fromProto(msg.getAlarmSubUpdate()), callback);
+        } else {
+            throwNotHandled(msg, callback);
+        }
+    }
+
     private void forwardToSubMgrService(SubscriptionMgrMsgProto msg, TbCallback callback) {
         if (msg.hasAttributeSub()) {
             subscriptionManagerService.addSubscription(TbSubscriptionUtils.fromProto(msg.getAttributeSub()), callback);

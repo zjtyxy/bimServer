@@ -15,10 +15,7 @@ import org.jeecg.modules.device.mapper.AttributeKvMapper;
 import org.jeecg.modules.device.service.IAttributeKvService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,6 +29,10 @@ import com.github.jeffreyning.mybatisplus.service.MppServiceImpl;
  */
 @Service
 public class AttributeKvServiceImpl extends MppServiceImpl<AttributeKvMapper, AttributeKv> implements IAttributeKvService {
+	@Override
+	public ListenableFuture<Optional<AttributeKv>> find(TenantId tenantId, EntityId entityId, String scope, String attributeKey) {
+		return null;
+	}
 
 	@Autowired
 	private AttributeKvMapper attributeKvMapper;
@@ -43,7 +44,7 @@ public class AttributeKvServiceImpl extends MppServiceImpl<AttributeKvMapper, At
 	}
 
 	@Override
-	public ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Set<String> keySet) {
+	public ListenableFuture<List<AttributeKv>> find(String tenantId, EntityId entityId, String clientScope, Collection<String> keySet) {
 		//List<ListenableFuture<AttributeKv>> saveFutures = keySet.stream().map(attribute ->attributesDao.save(tenantId, entityId, scope, attribute)).collect(Collectors.toList());
 		LambdaQueryWrapper<AttributeKv> lqw = new LambdaQueryWrapper<>();
 		lqw.eq(AttributeKv::getEntityId,entityId);

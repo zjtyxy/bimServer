@@ -279,7 +279,8 @@ public class HashPartitionService implements PartitionService {
         } else {
             tpi.myPartition(false);
         }
-        return tpi.build();
+        TopicPartitionInfo rst = tpi.build();
+        return rst;
     }
 
     private String isIsolated(ServiceQueue serviceQueue, String tenantId) {

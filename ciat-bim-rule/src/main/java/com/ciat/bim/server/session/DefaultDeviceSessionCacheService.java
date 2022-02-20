@@ -37,14 +37,14 @@ import static com.ciat.bim.server.common.data.CacheConstants.SESSIONS_CACHE;
 public class DefaultDeviceSessionCacheService implements DeviceSessionCacheService {
 
     @Override
-    @Cacheable(cacheNames = SESSIONS_CACHE, key = "#deviceId.toString()")
+    //@Cacheable(cacheNames = SESSIONS_CACHE, key = "#p0.toString()")
     public byte[] get(DeviceId deviceId) {
         log.debug("[{}] Fetching session data from cache", deviceId);
         return TransportProtos.DeviceSessionsCacheEntry.newBuilder().addAllSessions(Collections.emptyList()).build().toByteArray();
     }
 
     @Override
-    @CachePut(cacheNames = SESSIONS_CACHE, key = "#deviceId.toString()")
+    @CachePut(cacheNames = SESSIONS_CACHE, key = "#p0.toString()")
     public byte[] put(DeviceId deviceId, byte[] sessions) {
         log.debug("[{}] Pushing session data to cache: {}", deviceId, sessions);
         return sessions;

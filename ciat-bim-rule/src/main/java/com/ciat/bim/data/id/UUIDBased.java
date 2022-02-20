@@ -43,6 +43,10 @@ public abstract class UUIDBased implements HasUUID, Serializable {
     }
 
     @Override
+    public String toString() {
+        return id.toString();
+    }
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -66,10 +70,4 @@ public abstract class UUIDBased implements HasUUID, Serializable {
             return false;
         return true;
     }
-
-    @Override
-    public String toString() {
-        return id.toString();
-    }
-
 }

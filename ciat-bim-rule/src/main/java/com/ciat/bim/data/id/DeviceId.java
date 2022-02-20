@@ -43,4 +43,8 @@ public class DeviceId extends UUIDBased implements EntityId {
     public EntityType getEntityType() {
         return EntityType.DEVICE;
     }
+
+    public String toString() {
+        return this.getId();
+    }
 }

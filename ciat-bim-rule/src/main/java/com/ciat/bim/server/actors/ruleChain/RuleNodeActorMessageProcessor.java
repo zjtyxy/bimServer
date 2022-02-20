@@ -23,6 +23,7 @@ import com.ciat.bim.rule.RuleNodeId;
 import com.ciat.bim.rule.RuleNodeInfo;
 import com.ciat.bim.rule.TbNode;
 import com.ciat.bim.rule.TbNodeConfiguration;
+import com.ciat.bim.rule.util.RuleNodeTypeUtils;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorCtx;
 import com.ciat.bim.server.actors.TbActorRef;
@@ -32,7 +33,7 @@ import com.ciat.bim.server.actors.shared.ComponentMsgProcessor;
 import com.ciat.bim.server.common.data.ApiUsageRecordKey;
 import com.ciat.bim.server.common.msg.queue.RuleNodeException;
 import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
-import com.ciat.bim.server.utils.RuleNodeTypeUtils;
+
 import org.jeecg.modules.rule.entity.RuleNode;
 
 /**

@@ -3,6 +3,7 @@ package org.jeecg.modules.tenant.entity;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -51,6 +52,7 @@ public class Tenant implements Serializable {
 	/**标题*/
 	@Excel(name = "标题", width = 15)
     @ApiModelProperty(value = "标题")
+    @TableField("name")
     private java.lang.String title;
 	/**描述*/
 	@Excel(name = "描述", width = 15)

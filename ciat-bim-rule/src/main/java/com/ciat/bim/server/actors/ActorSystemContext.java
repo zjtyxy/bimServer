@@ -35,7 +35,9 @@ import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.discovery.PartitionService;
 import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
 import com.ciat.bim.server.queue.usagestats.TbApiUsageClient;
+import com.ciat.bim.server.rpc.TbCoreDeviceRpcService;
 import com.ciat.bim.server.rpc.TbRpcService;
+import com.ciat.bim.server.rpc.TbRuleEngineDeviceRpcService;
 import com.ciat.bim.server.script.JsInvokeService;
 import com.ciat.bim.server.session.DeviceSessionCacheService;
 import com.ciat.bim.server.state.DeviceStateService;
@@ -254,22 +256,22 @@ public class ActorSystemContext {
     @Getter
     private TbCoreToTransportService tbCoreToTransportService;
 
-//    /**
-//     * The following Service will be null if we operate in tb-core mode
-//     */
-//    @Lazy
-//    @Autowired(required = false)
-//    @Getter
-//    private TbRuleEngineDeviceRpcService tbRuleEngineDeviceRpcService;
-//
+    /**
+     * The following Service will be null if we operate in tb-core mode
+     */
+    @Lazy
+    @Autowired(required = false)
+    @Getter
+    private TbRuleEngineDeviceRpcService tbRuleEngineDeviceRpcService;
+
 //    /**
 //     * The following Service will be null if we operate in tb-rule-engine mode
 //     */
-//    @Lazy
-//    @Autowired(required = false)
-//    @Getter
-//    private TbCoreDeviceRpcService tbCoreDeviceRpcService;
-//
+    @Lazy
+    @Autowired(required = false)
+    @Getter
+    private TbCoreDeviceRpcService tbCoreDeviceRpcService;
+
     @Lazy
     @Autowired(required = false)
     @Getter

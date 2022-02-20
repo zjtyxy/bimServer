@@ -18,7 +18,10 @@ package com.ciat.bim.server.security;
 
 
 import com.ciat.bim.data.id.CustomerId;
+import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jeecg.common.system.vo.LoginUser;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -27,15 +30,28 @@ import java.util.stream.Stream;
 public class SecurityUser {
 
     private static final long serialVersionUID = -797397440703066079L;
-
+    private  LoginUser sysUser;
     public CustomerId getCustomerId() {
         return null;
     }
 
     public TenantId getTenantId() {
-        return null;
+        return TenantId.fromString(sysUser.getRelTenantIds());
+    }
+    public boolean isSystemAdmin() {
+        return getTenantId() == null || EntityId.NULL_UUID.equals(getTenantId().getId());
     }
 
+    @JsonIgnore
+    public boolean isTenantAdmin() {
+        return  true;
+       // return !isSystemAdmin() && (customerId == null || EntityId.NULL_UUID.equals(customerId.getId()));
+    }
+
+    @JsonIgnore
+    public boolean isCustomerUser() {
+        return !isSystemAdmin() && !isTenantAdmin();
+    }
 //    private Collection<GrantedAuthority> authorities;
 //    private boolean enabled;
 //    private UserPrincipal userPrincipal;
@@ -48,12 +64,10 @@ public class SecurityUser {
 //        super(id);
 //    }
 //
-//    public SecurityUser(User user, boolean enabled, UserPrincipal userPrincipal) {
-//        super(user);
-//        this.enabled = enabled;
-//        this.userPrincipal = userPrincipal;
-//    }
-//
+    public SecurityUser(LoginUser sysUser) {
+     this.sysUser =sysUser;
+    }
+
 //    public Collection<GrantedAuthority> getAuthorities() {
 //        if (authorities == null) {
 //            authorities = Stream.of(SecurityUser.this.getAuthority())

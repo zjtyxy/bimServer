@@ -39,11 +39,11 @@ public class TbRpcService {
     //private final RpcService rpcService;
     private final TbClusterService tbClusterService;
 
-//    public Rpc save(TenantId tenantId, Rpc rpc) {
-//        Rpc saved = rpcService.save(rpc);
-//        pushRpcMsgToRuleEngine(tenantId, saved);
-//        return saved;
-//    }
+    public Rpc save(TenantId tenantId, Rpc rpc) {
+        //Rpc saved = rpcService.save(rpc);
+        pushRpcMsgToRuleEngine(tenantId, rpc);
+        return rpc;
+    }
 
     public void save(TenantId tenantId, RpcId rpcId, RpcStatus newStatus, JsonNode response) {
 //        Rpc foundRpc = rpcService.findById(tenantId, rpcId);
@@ -60,8 +60,8 @@ public class TbRpcService {
     }
 
     private void pushRpcMsgToRuleEngine(TenantId tenantId, Rpc rpc) {
-//        TbMsg msg = TbMsg.newMsg("RPC_" + rpc.getStatus().name(), rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
-//        tbClusterService.pushMsgToRuleEngine(tenantId, rpc.getDeviceId(), msg, null);
+        TbMsg msg = TbMsg.newMsg("RPC_" + rpc.getStatus().name(), rpc.getDeviceId(), TbMsgMetaData.EMPTY, JacksonUtil.toString(rpc));
+        tbClusterService.pushMsgToRuleEngine(tenantId.getId(), rpc.getDeviceId(), msg, null);
     }
 
 //    public Rpc findRpcById(TenantId tenantId, RpcId rpcId) {

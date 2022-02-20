@@ -41,9 +41,9 @@ public class TopicPartitionInfo {
         this.partition = partition;
         this.myPartition = myPartition;
         String tmp = topic;
-        if (tenantId != null) {
-            tmp += "." + tenantId;
-        }
+//        if (tenantId != null) {
+//            tmp += "." + tenantId;
+//        }
         if (partition != null) {
             tmp += "." + partition;
         }
@@ -72,7 +72,7 @@ public class TopicPartitionInfo {
         if (o == null || getClass() != o.getClass()) return false;
         TopicPartitionInfo that = (TopicPartitionInfo) o;
         return topic.equals(that.topic) &&
-                Objects.equals(tenantId, that.tenantId) &&
+//                Objects.equals(tenantId, that.tenantId) &&
                 Objects.equals(partition, that.partition) &&
                 fullTopicName.equals(that.fullTopicName);
     }

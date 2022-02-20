@@ -1,5 +1,10 @@
 package org.jeecg.modules.device.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ciat.bim.server.common.data.page.PageData;
+import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.dao.JpaExecutorService;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.jeecg.modules.device.entity.AttributeKv;
@@ -80,6 +85,16 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 	@Override
 	public ListenableFuture<Device> getByIdFuture(String deviceId) {
 		return service.submit(()-> this.getById(deviceId));
+	}
+
+	@Override
+	public PageData<Device> findDevicesByTenantId(String id, PageLink pageLink) {
+
+		QueryWrapper<Device> qw = new QueryWrapper();
+		qw.eq("tenant_id",id);
+		Page<Device> page = new Page<Device>(pageLink.getPage(), pageLink.getPageSize());
+		IPage<Device> pageList = this.page(page, qw);
+		return new PageData<Device>(pageList.getRecords(), (int) pageList.getPages(),pageList.getTotal(),pageList.getPages()>pageLink.getPage());
 	}
 
 }
