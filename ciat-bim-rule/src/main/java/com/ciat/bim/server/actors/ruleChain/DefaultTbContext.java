@@ -27,6 +27,7 @@ import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
 import com.ciat.bim.rule.engine.action.RuleNodeJsScriptEngine;
 import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
+import com.ciat.bim.rule.engine.mail.MailService;
 import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.actors.TbActorRef;
 import com.ciat.bim.server.cluster.TbClusterService;
@@ -347,11 +348,11 @@ class DefaultTbContext implements TbContext {
         return nodeCtx.getTenantId();
     }
 
-//    @Override
-//    public ListeningExecutor getMailExecutor() {
-//        return mainCtx.getMailExecutor();
-//    }
-//
+    @Override
+    public ListeningExecutor getMailExecutor() {
+        return mainCtx.getMailExecutor();
+    }
+
 //    @Override
 //    public ListeningExecutor getSmsExecutor() {
 //        return mainCtx.getSmsExecutor();
@@ -498,15 +499,15 @@ class DefaultTbContext implements TbContext {
         return mainCtx.getSharedEventLoopGroupService().getSharedEventLoopGroup();
     }
 
-//    @Override
-//    public MailService getMailService(boolean isSystem) {
-//        if (!isSystem || mainCtx.isAllowSystemMailService()) {
-//            return mainCtx.getMailService();
-//        } else {
-//            throw new RuntimeException("Access to System Mail Service is forbidden!");
-//        }
-//    }
-//
+    @Override
+    public MailService getMailService(boolean isSystem) {
+        if (!isSystem || mainCtx.isAllowSystemMailService()) {
+            return mainCtx.getMailService();
+        } else {
+            throw new RuntimeException("Access to System Mail Service is forbidden!");
+        }
+    }
+
 //    @Override
 //    public SmsService getSmsService() {
 //        if (mainCtx.isAllowSystemSmsService()) {

@@ -1,12 +1,12 @@
 /**
  * Copyright © 2016-2021 The Thingsboard Authors
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 package com.ciat.bim.server.actors;
+
 import javax.annotation.Nullable;
+
 import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.Event;
 import com.ciat.bim.data.id.EntityId;
 import com.ciat.bim.data.id.TenantId;
 import com.ciat.bim.msg.*;
 import com.ciat.bim.rule.engine.action.JsInvokeStats;
+import com.ciat.bim.rule.engine.mail.MailService;
 import com.ciat.bim.server.ActorService;
 import com.ciat.bim.server.actors.tenant.DebugTbRateLimits;
 import com.ciat.bim.server.apiusage.TbApiUsageStateService;
@@ -31,6 +34,7 @@ import com.ciat.bim.server.edge.rpc.EdgeRpcService;
 import com.ciat.bim.server.event.EventService;
 import com.ciat.bim.server.executors.DbCallbackExecutorService;
 import com.ciat.bim.server.executors.SharedEventLoopGroupService;
+import com.ciat.bim.server.mail.MailExecutorService;
 import com.ciat.bim.server.profile.TbDeviceProfileCache;
 import com.ciat.bim.server.queue.discovery.PartitionService;
 import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
@@ -68,6 +72,7 @@ import org.springframework.stereotype.Component;
 
 
 import com.google.common.util.concurrent.ListenableFuture;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -76,7 +81,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import com.google.common.util.concurrent.Futures;
+
 @Slf4j
 @Component
 public class ActorSystemContext {
@@ -118,7 +125,7 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private IDeviceService deviceService;
-//
+    //
     @Autowired
     @Getter
     private TbTenantProfileCache tenantProfileCache;
@@ -126,7 +133,7 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private TbDeviceProfileCache deviceProfileCache;
-//
+    //
 //    @Autowired
 //    @Getter
 //    private AssetService assetService;
@@ -158,7 +165,7 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private IRuleNodeStateService ruleNodeStateService;
-//
+    //
     @Autowired
     private PartitionService partitionService;
 
@@ -177,7 +184,7 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private EventService eventService;
-//
+    //
 //    @Autowired
 //    @Getter
 //    private RelationService relationService;
@@ -202,10 +209,10 @@ public class ActorSystemContext {
     @Getter
     private JsInvokeService jsSandbox;
 
-//    @Autowired
-//    @Getter
-//    private MailExecutorService mailExecutor;
-//
+    @Autowired
+    @Getter
+    private MailExecutorService mailExecutor;
+
 //    @Autowired
 //    @Getter
 //    private SmsExecutorService smsExecutor;
@@ -221,11 +228,11 @@ public class ActorSystemContext {
     @Autowired
     @Getter
     private SharedEventLoopGroupService sharedEventLoopGroupService;
-//
-//    @Autowired
-//    @Getter
-//    private MailService mailService;
-//
+
+    @Autowired
+    @Getter
+    private MailService mailService;
+
 //    @Autowired
 //    @Getter
 //    private SmsService smsService;
@@ -243,7 +250,7 @@ public class ActorSystemContext {
     @Getter
     private JsInvokeStats jsInvokeStats;
 
-//    //TODO: separate context for TbCore and TbRuleEngine
+    //    //TODO: separate context for TbCore and TbRuleEngine
     @Autowired(required = false)
     @Getter
     private DeviceStateService deviceStateService;
@@ -264,7 +271,7 @@ public class ActorSystemContext {
     @Getter
     private TbRuleEngineDeviceRpcService tbRuleEngineDeviceRpcService;
 
-//    /**
+    //    /**
 //     * The following Service will be null if we operate in tb-rule-engine mode
 //     */
     @Lazy
@@ -286,7 +293,7 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private EdgeRpcService edgeRpcService;
-//
+    //
 //    @Lazy
 //    @Autowired(required = false)
 //    @Getter
@@ -458,10 +465,9 @@ public class ActorSystemContext {
     public TopicPartitionInfo resolve(ServiceType serviceType, String queueName, String tenantId, EntityId entityId) {
         try {
             return partitionService.resolve(serviceType, queueName, tenantId, entityId.getId());
-        }catch (Exception e)
-        {
-            log.warn("entityId:{},tenantId:{},serviceType:{}",entityId,tenantId,serviceType);
-         e.printStackTrace();
+        } catch (Exception e) {
+            log.warn("entityId:{},tenantId:{},serviceType:{}", entityId, tenantId, serviceType);
+            e.printStackTrace();
         }
         return null;
     }
@@ -470,7 +476,7 @@ public class ActorSystemContext {
         return serviceInfoProvider.getServiceId();
     }
 
-//    public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
+    //    public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
 //        persistDebugAsync(tenantId, entityId, "IN", tbMsg, relationType, null, null);
 //    }
 //

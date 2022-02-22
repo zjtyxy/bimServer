@@ -20,6 +20,7 @@ import com.ciat.bim.msg.*;
 import com.ciat.bim.rule.engine.RuleEngineDeviceProfileCache;
 import com.ciat.bim.rule.engine.action.ScriptEngine;
 import com.ciat.bim.rule.engine.api.RuleEngineTelemetryService;
+import com.ciat.bim.rule.engine.mail.MailService;
 import com.ciat.bim.server.common.data.page.PageData;
 import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.rpc.RuleEngineRpcService;
@@ -197,7 +198,7 @@ public interface TbContext {
 //
 //    EdgeEventService getEdgeEventService();
 //
-//    ListeningExecutor getMailExecutor();
+    ListeningExecutor getMailExecutor();
 //
 //    ListeningExecutor getSmsExecutor();
 //
@@ -205,7 +206,7 @@ public interface TbContext {
 //
 //    ListeningExecutor getExternalCallExecutor();
 //
-//    MailService getMailService(boolean isSystem);
+    MailService getMailService(boolean isSystem);
 //
 //    SmsService getSmsService();
 //
