@@ -56,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jeecg.modules.device.entity.Device;
 import org.jeecg.modules.device.entity.DeviceProfile;
+import org.jeecg.modules.system.entity.SysCategory;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import java.io.IOException;
@@ -872,17 +873,20 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private void checkGatewaySession(SessionMetaData sessionMetaData) {
         TransportDeviceInfo device = deviceSessionCtx.getDeviceInfo();
         try {
-            JsonNode infoNode = context.getMapper().readTree(device.getAdditionalInfo());
-            if (infoNode != null) {
-                JsonNode gatewayNode = infoNode.get("gateway");
-                if (gatewayNode != null && gatewayNode.asBoolean()) {
+            //JsonNode infoNode = context.getMapper().readTree(device.getAdditionalInfo());
+//            if (infoNode != null) {
+               // JsonNode gatewayNode = infoNode.get("gateway");
+               // if (gatewayNode != null && gatewayNode.asBoolean())
+            SysCategory dcategory = deviceSessionCtx.getContext().getSysCategoryService().getById(device.getDeviceType());
+               if(dcategory.getCode().startsWith("B03A05")) //网关类型
+                {
                     gatewaySessionHandler = new GatewaySessionHandler(deviceSessionCtx, sessionId);
-                    if (infoNode.has(DefaultTransportService.OVERWRITE_ACTIVITY_TIME) && infoNode.get(DefaultTransportService.OVERWRITE_ACTIVITY_TIME).isBoolean()) {
-                        sessionMetaData.setOverwriteActivityTime(infoNode.get(DefaultTransportService.OVERWRITE_ACTIVITY_TIME).asBoolean());
-                    }
-                }
+//                    if (infoNode.has(DefaultTransportService.OVERWRITE_ACTIVITY_TIME) && infoNode.get(DefaultTransportService.OVERWRITE_ACTIVITY_TIME).isBoolean()) {
+//                        sessionMetaData.setOverwriteActivityTime(infoNode.get(DefaultTransportService.OVERWRITE_ACTIVITY_TIME).asBoolean());
+//                    }
+//                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.trace("[{}][{}] Failed to fetch device additional info", sessionId, device.getDeviceName(), e);
         }
     }

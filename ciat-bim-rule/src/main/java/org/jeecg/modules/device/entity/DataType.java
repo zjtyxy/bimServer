@@ -16,7 +16,5 @@
 package org.jeecg.modules.device.entity;
 
 public enum DataType {
-
-    STRING, LONG, BOOLEAN, DOUBLE, JSON;
-
+    STRING, LONG, BOOLEAN, DOUBLE, JSON,DATETIME
 }

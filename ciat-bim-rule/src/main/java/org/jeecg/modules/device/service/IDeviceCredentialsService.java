@@ -14,4 +14,5 @@ public interface IDeviceCredentialsService extends IService<DeviceCredentials> {
     DeviceCredentials findDeviceCredentialsByDeviceId(String deviceId);
 
 
+    DeviceCredentials getByUserName(String userName);
 }

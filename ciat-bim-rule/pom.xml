@@ -52,7 +52,12 @@
             <groupId>org.jeecgframework.boot</groupId>
             <artifactId>jeecg-boot-base-core</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.jeecgframework.boot</groupId>
+            <artifactId>jeecg-boot-module-system</artifactId>
+            <exclusions>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.jeecgframework.boot</groupId>
             <artifactId>ciat-bim-netty-mqtt</artifactId>

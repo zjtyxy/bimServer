@@ -45,4 +45,6 @@ public interface IDeviceService extends IService<Device> {
 	public ListenableFuture<Device> getByIdFuture(String deviceId);
 
     PageData<Device> findDevicesByTenantId(String id, PageLink pageLink);
+
+	Device findDeviceByTenantIdAndName(String tenantId, String deviceName);
 }

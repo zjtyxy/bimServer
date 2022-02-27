@@ -9,6 +9,7 @@ import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jeecg.common.aspect.annotation.Dict;
+import org.jeecg.common.util.DateUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import java.util.Date;
@@ -67,7 +68,6 @@ public class AttributeKv implements KvEntry {
 	/**属性类型*/
 	@Excel(name = "属性类型", width = 15, dicCode = "attr_value_type")
     @Dict(dicCode = "attr_value_type")
-    @TableField(value = "attribute_type")
     @ApiModelProperty(value = "属性类型")
     private DataType dataType;
 	/**布尔值*/
@@ -101,10 +101,7 @@ public class AttributeKv implements KvEntry {
         return attributeKey;
     }
 
-    @Override
-    public DataType getDataType() {
-        return null;
-    }
+
 
     public String getValueAsString() {
         return "";
@@ -141,6 +138,9 @@ public class AttributeKv implements KvEntry {
                 return this.doubleValue;
             case LONG:
                 return this.longValue;
+            case DATETIME:
+                return  DateUtils.datetimeFormat.get().format(new Date(this.longValue));
+               // return new Date(this.longValue);
             case BOOLEAN:
                 return this.booleanValue;
             case JSON:

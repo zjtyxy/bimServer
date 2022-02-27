@@ -144,7 +144,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
         DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
         stateData.getState().setLastConnectTime(ts);
-        save(deviceId, LAST_CONNECT_TIME, ts);
+        saveDateTime(deviceId, LAST_CONNECT_TIME, ts);
         pushRuleEngineMessage(stateData, CONNECT_EVENT);
         checkAndUpdateState(deviceId, stateData);
         cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId);
@@ -163,7 +163,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
     void updateActivityState(DeviceId deviceId, DeviceStateData stateData, long lastReportedActivity) {
         log.trace("updateActivityState - fetched state {} for device {}, lastReportedActivity {}", stateData, deviceId, lastReportedActivity);
         if (stateData != null) {
-            save(deviceId, LAST_ACTIVITY_TIME, lastReportedActivity);
+            saveDateTime(deviceId, LAST_ACTIVITY_TIME, lastReportedActivity);
             DeviceState state = stateData.getState();
             state.setLastActivityTime(lastReportedActivity);
             if (!state.isActive()) {
@@ -182,7 +182,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
         DeviceStateData stateData = getOrFetchDeviceStateData(deviceId);
         long ts = System.currentTimeMillis();
         stateData.getState().setLastDisconnectTime(ts);
-        save(deviceId, LAST_DISCONNECT_TIME, ts);
+        saveDateTime(deviceId, LAST_DISCONNECT_TIME, ts);
         pushRuleEngineMessage(stateData, DataConstants.DISCONNECT_EVENT);
         cleanDeviceStateIfBelongsExternalPartition(tenantId, deviceId);
     }
@@ -431,7 +431,7 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
             if (!isActive(ts, state) && (state.getLastInactivityAlarmTime() == 0L || state.getLastInactivityAlarmTime() < state.getLastActivityTime()) && stateData.getDeviceCreationTime() + state.getInactivityTimeout() < ts) {
                 state.setActive(false);
                 state.setLastInactivityAlarmTime(ts);
-                save(deviceId, INACTIVITY_ALARM_TIME, ts);
+                saveDateTime(deviceId, INACTIVITY_ALARM_TIME, ts);
                 save(deviceId, ACTIVITY_STATE, false);
                 pushRuleEngineMessage(stateData, DataConstants.INACTIVITY_EVENT);
             }
@@ -612,7 +612,16 @@ public class DefaultDeviceStateService extends TbApplicationEventListener<Partit
             tsSubService.saveAttrAndNotify(TenantId.fromString(TenantId.SYS_TENANT_ID), deviceId, DataConstants.SERVER_SCOPE, key, value, new TelemetrySaveCallback<>(deviceId, key, value));
         }
     }
-
+    private void saveDateTime(DeviceId deviceId, String key, long value) {
+        if (persistToTelemetry) {
+            tsSubService.saveAndNotifyInternal(
+                    TenantId.fromString(TenantId.SYS_TENANT_ID), deviceId,
+                    Collections.singletonList(new TsKv( new DateTimeDataEntry(key, value),System.currentTimeMillis())),
+                    new TelemetrySaveCallback<>(deviceId, key, value));
+        } else {
+            tsSubService.saveAttrTimeAndNotify(TenantId.fromString(TenantId.SYS_TENANT_ID), deviceId, DataConstants.SERVER_SCOPE, key, value, new TelemetrySaveCallback<>(deviceId, key, value));
+        }
+    }
     private void save(DeviceId deviceId, String key, boolean value) {
         if (persistToTelemetry) {
             tsSubService.saveAndNotifyInternal(

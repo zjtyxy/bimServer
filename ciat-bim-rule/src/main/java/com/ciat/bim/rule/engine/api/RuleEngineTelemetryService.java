@@ -43,6 +43,7 @@ public interface RuleEngineTelemetryService {
     void saveLatestAndNotify(TenantId tenantId, EntityId entityId, List<TsKv> ts, FutureCallback<Void> callback);
 
     void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value, FutureCallback<Void> callback);
+    void saveAttrTimeAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value, FutureCallback<Void> callback);
 
     void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, String value, FutureCallback<Void> callback);
 

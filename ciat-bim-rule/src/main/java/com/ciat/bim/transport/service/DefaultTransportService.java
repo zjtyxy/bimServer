@@ -310,7 +310,7 @@ public class DefaultTransportService implements TransportService {
         }
     }
 
-    @Override
+    //@Override
     public void process(DeviceTransportType transportType, TransportProtos.ValidateDeviceTokenRequestMsg msg,
                         TransportServiceCallback<ValidateDeviceCredentialsResponse> callback) {
         log.trace("Processing msg: {}", msg);

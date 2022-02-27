@@ -218,12 +218,12 @@ public final class TbMsg implements Serializable {
             CustomerId customerId = null;
             RuleChainId ruleChainId = null;
             RuleNodeId ruleNodeId = null;
-            if (proto.getCustomerIdMSB() != 0L && proto.getCustomerIdLSB() != 0L) {
+            //if (proto.getCustomerIdMSB() != 0L && proto.getCustomerIdLSB() != 0L) {
                 customerId = new CustomerId(proto.getCustomerIdMSB()+"");
-            }
-            if (proto.getRuleChainIdMSB() != 0L && proto.getRuleChainIdLSB() != 0L) {
+           // }
+            //if (proto.getRuleChainIdMSB() != 0L && proto.getRuleChainIdLSB() != 0L) {
                 ruleChainId = new RuleChainId(proto.getRuleChainIdMSB()+"");
-            }
+           // }
            // if (proto.getRuleNodeIdMSB() != 0L && proto.getRuleNodeIdLSB() != 0L) {
                 ruleNodeId = new RuleNodeId(proto.getRuleNodeIdMSB()+"");
           //  }

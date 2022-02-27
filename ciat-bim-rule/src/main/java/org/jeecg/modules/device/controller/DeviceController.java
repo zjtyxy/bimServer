@@ -194,7 +194,7 @@ public class DeviceController extends JeecgController<Device, IDeviceService> {
 	@ApiOperation(value="属性表-编辑", notes="属性表-编辑")
 	@PutMapping(value = "/editAttributeKv")
 	public Result<?> editAttributeKv(@RequestBody AttributeKv attributeKv) {
-		attributeKvService.updateById(attributeKv);
+		attributeKvService.updateByMultiId(attributeKv);
 		return Result.OK("编辑成功!");
 	}
 
@@ -207,7 +207,7 @@ public class DeviceController extends JeecgController<Device, IDeviceService> {
 	@ApiOperation(value="属性表-通过id删除", notes="属性表-通过id删除")
 	@DeleteMapping(value = "/deleteAttributeKv")
 	public Result<?> deleteAttributeKv(@RequestParam(name="id",required=true) String id) {
-		attributeKvService.removeById(id);
+		//attributeKvService.deleteByMultiId(id);
 		return Result.OK("删除成功!");
 	}
 

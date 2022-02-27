@@ -36,7 +36,19 @@ public class DeviceProfileServiceImpl extends ServiceImpl<DeviceProfileMapper, D
     private IAlarmRuleService alarmRuleService;
     @Override
     public DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String profileName) {
-        return null;
+        LambdaQueryWrapper<DeviceProfile> lqw = new LambdaQueryWrapper();
+        lqw.eq(DeviceProfile::getTenantId,tenantId.getId());
+        lqw.eq(DeviceProfile::getName,profileName);
+        DeviceProfile rst = this.getOne(lqw);
+        if(rst == null)
+        {
+            rst = new DeviceProfile();
+            rst.setTenantId(tenantId.getId());
+            rst.setName(profileName);
+            this.save(rst);
+        }
+
+        return rst;
     }
 
     @Override

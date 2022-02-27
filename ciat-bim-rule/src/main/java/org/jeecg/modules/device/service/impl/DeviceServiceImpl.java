@@ -97,4 +97,11 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 		return new PageData<Device>(pageList.getRecords(), (int) pageList.getPages(),pageList.getTotal(),pageList.getPages()>pageLink.getPage());
 	}
 
+	@Override
+	public Device findDeviceByTenantIdAndName(String tenantId, String deviceName) {
+		QueryWrapper<Device> qw = new QueryWrapper();
+		qw.eq("name",deviceName);
+		return this.getOne(qw);
+	}
+
 }

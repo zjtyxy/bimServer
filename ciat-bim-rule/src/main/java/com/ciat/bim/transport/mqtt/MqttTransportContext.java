@@ -22,6 +22,7 @@ import io.netty.handler.ssl.SslHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jeecg.modules.system.service.ISysCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -37,6 +38,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.mqtt.enabled}'=='true')")
 public class MqttTransportContext extends TransportContext {
+
+
+    @Autowired
+    @Getter
+    private ISysCategoryService sysCategoryService;
 
     @Getter
     @Autowired(required = false)

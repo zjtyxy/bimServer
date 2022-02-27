@@ -262,6 +262,12 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     }
 
     @Override
+    public void saveAttrTimeAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, long value, FutureCallback<Void> callback) {
+        saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new AttributeKv(new DateTimeDataEntry(key, value)
+                , System.currentTimeMillis())), callback);
+    }
+
+    @Override
     public void saveAttrAndNotify(TenantId tenantId, EntityId entityId, String scope, String key, String value, FutureCallback<Void> callback) {
         saveAndNotify(tenantId, entityId, scope, Collections.singletonList(new AttributeKv(new StringDataEntry(key, value)
                 , System.currentTimeMillis())), callback);
