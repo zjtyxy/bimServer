@@ -449,6 +449,9 @@ public class DefaultTransportService implements TransportService {
     }
 
     @Override
+    /*
+    创建DeviceActor
+     */
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SessionEventMsg msg, TransportServiceCallback<Void> callback) {
         if (checkLimits(sessionInfo, msg, callback)) {
             reportActivityInternal(sessionInfo);

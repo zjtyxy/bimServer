@@ -75,12 +75,12 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
     }
 
     private void scheduleStatsPersistTick() {
-//        try {
-//            processor.scheduleStatsPersistTick(ctx, systemContext.getStatisticsPersistFrequency());
-//        } catch (Exception e) {
-//            log.error("[{}][{}] Failed to schedule statistics store message. No statistics is going to be stored: {}", tenantId, id, e.getMessage());
-//            logAndPersist("onScheduleStatsPersistMsg", e);
-//        }
+        try {
+            processor.scheduleStatsPersistTick(ctx, systemContext.getStatisticsPersistFrequency());
+        } catch (Exception e) {
+            log.error("[{}][{}] Failed to schedule statistics store message. No statistics is going to be stored: {}", tenantId, id, e.getMessage());
+            logAndPersist("onScheduleStatsPersistMsg", e);
+        }
     }
 
     @Override

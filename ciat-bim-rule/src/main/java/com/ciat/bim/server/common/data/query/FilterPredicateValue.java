@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ public class FilterPredicateValue<T> implements Serializable {
     @Getter
     private final T userValue;
     @Getter
+    @Setter
     @Valid
     private final DynamicValue<T> dynamicValue;
 

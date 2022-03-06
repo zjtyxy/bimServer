@@ -20,13 +20,11 @@ import com.ciat.bim.server.common.data.device.profile.AnyTimeSchedule;
 import com.ciat.bim.server.common.data.device.profile.DurationAlarmConditionSpec;
 import com.ciat.bim.server.common.data.device.profile.SimpleAlarmConditionSpec;
 import com.ciat.bim.server.common.data.device.profile.SpecificTimeSchedule;
-import com.ciat.bim.server.common.data.query.BooleanFilterPredicate;
-import com.ciat.bim.server.common.data.query.FilterPredicateValue;
-import com.ciat.bim.server.common.data.query.NumericFilterPredicate;
-import com.ciat.bim.server.common.data.query.StringFilterPredicate;
+import com.ciat.bim.server.common.data.query.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.modules.alarm.entity.BimAlarmRule;
 
 
@@ -71,20 +69,24 @@ public class AlarmRule implements Serializable {
             this.condition.setSpec(new SimpleAlarmConditionSpec());
         }
         AlarmConditionFilter alarmConditionFilter = new AlarmConditionFilter();
-        alarmConditionFilter.setKey(new AlarmConditionFilterKey(AlarmConditionKeyType.ATTRIBUTE,alarm.getAlarmConditionKey()));
+        alarmConditionFilter.setKey(new AlarmConditionFilterKey(alarm.getAlarmCondition(),alarm.getAlarmConditionKey()));
+        DynamicValue<?> dv = null;
+        if(alarm.getDynamicType()!=null && StringUtils.isNotEmpty( alarm.getDynamicAttr()))
+        {
+            dv = new DynamicValue<>(alarm.getDynamicType(),alarm.getDynamicAttr());
+        }
+
         switch(alarm.getValueType())
         {
             case BOOLEAN:
-                alarmConditionFilter.setValue(FilterPredicateValue.fromBoolean(alarm.getValue().equals("Y")));
+                alarmConditionFilter.setValue(new FilterPredicateValue(alarm.getValue().equals("Y"),null,dv));
                 break;
             case STRING:
-                alarmConditionFilter.setValue(FilterPredicateValue.fromString(alarm.getValue()));
+                alarmConditionFilter.setValue(new FilterPredicateValue(alarm.getValue(),null,dv));
                 break;
             case NUMERIC:
-                alarmConditionFilter.setValue(FilterPredicateValue.fromDouble(Double.parseDouble(alarm.getValue())));
-                break;
             case DATETIME:
-                alarmConditionFilter.setValue(FilterPredicateValue.fromDouble(Double.parseDouble(alarm.getValue())));
+                alarmConditionFilter.setValue(new FilterPredicateValue(Double.parseDouble(alarm.getValue()),null,dv));
                 break;
         }
      //   alarmConditionFilter.setValue(alarm.getValue());
@@ -98,21 +100,21 @@ public class AlarmRule implements Serializable {
                         BooleanFilterPredicate booleanFilterPredicate = new BooleanFilterPredicate();
                         booleanFilterPredicate.setOperation(BooleanFilterPredicate.BooleanOperation.valueOf(alarm.getFilterPredicate()));
                         alarmConditionFilter.setPredicate(booleanFilterPredicate);
-                        booleanFilterPredicate.setValue(FilterPredicateValue.fromBoolean(alarm.getValue().equals("Y")));
+                        booleanFilterPredicate.setValue((FilterPredicateValue<Boolean>) alarmConditionFilter.getValue());
 
                         break;
                     case STRING:
                         StringFilterPredicate stringFilterPredicate = new StringFilterPredicate();
                         stringFilterPredicate.setOperation(StringFilterPredicate.StringOperation.valueOf(alarm.getFilterPredicate()));
                         alarmConditionFilter.setPredicate(stringFilterPredicate);
-                        stringFilterPredicate.setValue(FilterPredicateValue.fromString(alarm.getValue()));
+                        stringFilterPredicate.setValue((FilterPredicateValue<String>) alarmConditionFilter.getValue());
                         break;
                     case NUMERIC:
                     case DATETIME:
                         NumericFilterPredicate numericFilterPredicate = new NumericFilterPredicate();
                         numericFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.valueOf(alarm.getFilterPredicate()));
                         alarmConditionFilter.setPredicate(numericFilterPredicate);
-                        numericFilterPredicate.setValue(FilterPredicateValue.fromDouble(Double.parseDouble(alarm.getValue())));
+                        numericFilterPredicate.setValue((FilterPredicateValue<Double>) alarmConditionFilter.getValue());
                         break;
                 }
                 break;
@@ -123,7 +125,7 @@ public class AlarmRule implements Serializable {
                 NumericFilterPredicate numericFilterPredicate = new NumericFilterPredicate();
                 numericFilterPredicate.setOperation(NumericFilterPredicate.NumericOperation.valueOf(alarm.getFilterPredicate()));
                 alarmConditionFilter.setPredicate(numericFilterPredicate);
-                numericFilterPredicate.setValue(FilterPredicateValue.fromDouble(Double.parseDouble(alarm.getValue())));
+                numericFilterPredicate.setValue((FilterPredicateValue<Double>) alarmConditionFilter.getValue());
                 break;
             case "STARTSWITH":
             case "ENDSWITH":
@@ -132,7 +134,7 @@ public class AlarmRule implements Serializable {
                 StringFilterPredicate stringFilterPredicate = new StringFilterPredicate();
                 stringFilterPredicate.setOperation(StringFilterPredicate.StringOperation.valueOf(alarm.getFilterPredicate()));
                 alarmConditionFilter.setPredicate(stringFilterPredicate);
-                stringFilterPredicate.setValue(FilterPredicateValue.fromString(alarm.getValue()));
+                stringFilterPredicate.setValue((FilterPredicateValue<String>) alarmConditionFilter.getValue());
                 break;
 
         }

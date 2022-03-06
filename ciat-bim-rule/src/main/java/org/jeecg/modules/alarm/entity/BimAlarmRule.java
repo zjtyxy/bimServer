@@ -4,8 +4,10 @@ import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ciat.bim.data.device.AlarmConditionKeyType;
 import com.ciat.bim.data.device.AlarmSeverity;
 import com.ciat.bim.data.device.EntityKeyValueType;
+import com.ciat.bim.server.common.data.query.DynamicValueSourceType;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,7 +47,7 @@ public class BimAlarmRule implements Serializable {
 	/**触发条件*/
 	@Excel(name = "触发条件", width = 15)
     @ApiModelProperty(value = "触发条件")
-    private java.lang.String alarmCondition;
+    private AlarmConditionKeyType alarmCondition;
 	/**触发时间设置*/
 	@Excel(name = "触发时间设置", width = 15, dicCode = "alarm_schedule")
     @ApiModelProperty(value = "触发时间设置")
@@ -75,4 +77,10 @@ public class BimAlarmRule implements Serializable {
     private AlarmSeverity alarmSeverity;
     @ApiModelProperty(value = "创建和是取消")
     private String isCreate;
+
+    @ApiModelProperty(value = "动态值范围")
+    private DynamicValueSourceType dynamicType;
+
+    @ApiModelProperty(value = "动态值来源")
+    private String dynamicAttr;
 }

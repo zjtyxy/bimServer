@@ -64,6 +64,9 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/***
+ * 订阅管理服务
+ */
 @Slf4j
 @TbCoreComponent
 @Service

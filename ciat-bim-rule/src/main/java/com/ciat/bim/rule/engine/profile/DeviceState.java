@@ -356,7 +356,7 @@ class DeviceState {
             List<TsKv> data = ctx.getTimeseriesService().findLatest(TenantId.fromString(ctx.getTenantId()), originator, latestTsKeys).get();
             for (TsKv entry : data) {
                 if (entry.getValue() != null) {
-                    result.putValue(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, entry.getKey()), entry.getCreateTime().getTime(), toEntityValue(entry));
+                    result.putValue(new AlarmConditionFilterKey(AlarmConditionKeyType.TIME_SERIES, entry.getKey()), entry.getTs().getTime(), toEntityValue(entry));
                 }
             }
         }
