@@ -163,6 +163,7 @@ spring:
 #mybatis plus 设置
 mybatis-plus:
   mapper-locations: classpath*:org/jeecg/modules/**/xml/*Mapper.xml
+  typeEnumsPackage: org.jeecg.modules.device.entity
   global-config:
     # 关闭MP3.0自带的banner
     banner: false
@@ -173,7 +174,7 @@ mybatis-plus:
       table-underline: true
   configuration:
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # 返回类型为Map,显示null对应的字段
     call-setters-on-nulls: true
 #jeecg专用配置
@@ -194,7 +195,7 @@ jeecg :
     #webapp文件路径
     webapp: /opt/webapp
   shiro:
-    excludeUrls: /base/**,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
+    excludeUrls: /device/device/addByPlot,/base/**,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
     accessKey: ??
@@ -266,7 +267,7 @@ cas:
 #Mybatis输出sql日志
 logging:
   level:
-    org.jeecg.modules.system.mapper : info
+    org.jeecg.modules.system.mapper : warn
 #swagger
 knife4j:
   #开启增强配置

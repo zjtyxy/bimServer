@@ -76,4 +76,7 @@ public class BimGtlfModel implements Serializable {
     @ApiModelProperty(value = "类型")
     @TableField(value = "type")
     private String classType;
+
+    @ApiModelProperty(value = "默认尺寸")
+    private Double defaultSize;
 }
