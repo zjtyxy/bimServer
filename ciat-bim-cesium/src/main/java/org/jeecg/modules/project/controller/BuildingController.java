@@ -13,6 +13,7 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.project.entity.Building;
+import org.jeecg.modules.project.entity.HeatingUnit;
 import org.jeecg.modules.project.service.IBuildingService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,6 +21,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
+import org.jeecg.modules.project.service.IHeatingUnitService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -49,7 +51,8 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class BuildingController extends JeecgController<Building, IBuildingService> {
 	@Autowired
 	private IBuildingService buildingService;
-	
+	 @Autowired
+	 private IHeatingUnitService heatingUnitService;
 	/**
 	 * 分页列表查询
 	 *
@@ -71,7 +74,17 @@ public class BuildingController extends JeecgController<Building, IBuildingServi
 		IPage<Building> pageList = buildingService.page(page, queryWrapper);
 		return Result.OK(pageList);
 	}
-	
+	 @AutoLog(value = "楼栋信息-分页列表查询")
+	 @ApiOperation(value="楼栋信息-分页列表查询", notes="楼栋信息-分页列表查询")
+	 @GetMapping(value = "/roomlist")
+	 public Result<?> queryRoomList(Building building,
+									HttpServletRequest req) {
+		 QueryWrapper<HeatingUnit> queryWrapper = new QueryWrapper<>();
+		 queryWrapper.eq("room_buiding",building.getId());
+		 List<HeatingUnit> pageList = heatingUnitService.list(queryWrapper);
+
+		 return Result.OK(pageList);
+	 }
 	/**
 	 *   添加
 	 *
@@ -85,7 +98,7 @@ public class BuildingController extends JeecgController<Building, IBuildingServi
 		buildingService.save(building);
 		return Result.OK("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -99,7 +112,7 @@ public class BuildingController extends JeecgController<Building, IBuildingServi
 		buildingService.updateById(building);
 		return Result.OK("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -113,7 +126,7 @@ public class BuildingController extends JeecgController<Building, IBuildingServi
 		buildingService.removeById(id);
 		return Result.OK("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -127,7 +140,7 @@ public class BuildingController extends JeecgController<Building, IBuildingServi
 		this.buildingService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.OK("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -85,6 +86,16 @@ public class HeatingUnit implements Serializable {
 	@Excel(name = "所在楼层", width = 15)
     @ApiModelProperty(value = "所在楼层")
     private Integer roomLayer;
+    /**所在楼层*/
+    @Excel(name = "所在楼层", width = 15)
+    @ApiModelProperty(value = "开始楼层")
+    @TableField(exist = false)
+    private Integer roomLayerStart;
+    /**所在楼层*/
+    @Excel(name = "所在楼层", width = 15)
+    @ApiModelProperty(value = "结束楼层")
+    @TableField(exist = false)
+    private Integer roomLayerEnd;
 	/**所在单元*/
 	@Excel(name = "所在单元", width = 15)
     @ApiModelProperty(value = "所在单元")
@@ -101,4 +112,12 @@ public class HeatingUnit implements Serializable {
 	@Excel(name = "房间编号", width = 15)
     @ApiModelProperty(value = "房间编号")
     private String roomNumber;
+    @Excel(name = "所属项目", width = 15, dictTable = "bim_project", dicText = "name", dicCode = "id")
+    @Dict(dictTable = "bim_project", dicText = "name", dicCode = "id")
+    @ApiModelProperty(value = "所属项目")
+    private java.lang.String project;
+    /**所属建筑*/
+    @Excel(name = "所属建筑", width = 15)
+    @ApiModelProperty(value = "所属建筑")
+    private java.lang.String roomBuidingNumber;
 }

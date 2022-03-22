@@ -1,5 +1,6 @@
 package org.jeecg.modules.project.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +51,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class HeatingUnitController extends JeecgController<HeatingUnit, IHeatingUnitService> {
 	@Autowired
 	private IHeatingUnitService heatingUnitService;
-	
+
 	/**
 	 * 分页列表查询
 	 *
@@ -71,7 +73,7 @@ public class HeatingUnitController extends JeecgController<HeatingUnit, IHeating
 		IPage<HeatingUnit> pageList = heatingUnitService.page(page, queryWrapper);
 		return Result.OK(pageList);
 	}
-	
+
 	/**
 	 *   添加
 	 *
@@ -82,10 +84,26 @@ public class HeatingUnitController extends JeecgController<HeatingUnit, IHeating
 	@ApiOperation(value="房屋单元-添加", notes="房屋单元-添加")
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody HeatingUnit heatingUnit) {
-		heatingUnitService.save(heatingUnit);
+		if(heatingUnit.getRoomLayerStart() != null && heatingUnit.getRoomLayerEnd() != null)
+		{
+			List<HeatingUnit> batchUnit = new ArrayList<>();
+			for(int i=heatingUnit.getRoomLayerStart();i<heatingUnit.getRoomLayerEnd();i++)
+			{
+				HeatingUnit unit = new HeatingUnit();
+				BeanUtils.copyProperties(heatingUnit,unit);
+				unit.setRoomLayer(i);
+				batchUnit.add(unit);
+			}
+			heatingUnitService.saveBatch(batchUnit);
+			return Result.OK("成功添加"+batchUnit.size()+"个房间！");
+		}
+		else {
+			heatingUnitService.save(heatingUnit);
+		}
+
 		return Result.OK("添加成功！");
 	}
-	
+
 	/**
 	 *  编辑
 	 *
@@ -99,7 +117,7 @@ public class HeatingUnitController extends JeecgController<HeatingUnit, IHeating
 		heatingUnitService.updateById(heatingUnit);
 		return Result.OK("编辑成功!");
 	}
-	
+
 	/**
 	 *   通过id删除
 	 *
@@ -113,7 +131,7 @@ public class HeatingUnitController extends JeecgController<HeatingUnit, IHeating
 		heatingUnitService.removeById(id);
 		return Result.OK("删除成功!");
 	}
-	
+
 	/**
 	 *  批量删除
 	 *
@@ -127,7 +145,7 @@ public class HeatingUnitController extends JeecgController<HeatingUnit, IHeating
 		this.heatingUnitService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.OK("批量删除成功!");
 	}
-	
+
 	/**
 	 * 通过id查询
 	 *
