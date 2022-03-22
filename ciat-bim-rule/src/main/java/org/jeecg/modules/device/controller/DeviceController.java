@@ -1,5 +1,6 @@
 package org.jeecg.modules.device.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import org.jeecg.common.system.query.QueryGenerator;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -94,7 +95,18 @@ public class DeviceController extends JeecgController<Device, IDeviceService> {
         deviceService.save(device);
         return Result.OK("添加成功！");
     }
-
+	 /**
+	  *   添加
+	  * @param device
+	  * @return
+	  */
+	 @AutoLog(value = "设备信息-添加")
+	 @ApiOperation(value="设备信息-添加", notes="设备信息-添加")
+	 @PostMapping(value = "/addByPlot")
+	 public Result<?> addByPlot(@RequestBody JSONArray devices) {
+		 //deviceService.save(device);
+		 return Result.OK("添加成功！");
+	 }
     /**
      *  编辑
      * @param device

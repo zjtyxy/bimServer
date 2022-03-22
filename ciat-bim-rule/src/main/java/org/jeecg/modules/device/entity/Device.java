@@ -102,10 +102,40 @@ public class Device implements Serializable {
 	@Excel(name = "设备数据", width = 15)
     @ApiModelProperty(value = "设备数据")
     private java.lang.String deviceData;
+    /**凭证类型*/
+    @Excel(name = "凭证类型", width = 15, dicCode = "auth_type")
+    @Dict(dicCode = "auth_type")
+    @ApiModelProperty(value = "凭证类型")
+    private java.lang.String authType;
+    /**凭证*/
+    @Excel(name = "凭证", width = 15)
+    @ApiModelProperty(value = "凭证")
+    private java.lang.String authToken;
 	/**地理数据*/
 	@Excel(name = "地理数据", width = 15)
     @ApiModelProperty(value = "地理数据")
     private java.lang.String geoInfo;
+    @Excel(name = "所属项目", width = 15, dictTable = "bim_project", dicText = "name", dicCode = "id")
+    @Dict(dictTable = "bim_project", dicText = "name", dicCode = "id")
+    @ApiModelProperty(value = "所属项目")
+    private java.lang.String project;
+    /**所属建筑*/
+    @Excel(name = "所属建筑", width = 15)
+    @ApiModelProperty(value = "所属建筑")
+    private java.lang.String buiding;
+    /**所属房屋*/
+    @Excel(name = "所属房屋", width = 15)
+    @ApiModelProperty(value = "所属房屋")
+    private java.lang.String house;
+
+    /**建筑id*/
+    @Excel(name = "建筑id", width = 15)
+    @ApiModelProperty(value = "建筑id")
+    private java.lang.String buidingId;
+    /**房屋id*/
+    @Excel(name = "房屋id", width = 15)
+    @ApiModelProperty(value = "房屋id")
+    private java.lang.String houseId;
 
     public JsonNode fetchAdditionalInfo() {
         return null;
