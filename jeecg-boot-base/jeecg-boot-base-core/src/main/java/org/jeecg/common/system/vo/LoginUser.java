@@ -2,6 +2,7 @@ package org.jeecg.common.system.vo;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -78,7 +79,7 @@ public class LoginUser {
 	 * 状态(1：正常 2：冻结 ）
 	 */
 	private Integer status;
-	
+
 	private Integer delFlag;
 	/**
      * 同步工作流引擎1同步0不同步
@@ -112,8 +113,13 @@ public class LoginUser {
 
 	/**多租户id配置，编辑用户的时候设置*/
 	private String relTenantIds;
-
+	private String tenantId;
 	/**设备id uniapp推送用*/
 	private String clientId;
 
+	public String getTenantId() {
+		if(StringUtils.isNotEmpty(relTenantIds))
+			return relTenantIds.split(",")[0];
+		return relTenantIds;
+	}
 }

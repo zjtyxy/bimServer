@@ -57,6 +57,19 @@ public class MybatisInterceptor implements Interceptor {
 							}
 						}
 					}
+					if ("tenantId".equals(field.getName())) {
+						field.setAccessible(true);
+						Object local_createBy = field.get(parameter);
+						field.setAccessible(false);
+						if (local_createBy == null || local_createBy.equals("")) {
+							if (sysUser != null) {
+								// 登录人账号
+								field.setAccessible(true);
+								field.set(parameter, sysUser.getTenantId());
+								field.setAccessible(false);
+							}
+						}
+					}
 					// 注入创建时间
 					if ("createTime".equals(field.getName())) {
 						field.setAccessible(true);
