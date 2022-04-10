@@ -17,6 +17,7 @@ package com.ciat.bim.transport;
 
 import com.ciat.bim.msg.ServiceType;
 import com.ciat.bim.msg.TopicPartitionInfo;
+import com.ciat.bim.server.common.msg.rpc.ToDeviceCmdRequest;
 import com.ciat.bim.server.queue.common.TbProtoQueueMsg;
 import com.ciat.bim.server.queue.discovery.PartitionService;
 import com.ciat.bim.server.queue.provider.TbQueueProducerProvider;
@@ -52,7 +53,23 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
     public void process(String nodeId, ToTransportMsg msg) {
         process(nodeId, msg, null, null);
     }
-
+    @Override
+    public void process(String nodeId, ToDeviceCmdRequest msg) {
+        Runnable onSuccess = null;
+        Consumer<Throwable> onFailure =null;
+        if (nodeId == null || nodeId.isEmpty()){
+            log.trace("process: skipping message without nodeId [{}], (ToTransportMsg) msg [{}]", nodeId, msg);
+            if (onSuccess != null) {
+                onSuccess.run();
+            }
+            return;
+        }
+        TopicPartitionInfo tpi = partitionService.getNotificationsTopic(ServiceType.TB_TRANSPORT, nodeId);
+        UUID sessionId = msg.getId();
+        log.trace("[{}][{}] Pushing session data to topic: {}", tpi.getFullTopicName(), sessionId, msg);
+        //TbProtoQueueMsg<ToTransportMsg> queueMsg = new TbProtoQueueMsg<>(NULL_UUID.toString(), msg);
+       // tbTransportProducer.send(tpi, queueMsg, new QueueCallbackAdaptor(onSuccess, onFailure));
+    }
     @Override
     public void process(String nodeId, ToTransportMsg msg, Runnable onSuccess, Consumer<Throwable> onFailure) {
         if (nodeId == null || nodeId.isEmpty()){

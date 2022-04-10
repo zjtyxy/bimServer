@@ -15,18 +15,31 @@
  */
 package com.ciat.bim.server.rpc;
 
-import com.ciat.bim.server.common.msg.rpc.RuleEngineDeviceRpcResponse;
+import com.ciat.bim.data.id.DeviceId;
+import com.ciat.bim.data.id.TenantId;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * Created by ashvayka on 02.04.18.
  */
-public interface RuleEngineRpcService {
+@Data
+@Builder
+public final class RuleEngineDeviceCmdRequest {
 
-    void sendRpcReplyToDevice(String serviceId, UUID sessionId, int requestId, String body);
-
-    void sendRpcRequestToDevice(RuleEngineDeviceRpcRequest request, Consumer<RuleEngineDeviceRpcResponse> consumer);
-    void sendCmdRequestToDevice(RuleEngineDeviceCmdRequest request, Consumer<RuleEngineDeviceRpcResponse> consumer);
+    private final TenantId tenantId;
+    private final DeviceId deviceId;
+    private final int requestId;
+    private final UUID requestUUID;
+    private final String originServiceId;
+    private final boolean oneway;
+    private final boolean persisted;
+    private final String type;
+    private final String body;
+    private final long expirationTime;
+    private final boolean restApiCall;
+    private final String additionalInfo;
+    private final Integer retries;
 }

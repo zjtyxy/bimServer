@@ -33,4 +33,6 @@ public interface TbTransportQueueFactory extends TbUsageStatsClientQueueFactory 
 
     TbQueueConsumer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsConsumer();
 
+    TbQueueConsumer<CmdQueueMsg> createCmdTransportNotificationsConsumer();
+
 }

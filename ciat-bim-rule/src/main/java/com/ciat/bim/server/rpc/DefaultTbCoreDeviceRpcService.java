@@ -23,6 +23,7 @@ import com.ciat.bim.server.actors.ActorSystemContext;
 import com.ciat.bim.server.cluster.TbClusterService;
 import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
 import com.ciat.bim.server.common.msg.rpc.RpcError;
+import com.ciat.bim.server.common.msg.rpc.ToDeviceCmdRequest;
 import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequest;
 import com.ciat.bim.server.queue.discovery.TbServiceInfoProvider;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
@@ -60,7 +61,7 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
 
     private final ConcurrentMap<UUID, Consumer<FromDeviceRpcResponse>> localToRuleEngineRpcRequests = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, ToDeviceRpcRequestActorMsg> localToDeviceRpcRequests = new ConcurrentHashMap<>();
-
+    private final ConcurrentMap<UUID, ToDeviceCmdRequestActorMsg> localToDeviceCmdRequests = new ConcurrentHashMap<>();
     private Optional<TbRuleEngineDeviceRpcService> tbRuleEngineRpcService;
     private ScheduledExecutorService scheduler;
     private String serviceId;
@@ -99,7 +100,14 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         sendRpcRequestToRuleEngine(request, currentUser);
         scheduleToRuleEngineTimeout(request, requestId);
     }
-
+    @Override
+    public void processRestApiRpcRequest(ToDeviceCmdRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser) {
+        log.trace("[{}][{}] Processing REST API call to rule engine [{}]", request.getTenantId(), request.getId(), request.getDeviceId());
+        UUID requestId = request.getId();
+        localToRuleEngineRpcRequests.put(requestId, responseConsumer);
+        sendRpcRequestToRuleEngine(request, currentUser);
+        scheduleToRuleEngineTimeout(request, requestId);
+    }
     @Override
     public void processRpcResponseFromRuleEngine(FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from rule engine: [{}]", response.getId(), response);
@@ -121,7 +129,15 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         actorContext.tellWithHighPriority(rpcMsg);
         scheduleToDeviceTimeout(request, requestId);
     }
-
+    @Override
+    public void forwardCmdRequestToDeviceActor(ToDeviceCmdRequestActorMsg rpcMsg) {
+        ToDeviceCmdRequest request = rpcMsg.getMsg();
+        log.trace("[{}][{}] Processing local rpc call to device actor [{}]", request.getTenantId(), request.getId(), request.getDeviceId());
+        UUID requestId = request.getId();
+        localToDeviceCmdRequests.put(requestId, rpcMsg);
+        actorContext.tellWithHighPriority(rpcMsg);
+        scheduleToDeviceTimeout(request, requestId);
+    }
     @Override
     public void processRpcResponseFromDeviceActor(FromDeviceRpcResponse response) {
         log.trace("[{}] Received response to server-side RPC request from device actor.", response.getId());
@@ -184,8 +200,50 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             throw new RuntimeException(e);
         }
     }
+    private void sendRpcRequestToRuleEngine(ToDeviceCmdRequest msg, SecurityUser currentUser) {
+        ObjectNode entityNode = json.createObjectNode();
+        TbMsgMetaData metaData = new TbMsgMetaData();
+        metaData.putValue("requestUUID", msg.getId().toString());
+        metaData.putValue("originServiceId", serviceId);
+        metaData.putValue("expirationTime", Long.toString(msg.getExpirationTime()));
+        metaData.putValue("oneway", Boolean.toString(msg.isOneway()));
+        metaData.putValue(DataConstants.PERSISTENT, Boolean.toString(msg.isPersisted()));
 
+        if (msg.getRetries() != null) {
+            metaData.putValue(DataConstants.RETRIES, msg.getRetries().toString());
+        }
+
+
+        Device device = deviceService.getById(msg.getDeviceId().getId());
+        if (device != null) {
+            metaData.putValue("deviceName", device.getName());
+            metaData.putValue("deviceType", device.getType());
+        }
+
+        entityNode.put("type", msg.getBody().getType());
+        entityNode.put("data", msg.getBody().getData());
+
+        entityNode.put(DataConstants.ADDITIONAL_INFO, msg.getAdditionalInfo());
+
+        try {
+            TbMsg tbMsg = TbMsg.newMsg(DataConstants.RPC_CALL_FROM_SERVER_TO_DEVICE, msg.getDeviceId(), currentUser.getCustomerId(), metaData, TbMsgDataType.JSON, json.writeValueAsString(entityNode));
+            clusterService.pushMsgToRuleEngine(msg.getTenantId().getId(), msg.getDeviceId(), tbMsg, null);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void scheduleToRuleEngineTimeout(ToDeviceRpcRequest request, UUID requestId) {
+        long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
+        log.trace("[{}] processing to rule engine request.", requestId);
+        scheduler.schedule(() -> {
+            log.trace("[{}] timeout for processing to rule engine request.", requestId);
+            Consumer<FromDeviceRpcResponse> consumer = localToRuleEngineRpcRequests.remove(requestId);
+            if (consumer != null) {
+                consumer.accept(new FromDeviceRpcResponse(requestId.toString(), null, RpcError.TIMEOUT));
+            }
+        }, timeout, TimeUnit.MILLISECONDS);
+    }
+    private void scheduleToRuleEngineTimeout(ToDeviceCmdRequest request, UUID requestId) {
         long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
         log.trace("[{}] processing to rule engine request.", requestId);
         scheduler.schedule(() -> {
@@ -205,5 +263,12 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             localToDeviceRpcRequests.remove(requestId);
         }, timeout, TimeUnit.MILLISECONDS);
     }
-
+    private void scheduleToDeviceTimeout(ToDeviceCmdRequest request, UUID requestId) {
+        long timeout = Math.max(0, request.getExpirationTime() - System.currentTimeMillis()) + TimeUnit.SECONDS.toMillis(1);
+        log.trace("[{}] processing to device request.", requestId);
+        scheduler.schedule(() -> {
+            log.trace("[{}] timeout for to device request.", requestId);
+            localToDeviceRpcRequests.remove(requestId);
+        }, timeout, TimeUnit.MILLISECONDS);
+    }
 }

@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ciat.bim.server.rpc;
+package org.jeecg.modules.rpc.controller.rpc;
 
-import com.ciat.bim.server.common.msg.rpc.RuleEngineDeviceRpcResponse;
-
-import java.util.UUID;
-import java.util.function.Consumer;
+import com.ciat.bim.server.common.msg.rpc.ToDeviceCmdRequest;
+import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequest;
+import com.ciat.bim.server.security.SecurityUser;
+import lombok.Data;
+import org.jeecg.common.api.vo.Result;
+import org.springframework.http.ResponseEntity;
 
 /**
- * Created by ashvayka on 02.04.18.
+ * Created by ashvayka on 16.04.18.
  */
-public interface RuleEngineRpcService {
-
-    void sendRpcReplyToDevice(String serviceId, UUID sessionId, int requestId, String body);
-
-    void sendRpcRequestToDevice(RuleEngineDeviceRpcRequest request, Consumer<RuleEngineDeviceRpcResponse> consumer);
-    void sendCmdRequestToDevice(RuleEngineDeviceCmdRequest request, Consumer<RuleEngineDeviceRpcResponse> consumer);
+@Data
+public class LocalRequestCmdMetaData {
+    private final ToDeviceCmdRequest request;
+    private final SecurityUser user;
+    private final Result<ResponseEntity> responseWriter;
 }

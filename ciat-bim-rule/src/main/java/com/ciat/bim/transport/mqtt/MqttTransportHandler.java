@@ -296,6 +296,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private void handleGatewayPublishMsg(ChannelHandlerContext ctx, String topicName, int msgId, MqttPublishMessage mqttMsg) {
         try {
             switch (topicName) {
+                case MqttTopics.GATEWAY_REG_TOPIC: //网关注册包
+                    gatewaySessionHandler.onGatewayRegistration(mqttMsg);
+                    break;
                 case MqttTopics.GATEWAY_TELEMETRY_TOPIC:
                     gatewaySessionHandler.onDeviceTelemetry(mqttMsg);
                     break;

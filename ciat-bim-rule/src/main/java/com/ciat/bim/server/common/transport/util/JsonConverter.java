@@ -127,6 +127,10 @@ public class JsonConverter {
         if (includeRequestId) {
             result.addProperty("id", msg.getRequestId());
         }
+        if(msg.getMethodName().equals("DSGW-CMD"))//对dsgw网关的命令处理
+        {
+          return JSON_PARSER.parse(msg.getParams()).getAsJsonObject();
+        }
         result.addProperty("method", msg.getMethodName());
         result.add("params", JSON_PARSER.parse(msg.getParams()));
         return result;

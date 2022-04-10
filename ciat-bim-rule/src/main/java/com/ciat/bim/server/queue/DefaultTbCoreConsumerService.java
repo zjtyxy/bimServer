@@ -35,6 +35,7 @@ import com.ciat.bim.server.queue.processing.IdMsgPair;
 import com.ciat.bim.server.queue.provider.TbCoreQueueFactory;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
 import com.ciat.bim.server.rpc.TbCoreDeviceRpcService;
+import com.ciat.bim.server.rpc.ToDeviceCmdRequestActorMsg;
 import com.ciat.bim.server.rpc.ToDeviceRpcRequestActorMsg;
 import com.ciat.bim.server.state.DeviceStateService;
 import com.ciat.bim.server.subscription.SubscriptionManagerService;
@@ -215,7 +216,10 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                                         TbActorMsg tbActorMsg = actorMsg.get();
                                         if (tbActorMsg.getMsgType().equals(MsgType.DEVICE_RPC_REQUEST_TO_DEVICE_ACTOR_MSG)) {
                                             tbCoreDeviceRpcService.forwardRpcRequestToDeviceActor((ToDeviceRpcRequestActorMsg) tbActorMsg);
-                                        } else {
+                                        }else  if (tbActorMsg.getMsgType().equals(MsgType.DEVICE_CMD_REQUEST_TO_DEVICE_ACTOR_MSG)) {
+                                            tbCoreDeviceRpcService.forwardCmdRequestToDeviceActor((ToDeviceCmdRequestActorMsg) tbActorMsg);
+                                        }
+                                        else {
                                             log.trace("[{}] Forwarding message to App Actor {}", id, actorMsg.get());
                                             actorContext.tell(actorMsg.get());
                                         }

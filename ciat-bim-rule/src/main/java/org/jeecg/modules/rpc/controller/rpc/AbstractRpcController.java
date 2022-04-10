@@ -15,6 +15,7 @@
  */
 package org.jeecg.modules.rpc.controller.rpc;
 
+import com.ciat.bim.server.common.msg.rpc.*;
 import com.ciat.bim.server.security.AccessValidator;
 import com.ciat.bim.server.security.Operation;
 import com.google.common.util.concurrent.FutureCallback;
@@ -26,10 +27,6 @@ import com.ciat.bim.data.DataConstants;
 import com.ciat.bim.data.id.*;
 import com.ciat.bim.server.common.data.exception.ThingsboardErrorCode;
 import com.ciat.bim.server.common.data.exception.ThingsboardException;
-import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
-import com.ciat.bim.server.common.msg.rpc.RpcError;
-import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequest;
-import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequestBody;
 import com.ciat.bim.server.queue.util.TbCoreComponent;
 import com.ciat.bim.server.rpc.TbCoreDeviceRpcService;
 import com.ciat.bim.server.security.SecurityUser;
@@ -45,6 +42,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -113,7 +111,60 @@ public abstract class AbstractRpcController  {
             throw new ThingsboardException("Invalid request body", ioe, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
         }
     }
+    protected Result<?> handleDeviceCmdRequest(boolean oneWay, DeviceId deviceId, String requestBody, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus, HttpServletRequest req) throws ThingsboardException {
+        try {
+            JsonNode rpcRequestBody = JacksonUtil.toJsonNode(requestBody);
+            ToDeviceCommandRequestBody body = new ToDeviceCommandRequestBody();
+            body.setDeviceCode(deviceId.getId());
+            body.setData(JacksonUtil.toString(rpcRequestBody.get("data")));
+            body.setTime(new Date().getTime());
+            if(rpcRequestBody.get("type")!=null)
+            {
+                body.setType(rpcRequestBody.get("type").asText());
+            }
 
+            SecurityUser currentUser = getCurrentUser(req);
+            TenantId tenantId = currentUser.getTenantId();
+            final Result<ResponseEntity> response = new Result<>();
+            long timeout = rpcRequestBody.has(DataConstants.TIMEOUT) ? rpcRequestBody.get(DataConstants.TIMEOUT).asLong() : defaultTimeout;
+            long expTime = rpcRequestBody.has(DataConstants.EXPIRATION_TIME) ? rpcRequestBody.get(DataConstants.EXPIRATION_TIME).asLong() : System.currentTimeMillis() + Math.max(minTimeout, timeout);
+            UUID rpcRequestUUID = rpcRequestBody.has("requestUUID") ? UUID.fromString(rpcRequestBody.get("requestUUID").asText()) : UUID.randomUUID();
+            boolean persisted = rpcRequestBody.has(DataConstants.PERSISTENT) && rpcRequestBody.get(DataConstants.PERSISTENT).asBoolean();
+            String additionalInfo =  JacksonUtil.toString(rpcRequestBody.get(DataConstants.ADDITIONAL_INFO));
+            Integer retries = rpcRequestBody.has(DataConstants.RETRIES) ? rpcRequestBody.get(DataConstants.RETRIES).asInt() : null;
+            accessValidator.validate(currentUser, Operation.RPC_CALL, deviceId, new HttpValidationCallback(response, new FutureCallback<>() {
+                @Override
+                public void onSuccess(Result<ResponseEntity> result) {
+                    ToDeviceCmdRequest rpcRequest = new ToDeviceCmdRequest(rpcRequestUUID,
+                            tenantId,
+                            deviceId,
+                            oneWay,
+                            expTime,
+                            body,
+                            persisted,
+                            retries,
+                            additionalInfo
+                    );
+
+                    deviceRpcService.processRestApiRpcRequest(rpcRequest, fromDeviceRpcResponse -> reply(new LocalRequestCmdMetaData(rpcRequest, currentUser, result), fromDeviceRpcResponse, timeoutStatus, noActiveConnectionStatus), currentUser);
+                }
+                @Override
+                public void onFailure(Throwable e) {
+                    ResponseEntity entity;
+                    if (e instanceof ToErrorResponseEntity) {
+                        entity = ((ToErrorResponseEntity) e).toErrorResponseEntity();
+                    } else {
+                        entity = new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                    }
+                    //logRpcCall(currentUser, deviceId, body, oneWay, Optional.empty(), e);
+                    response.setResult(entity);
+                }
+            }));
+            return response;
+        } catch (IllegalArgumentException ioe) {
+            throw new ThingsboardException("Invalid request body", ioe, ThingsboardErrorCode.BAD_REQUEST_PARAMS);
+        }
+    }
     private SecurityUser getCurrentUser(HttpServletRequest req) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         SecurityUser securityUser = new SecurityUser(sysUser);
@@ -155,11 +206,47 @@ public abstract class AbstractRpcController  {
             }
         }
     }
-
+    public void reply(LocalRequestCmdMetaData rpcRequest, FromDeviceRpcResponse response, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) {
+        Optional<RpcError> rpcError = response.getError();
+        Result<ResponseEntity> responseWriter = rpcRequest.getResponseWriter();
+        if (rpcError.isPresent()) {
+            logRpcCall(rpcRequest, rpcError, null);
+            RpcError error = rpcError.get();
+            switch (error) {
+                case TIMEOUT:
+                    responseWriter.setResult(new ResponseEntity<>(timeoutStatus));
+                    break;
+                case NO_ACTIVE_CONNECTION:
+                    responseWriter.setResult(new ResponseEntity<>(noActiveConnectionStatus));
+                    break;
+                default:
+                    responseWriter.setResult(new ResponseEntity<>(timeoutStatus));
+                    break;
+            }
+        } else {
+            Optional<String> responseData = response.getResponse();
+            if (responseData.isPresent() && !StringUtils.isEmpty(responseData.get())) {
+                String data = responseData.get();
+                try {
+                    logRpcCall(rpcRequest, rpcError, null);
+                    responseWriter.setResult(new ResponseEntity<>(JacksonUtil.toJsonNode(data), HttpStatus.OK));
+                } catch (IllegalArgumentException e) {
+                    log.debug("Failed to decode device response: {}", data, e);
+                    logRpcCall(rpcRequest, rpcError, e);
+                    responseWriter.setResult(new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
+                }
+            } else {
+                logRpcCall(rpcRequest, rpcError, null);
+                responseWriter.setResult(new ResponseEntity<>(HttpStatus.OK));
+            }
+        }
+    }
     private void logRpcCall(LocalRequestMetaData rpcRequest, Optional<RpcError> rpcError, Throwable e) {
         logRpcCall(rpcRequest.getUser(), rpcRequest.getRequest().getDeviceId(), rpcRequest.getRequest().getBody(), rpcRequest.getRequest().isOneway(), rpcError, null);
     }
-
+    private void logRpcCall(LocalRequestCmdMetaData rpcRequest, Optional<RpcError> rpcError, Throwable e) {
+      //  logRpcCall(rpcRequest.getUser(), rpcRequest.getRequest().getDeviceId(), rpcRequest.getRequest().getBody(), rpcRequest.getRequest().isOneway(), rpcError, null);
+    }
 
     private void logRpcCall(SecurityUser user, EntityId entityId, ToDeviceRpcRequestBody body, boolean oneWay, Optional<RpcError> rpcError, Throwable e) {
         String rpcErrorStr = "";

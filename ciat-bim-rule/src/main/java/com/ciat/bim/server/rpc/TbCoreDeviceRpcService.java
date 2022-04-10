@@ -17,6 +17,7 @@ package com.ciat.bim.server.rpc;
 
 
 import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
+import com.ciat.bim.server.common.msg.rpc.ToDeviceCmdRequest;
 import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequest;
 import com.ciat.bim.server.security.SecurityUser;
 
@@ -34,6 +35,7 @@ public interface TbCoreDeviceRpcService {
      * @param currentUser
      */
     void processRestApiRpcRequest(ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser);
+    void processRestApiRpcRequest(ToDeviceCmdRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser);
 
     /**
      * Handles the RPC response from the Rule Engine.
@@ -48,7 +50,7 @@ public interface TbCoreDeviceRpcService {
      * @param request the RPC request message
      */
     void forwardRpcRequestToDeviceActor(ToDeviceRpcRequestActorMsg request);
-
+    void forwardCmdRequestToDeviceActor(ToDeviceCmdRequestActorMsg request);
     /**
      * Handles the RPC response from the Device Actor (Transport).
      *

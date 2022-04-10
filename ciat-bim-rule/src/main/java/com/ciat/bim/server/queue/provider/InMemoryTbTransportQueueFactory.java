@@ -94,7 +94,10 @@ public class InMemoryTbTransportQueueFactory implements TbTransportQueueFactory 
     public TbQueueConsumer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsConsumer() {
         return new InMemoryTbQueueConsumer<>(transportNotificationSettings.getNotificationsTopic() + "." + serviceInfoProvider.getServiceId());
     }
-
+    @Override
+    public TbQueueConsumer<CmdQueueMsg> createCmdTransportNotificationsConsumer() {
+        return new InMemoryTbQueueConsumer<>(transportNotificationSettings.getNotificationsTopic() + "." + serviceInfoProvider.getServiceId());
+    }
     @Override
     public TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToUsageStatsServiceMsg>> createToUsageStatsServiceMsgProducer() {
         return new InMemoryTbQueueProducer<>(coreSettings.getUsageStatsTopic());

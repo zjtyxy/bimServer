@@ -20,6 +20,7 @@ package com.ciat.bim.server.common.data;
  */
 public class MqttTopics {
 
+
     private static final String REQUEST = "/request";
     private static final String RESPONSE = "/response";
     private static final String RPC = "/rpc";
@@ -75,6 +76,7 @@ public class MqttTopics {
     public static final String GATEWAY_RPC_TOPIC = BASE_GATEWAY_API_TOPIC + RPC;
     public static final String GATEWAY_ATTRIBUTES_REQUEST_TOPIC = BASE_GATEWAY_API_TOPIC + ATTRIBUTES_REQUEST;
     public static final String GATEWAY_ATTRIBUTES_RESPONSE_TOPIC = BASE_GATEWAY_API_TOPIC + ATTRIBUTES_RESPONSE;
+    public static final String GATEWAY_REG_TOPIC = BASE_GATEWAY_API_TOPIC+"/registration";
     // v2 topics
     public static final String BASE_DEVICE_API_TOPIC_V2 = "v2";
     public static final String REQUEST_ID_PATTERN = "(?<requestId>\\d+)";

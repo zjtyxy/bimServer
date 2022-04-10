@@ -37,10 +37,7 @@ import com.ciat.bim.server.common.data.page.PageLink;
 import com.ciat.bim.server.common.data.relation.EntityRelation;
 import com.ciat.bim.server.common.data.relation.RelationTypeGroup;
 import com.ciat.bim.server.common.msg.queue.TbCallback;
-import com.ciat.bim.server.common.msg.rpc.FromDeviceRpcResponse;
-import com.ciat.bim.server.common.msg.rpc.RpcError;
-import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequest;
-import com.ciat.bim.server.common.msg.rpc.ToDeviceRpcRequestBody;
+import com.ciat.bim.server.common.msg.rpc.*;
 import com.ciat.bim.server.common.msg.timeout.DeviceActorServerSideRpcTimeoutMsg;
 import com.ciat.bim.server.edge.EdgeEvent;
 import com.ciat.bim.server.rpc.*;
@@ -138,7 +135,55 @@ class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {
 //        }
         return null;
     }
+    void processCmdRequest(TbActorCtx context, ToDeviceCmdRequestActorMsg msg) {
+        ToDeviceCmdRequest request = msg.getMsg();
+        //TransportProtos.ToDeviceRpcRequestMsg rpcRequest = creteToDeviceRpcRequestMsg(request);
 
+        long timeout = request.getExpirationTime() - System.currentTimeMillis();
+        boolean persisted = request.isPersisted();
+
+        if (timeout <= 0) {
+            log.debug("[{}][{}] Ignoring message due to exp time reached, {}", deviceId, request.getId(), request.getExpirationTime());
+            if (persisted) {
+                createCmd(request, RpcStatus.EXPIRED);
+            }
+            return;
+        } else if (persisted) {
+            createCmd(request, RpcStatus.QUEUED);
+        }
+
+        boolean sent = false;
+        if (isSendNewRpcAvailable()) {
+            sent = rpcSubscriptions.size() > 0;
+            Set<UUID> syncSessionSet = new HashSet<>();
+            rpcSubscriptions.forEach((key, value) -> {
+                sendToTransport(request, key, value.getNodeId());
+                if (SessionType.SYNC == value.getType()) {
+                    syncSessionSet.add(key);
+                }
+            });
+            log.trace("Rpc syncSessionSet [{}] subscription after sent [{}]", syncSessionSet, rpcSubscriptions);
+            syncSessionSet.forEach(rpcSubscriptions::remove);
+        }
+
+        if (persisted) {
+            ObjectNode response = JacksonUtil.newObjectNode();
+            response.put("rpcId", request.getId().toString());
+            systemContext.getTbCoreDeviceRpcService().processRpcResponseFromDeviceActor(new FromDeviceRpcResponse(msg.getMsg().getId().toString(), JacksonUtil.toString(response), null));
+        }
+
+        if (!persisted && request.isOneway() && sent) {
+            log.debug("[{}] Rpc command response sent [{}]!", deviceId, request.getId());
+            systemContext.getTbCoreDeviceRpcService().processRpcResponseFromDeviceActor(new FromDeviceRpcResponse(msg.getMsg().getId().toString(), null, null));
+        } else {
+           // registerPendingRpcRequest(context, msg, sent, rpcRequest, timeout);
+        }
+        if (sent) {
+            log.debug("[{}] RPC request {} is sent!", deviceId, request.getId());
+        } else {
+            log.debug("[{}] RPC request {} is NOT sent!", deviceId, request.getId());
+        }
+    }
     void processRpcRequest(TbActorCtx context, ToDeviceRpcRequestActorMsg msg) {
         ToDeviceRpcRequest request = msg.getMsg();
         TransportProtos.ToDeviceRpcRequestMsg rpcRequest = creteToDeviceRpcRequestMsg(request);
@@ -210,7 +255,18 @@ class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {
 
         return systemContext.getTbRpcService().save(tenantId, rpc);
     }
+    private Rpc createCmd(ToDeviceCmdRequest request, RpcStatus status) {
+        Rpc rpc = new Rpc(new RpcId(request.getId().toString()));
+        rpc.setCreatedTime(System.currentTimeMillis());
+        rpc.setTenantId(tenantId);
+        rpc.setDeviceId(deviceId);
+        rpc.setExpirationTime(request.getExpirationTime());
+        rpc.setRequest(JacksonUtil.valueToTree(request));
+        rpc.setStatus(status);
+        rpc.setAdditionalInfo(JacksonUtil.toJsonNode(request.getAdditionalInfo()));
 
+        return systemContext.getTbRpcService().save(tenantId, rpc);
+    }
     private ToDeviceRpcRequestMsg creteToDeviceRpcRequestMsg(ToDeviceRpcRequest request) {
         ToDeviceRpcRequestBody body = request.getBody();
         return ToDeviceRpcRequestMsg.newBuilder()
@@ -757,6 +813,13 @@ class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {
                 .setSessionIdLSB(sessionId.getLeastSignificantBits())
                 .setToDeviceRequest(rpcMsg).build();
         systemContext.getTbCoreToTransportService().process(nodeId, msg);
+    }
+    private void sendToTransport(ToDeviceCmdRequest cmdMsg, UUID sessionId, String nodeId) {
+//        ToTransportMsg msg = ToTransportMsg.newBuilder()
+//                .setSessionIdMSB(sessionId.getMostSignificantBits())
+//                .setSessionIdLSB(sessionId.getLeastSignificantBits())
+//                .setToDeviceRequest(rpcMsg).build();
+        systemContext.getTbCoreToTransportService().process(nodeId, cmdMsg);
     }
 
     private void sendToTransport(ToServerRpcResponseMsg rpcMsg, UUID sessionId, String nodeId) {

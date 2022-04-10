@@ -100,6 +100,17 @@ public class RpcV2Controller extends AbstractRpcController {
         return handleDeviceRPCRequest(true, new DeviceId(deviceIdStr), requestBody, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.GATEWAY_TIMEOUT,req);
     }
 
+    @RequestMapping(value = "/onewayCmd/{deviceId}", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<?> handleOneWayDeviceCmdRequest(
+            @ApiParam(value = DEVICE_ID_PARAM_DESCRIPTION)
+            @PathVariable("deviceId") String deviceIdStr,
+            @ApiParam(value = "A JSON value representing the RPC request.")
+            @RequestBody String requestBody, HttpServletRequest req) throws ThingsboardException {
+
+        return handleDeviceCmdRequest(true, new DeviceId(deviceIdStr), requestBody, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.GATEWAY_TIMEOUT,req);
+    }
+
     @ApiOperation(value = "Send two-way RPC request", notes = TWO_WAY_RPC_REQUEST_DESCRIPTION)
 //    @ApiResponses(value = {
 //            @ApiResponse(code = 200, message = "Persistent RPC request was saved to the database or lightweight RPC response received."),

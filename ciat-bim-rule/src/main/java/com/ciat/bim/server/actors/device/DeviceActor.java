@@ -28,6 +28,7 @@ import com.ciat.bim.server.actors.TbActorException;
 import com.ciat.bim.server.common.msg.timeout.DeviceActorServerSideRpcTimeoutMsg;
 import com.ciat.bim.server.rpc.FromDeviceRpcResponseActorMsg;
 import com.ciat.bim.server.rpc.RemoveRpcActorMsg;
+import com.ciat.bim.server.rpc.ToDeviceCmdRequestActorMsg;
 import com.ciat.bim.server.rpc.ToDeviceRpcRequestActorMsg;
 import com.ciat.bim.server.transport.TransportToDeviceActorMsgWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +74,9 @@ public class DeviceActor extends ContextAwareActor {
                 break;
             case DEVICE_RPC_REQUEST_TO_DEVICE_ACTOR_MSG:
                 processor.processRpcRequest(ctx, (ToDeviceRpcRequestActorMsg) msg);
+                break;
+            case DEVICE_CMD_REQUEST_TO_DEVICE_ACTOR_MSG:
+                processor.processCmdRequest(ctx, (ToDeviceCmdRequestActorMsg) msg);
                 break;
             case DEVICE_RPC_RESPONSE_TO_DEVICE_ACTOR_MSG:
                 processor.processRpcResponsesFromEdge(ctx, (FromDeviceRpcResponseActorMsg) msg);
